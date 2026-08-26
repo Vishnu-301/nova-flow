@@ -1,9 +1,7 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
+import { BoxesIcon, LayoutGrid, LinkIcon, LogOut, Settings } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
-import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
-import { NavUser } from '@/components/nav-user';
 import {
     Sidebar,
     SidebarContent,
@@ -18,22 +16,21 @@ import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Overview',
         href: dashboard(),
         icon: LayoutGrid,
-    },
-];
-
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: FolderGit2,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
+    }, {
+        title: 'Links',
+        href: dashboard(),
+        icon: LinkIcon,
+    }, {
+        title: 'Products',
+        href: dashboard(),
+        icon: BoxesIcon,
+    }, {
+        title: 'Settings',
+        href: dashboard(),
+        icon: Settings,
     },
 ];
 
@@ -43,7 +40,7 @@ export function AppSidebar() {
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild>
+                        <SidebarMenuButton size="lg" asChild className="hover:bg-transparent active:bg-transparent">
                             <Link href={dashboard()} prefetch>
                                 <AppLogo />
                             </Link>
@@ -57,8 +54,20 @@ export function AppSidebar() {
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
-                <NavUser />
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton
+                            asChild
+                            tooltip={{ children: 'Logout' }}
+                            className="h-10 text-[14.5px] font-bold text-red-400 hover:bg-red-500/10 hover:text-red-400"
+                        >
+                            <Link href="/logout" method="post" as="button">
+                                <LogOut />
+                                <span>Logout</span>
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                </SidebarMenu>
             </SidebarFooter>
         </Sidebar>
     );
