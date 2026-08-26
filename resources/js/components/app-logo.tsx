@@ -1,16 +1,16 @@
 export default function AppLogo() {
     return (
         <>
-            <div className="flex aspect-square size-8 items-center justify-center shrink-0">
+            <div className="size-8 shrink-0" aria-hidden="true">
                 <img
-                    src="/images/WhatsApp Image 2026-08-19 at 10.21.14(1).jpeg"
-                    alt="Nova Flow"
-                    className="size-8 rounded-md object-cover"
+                    src="/images/novaflow-symbol.png"
+                    alt=""
+                    className="size-full object-contain"
                 />
             </div>
             <div className="ml-1 grid flex-1 text-left">
                 <span className="truncate text-[19px] leading-tight font-extrabold tracking-tight text-white">
-                    Nova flow
+                    Nova Flow
                 </span>
             </div>
         </>
