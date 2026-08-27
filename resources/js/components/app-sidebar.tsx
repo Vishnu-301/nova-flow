@@ -48,13 +48,13 @@ const mainNavItems: NavItem[] = [
 export function AppSidebar() {
     return (
         <Sidebar collapsible="icon" className="bg-nf-ink" variant="sidebar">
-            <SidebarHeader className="px-4 pt-5 pb-9 group-data-[collapsible=icon]:p-2">
+            <SidebarHeader className="px-4 pt-5 pb-9 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:py-2">
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton
                             size="lg"
                             asChild
-                            className="group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0 hover:bg-transparent active:bg-transparent"
+                            className="group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0 hover:bg-transparent active:bg-transparent group-data-[collapsible=icon]:[&>div:first-child]:size-4 group-data-[collapsible=icon]:[&>div:last-child]:hidden"
                         >
                             <Link href={dashboard()} prefetch>
                                 <AppLogo />

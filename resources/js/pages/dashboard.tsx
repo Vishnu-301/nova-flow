@@ -20,6 +20,7 @@ function DonutChart() {
                 const gap = circumference - dash;
                 const currentOffset = offset;
                 offset += dash;
+
                 return (
                     <circle
                         key={i}
@@ -85,6 +86,7 @@ function GrowthChart() {
         .map((p, i) => {
             const x = i * stepX;
             const y = h - (p / maxY) * (h - 10);
+            
             return `${i === 0 ? 'M' : 'L'}${x},${y}`;
         })
         .join(' ');
