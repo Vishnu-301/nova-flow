@@ -15,8 +15,13 @@ class Category extends Model
     use HasFactory;
 
     // products can have many categories
-    public function product(): BelongsToMany
+    public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'category_products');
+    }
+
+    public function product(): BelongsToMany
+    {
+        return $this->products();
     }
 }

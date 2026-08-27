@@ -1,5 +1,6 @@
 import { Head } from '@inertiajs/react';
 import { dashboard } from '@/routes';
+import { Link } from '@inertiajs/react';
 
 /* ─── Donut chart SVG (pure CSS/SVG, no libraries) ─── */
 function DonutChart() {
@@ -107,29 +108,21 @@ function GrowthChart() {
     );
 }
 
-/* ─── Dashboard page ─── */
-export default function Dashboard() {
+// products, categories, users - passed from controller
+/** @type {{products: number, categories: {name: string, products_count: number}[], users: {name: string}}} */
+export default function Dashboard({products, categories, users}: any) {
     const stats = [
-        { label: 'Total Products', value: '40' },
+        { label: 'Total Products', value: products },
         { label: 'Total Revenue', value: '₦40,000' },
         { label: 'Total Links', value: '4' },
         { label: 'Total Link Clicks', value: '20' },
-        { label: 'Total Categories', value: '4' },
+        { label: 'Total Categories', value: categories.length },
     ];
 
     const donutLegend = [
         { label: 'Phone accessories', pct: '76%', color: '#6c5ce7' },
         { label: 'Snacks', pct: '13%', color: '#2dd4bf' },
         { label: 'Clothing', pct: '11%', color: '#ffb545' },
-    ];
-
-    const categories = [
-        { name: 'Phone accessories', count: 14 },
-        { name: 'Snacks', count: 9 },
-        { name: 'Clothing', count: 8 },
-        { name: 'Foot wears', count: 5 },
-        { name: 'Services', count: 3 },
-        { name: 'Hair accessories', count: 1 },
     ];
 
     const chips = ['Wireless Earbuds Pro', 'Phone Ring Holder', 'Plantain Chips 200g'];
@@ -142,7 +135,7 @@ export default function Dashboard() {
                 <div className="flex overflow-hidden rounded-[var(--radius)] bg-white shadow-[0_8px_24px_rgba(20,18,27,.06)]">
                     <div className="hidden w-[220px] shrink-0 md:block">
                         <img
-                            src="/images/WhatsApp Image 2026-08-19 at 10.21.14(1).jpeg"
+                            src="/images/avatar.jpeg"
                             alt="Welcome"
                             className="h-full w-full object-cover"
                         />
@@ -152,7 +145,7 @@ export default function Dashboard() {
                             Good to see you
                         </span>
                         <h1 className="text-[28px] font-extrabold tracking-tight text-nf-text">
-                            Welcome Alex !
+                            Welcome {users.name} !
                         </h1>
                         <div className="flex flex-wrap gap-2">
                             {chips.map((chip) => (
@@ -164,9 +157,9 @@ export default function Dashboard() {
                                 </span>
                             ))}
                         </div>
-                        <button className="mt-1 w-fit rounded-xl bg-nf-ink px-5 py-2.5 text-[14px] font-semibold text-white transition-transform active:scale-[0.97] hover:bg-nf-dark-green">
+                        <Link href="/products" className="mt-1 w-fit rounded-xl bg-nf-ink px-5 py-2.5 text-[14px] font-semibold text-white transition-transform active:scale-[0.97] hover:bg-nf-dark-green">
                             Check products
-                        </button>
+                        </Link>
                     </div>
                 </div>
 
@@ -209,14 +202,14 @@ export default function Dashboard() {
                     <div className="flex flex-col gap-4 rounded-[var(--radius)] bg-white p-6 shadow-[0_8px_24px_rgba(20,18,27,.06)]">
                         <h2 className="text-[15.5px] font-bold tracking-tight">Active Categories</h2>
                         <ul className="flex flex-col gap-3">
-                            {categories.map((cat) => (
+                            {categories.map((cat: any) => (
                                 <li
-                                    key={cat.name}
+                                    key={cat.id}
                                     className="flex items-center justify-between rounded-xl bg-nf-bg px-3.5 py-2.5 text-[13.5px] font-medium"
                                 >
                                     <span>{cat.name}</span>
                                     <span className="rounded-full bg-nf-green-light px-2.5 py-0.5 text-[11.5px] font-bold text-nf-dark-green">
-                                        {cat.count}
+                                        {cat.products_count}
                                     </span>
                                 </li>
                             ))}

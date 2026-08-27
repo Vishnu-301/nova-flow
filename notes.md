@@ -3,7 +3,8 @@
 nova-flow design process began, color matched for only ligth mode.
 product model created
 
+- products table, categories table, m:m relationship created and seeded.
+- database seeded with test user and products
+
 # next
-- Overview dashboard to use user details from database diretly
-- display, creating, updating and deleting of products 
-- category table set up
+dashboard controller setup, test request for user data.
