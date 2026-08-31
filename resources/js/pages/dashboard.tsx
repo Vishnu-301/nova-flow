@@ -57,8 +57,14 @@ function WeeklyBarChart() {
     return (
         <div className="flex h-[160px] items-end justify-between gap-2">
             {days.map((day) => (
-                <div key={day.label} className="flex flex-1 flex-col items-center gap-2">
-                    <div className="flex w-full items-end justify-center gap-1" style={{ height: '140px' }}>
+                <div
+                    key={day.label}
+                    className="flex flex-1 flex-col items-center gap-2"
+                >
+                    <div
+                        className="flex w-full items-end justify-center gap-1"
+                        style={{ height: '140px' }}
+                    >
                         <div
                             className="w-3 rounded-t-md bg-nf-green-light"
                             style={{ height: `${day.h1}%` }}
@@ -68,7 +74,9 @@ function WeeklyBarChart() {
                             style={{ height: `${day.h2}%` }}
                         />
                     </div>
-                    <span className="text-[11.5px] font-semibold text-nf-muted">{day.label}</span>
+                    <span className="text-[11.5px] font-semibold text-nf-muted">
+                        {day.label}
+                    </span>
                 </div>
             ))}
         </div>
@@ -77,7 +85,9 @@ function WeeklyBarChart() {
 
 /* ─── Growth line chart (pure SVG) ─── */
 function GrowthChart() {
-    const points = [10, 30, 25, 35, 28, 40, 35, 45, 42, 50, 48, 55, 50, 60, 58, 65];
+    const points = [
+        10, 30, 25, 35, 28, 40, 35, 45, 42, 50, 48, 55, 50, 60, 58, 65,
+    ];
     const w = 400;
     const h = 120;
     const stepX = w / (points.length - 1);
@@ -87,7 +97,7 @@ function GrowthChart() {
         .map((p, i) => {
             const x = i * stepX;
             const y = h - (p / maxY) * (h - 10);
-            
+
             return `${i === 0 ? 'M' : 'L'}${x},${y}`;
         })
         .join(' ');
@@ -103,14 +113,21 @@ function GrowthChart() {
                 </linearGradient>
             </defs>
             <path d={areaD} fill="url(#growthGrad)" />
-            <path d={pathD} fill="none" stroke="#6c5ce7" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+            <path
+                d={pathD}
+                fill="none"
+                stroke="#6c5ce7"
+                strokeWidth="2.5"
+                strokeLinejoin="round"
+                strokeLinecap="round"
+            />
         </svg>
     );
 }
 
 // products, categories, users - passed from controller
 /** @type {{products: number, categories: {name: string, products_count: number}[], users: {name: string}}} */
-export default function Dashboard({products, categories, users}: any) {
+export default function Dashboard({ products, categories, users }: any) {
     const stats = [
         { label: 'Total Products', value: products },
         { label: 'Total Revenue', value: '₦40,000' },
@@ -125,7 +142,11 @@ export default function Dashboard({products, categories, users}: any) {
         { label: 'Clothing', pct: '11%', color: '#ffb545' },
     ];
 
-    const chips = ['Wireless Earbuds Pro', 'Phone Ring Holder', 'Plantain Chips 200g'];
+    const chips = [
+        'Wireless Earbuds Pro',
+        'Phone Ring Holder',
+        'Plantain Chips 200g',
+    ];
 
     return (
         <>
@@ -141,7 +162,7 @@ export default function Dashboard({products, categories, users}: any) {
                         />
                     </div>
                     <div className="flex flex-1 flex-col justify-center gap-3 p-7">
-                        <span className="text-[13px] font-semibold uppercase tracking-[0.06em] text-nf-dark-green">
+                        <span className="text-[13px] font-semibold tracking-[0.06em] text-nf-dark-green uppercase">
                             Good to see you
                         </span>
                         <h1 className="text-[28px] font-extrabold tracking-tight text-nf-text">
@@ -157,7 +178,10 @@ export default function Dashboard({products, categories, users}: any) {
                                 </span>
                             ))}
                         </div>
-                        <Link href="/products" className="mt-1 w-fit rounded-xl bg-nf-ink px-5 py-2.5 text-[14px] font-semibold text-white transition-transform active:scale-[0.97] hover:bg-nf-dark-green">
+                        <Link
+                            href="/products"
+                            className="mt-1 w-fit rounded-xl bg-nf-ink px-5 py-2.5 text-[14px] font-semibold text-white transition-transform hover:bg-nf-dark-green active:scale-[0.97]"
+                        >
                             Check products
                         </Link>
                     </div>
@@ -170,8 +194,12 @@ export default function Dashboard({products, categories, users}: any) {
                             key={s.label}
                             className="flex flex-col gap-1.5 rounded-[var(--radius)] bg-white p-5 shadow-[0_8px_24px_rgba(20,18,27,.06)]"
                         >
-                            <span className="text-[12.5px] font-medium text-nf-muted">{s.label}</span>
-                            <span className="text-[20px] font-extrabold tracking-tight text-nf-text">{s.value}</span>
+                            <span className="text-[12.5px] font-medium text-nf-muted">
+                                {s.label}
+                            </span>
+                            <span className="text-[20px] font-extrabold tracking-tight text-nf-text">
+                                {s.value}
+                            </span>
                         </div>
                     ))}
                 </div>
@@ -180,18 +208,27 @@ export default function Dashboard({products, categories, users}: any) {
                 <div className="grid gap-5 md:grid-cols-2">
                     {/* Best Performing Products */}
                     <div className="flex flex-col gap-4 rounded-[var(--radius)] bg-white p-6 shadow-[0_8px_24px_rgba(20,18,27,.06)]">
-                        <h2 className="text-[15.5px] font-bold tracking-tight">Best Performing Products</h2>
+                        <h2 className="text-[15.5px] font-bold tracking-tight">
+                            Best Performing Products
+                        </h2>
                         <div className="flex items-center gap-6">
                             <DonutChart />
                             <ul className="flex flex-1 flex-col gap-2.5">
                                 {donutLegend.map((item) => (
-                                    <li key={item.label} className="flex items-center gap-2.5 text-[13.5px]">
+                                    <li
+                                        key={item.label}
+                                        className="flex items-center gap-2.5 text-[13.5px]"
+                                    >
                                         <span
                                             className="inline-block h-[9px] w-[9px] shrink-0 rounded-full"
                                             style={{ background: item.color }}
                                         />
-                                        <span className="flex-1">{item.label}</span>
-                                        <b className="font-extrabold">{item.pct}</b>
+                                        <span className="flex-1">
+                                            {item.label}
+                                        </span>
+                                        <b className="font-extrabold">
+                                            {item.pct}
+                                        </b>
                                     </li>
                                 ))}
                             </ul>
@@ -200,7 +237,9 @@ export default function Dashboard({products, categories, users}: any) {
 
                     {/* Active Categories */}
                     <div className="flex flex-col gap-4 rounded-[var(--radius)] bg-white p-6 shadow-[0_8px_24px_rgba(20,18,27,.06)]">
-                        <h2 className="text-[15.5px] font-bold tracking-tight">Active Categories</h2>
+                        <h2 className="text-[15.5px] font-bold tracking-tight">
+                            Active Categories
+                        </h2>
                         <ul className="flex flex-col gap-3">
                             {categories.map((cat: any) => (
                                 <li
@@ -221,16 +260,21 @@ export default function Dashboard({products, categories, users}: any) {
                 <div className="grid gap-5 md:grid-cols-2">
                     {/* Weekly Performance */}
                     <div className="flex flex-col gap-4 rounded-[var(--radius)] bg-white p-6 shadow-[0_8px_24px_rgba(20,18,27,.06)]">
-                        <h2 className="text-[15.5px] font-bold tracking-tight">Weekly Performance</h2>
+                        <h2 className="text-[15.5px] font-bold tracking-tight">
+                            Weekly Performance
+                        </h2>
                         <WeeklyBarChart />
                     </div>
 
                     {/* Audience Growth */}
                     <div className="flex flex-col gap-4 rounded-[var(--radius)] bg-white p-6 shadow-[0_8px_24px_rgba(20,18,27,.06)]">
-                        <h2 className="text-[15.5px] font-bold tracking-tight">Audience Growth</h2>
+                        <h2 className="text-[15.5px] font-bold tracking-tight">
+                            Audience Growth
+                        </h2>
                         <GrowthChart />
                         <p className="text-[12.5px] leading-relaxed text-nf-muted">
-                            Total number of people who have visited your inventory link will appear here
+                            Total number of people who have visited your
+                            inventory link will appear here
                         </p>
                     </div>
                 </div>

@@ -18,7 +18,7 @@ import {
     SidebarMenuItem,
     SidebarTrigger,
 } from '@/components/ui/sidebar';
-import { dashboard, links, products } from '@/routes';
+import { dashboard, links } from '@/routes';
 import { edit as editProfile } from '@/routes/profile';
 import type { NavItem } from '@/types';
 
@@ -35,7 +35,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Products',
-        href: products(),
+        href: '/products',
         icon: BoxesIcon,
     },
     {

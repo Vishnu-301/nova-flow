@@ -8,3 +8,5 @@ product model created
 
 # next
 dashboard controller setup, test request for user data.
+- integrate charts for user data, products data, categories data.
+- work on products folder{create products, edit products, store products, update products, delete products}

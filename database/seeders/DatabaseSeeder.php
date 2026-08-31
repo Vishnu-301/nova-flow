@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
 
         User::factory(10)->create();
         Product::factory(10)->create();
-        Category::factory(10)->create();
+        Category::factory(4)->create();
 
         // create test user + real products owned by them
         $testUser = User::factory()->create([
