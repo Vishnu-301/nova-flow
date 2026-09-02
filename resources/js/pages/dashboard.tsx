@@ -125,9 +125,29 @@ function GrowthChart() {
     );
 }
 
-// products, categories, users - passed from controller
-/** @type {{products: number, categories: {name: string, products_count: number}[], users: {name: string}}} */
-export default function Dashboard({ products, categories, users }: any) {
+interface CategoryItem {
+    id: number;
+    name: string;
+    products_count: number;
+}
+
+interface UserItem {
+    id: number;
+    name: string;
+    email: string;
+}
+
+export default function Dashboard({
+    products = 0,
+    categories = [],
+    users,
+    userProducts = [],
+}: {
+    products: number;
+    categories: CategoryItem[];
+    users: UserItem;
+    userProducts?: string[];
+}) {
     const stats = [
         { label: 'Total Products', value: products },
         { label: 'Total Revenue', value: '₦40,000' },
@@ -142,11 +162,9 @@ export default function Dashboard({ products, categories, users }: any) {
         { label: 'Clothing', pct: '11%', color: '#ffb545' },
     ];
 
-    const chips = [
-        'Wireless Earbuds Pro',
-        'Phone Ring Holder',
-        'Plantain Chips 200g',
-    ];
+    const displayChips = userProducts.length > 0
+        ? userProducts
+        : ['No products yet'];
 
     return (
         <>
@@ -166,10 +184,10 @@ export default function Dashboard({ products, categories, users }: any) {
                             Good to see you
                         </span>
                         <h1 className="text-[28px] font-extrabold tracking-tight text-nf-text">
-                            Welcome {users.name} !
+                            Welcome {users?.name ?? 'User'}
                         </h1>
                         <div className="flex flex-wrap gap-2">
-                            {chips.map((chip) => (
+                            {displayChips.map((chip) => (
                                 <span
                                     key={chip}
                                     className="rounded-full bg-nf-green-light px-3 py-1.5 text-[12.5px] font-semibold text-nf-dark-green"

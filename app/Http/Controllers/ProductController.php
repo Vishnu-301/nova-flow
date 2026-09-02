@@ -18,13 +18,18 @@ class ProductController extends Controller
      */
     public function index()
     {
+        $userId = auth()->id();
+
         $products = Product::query()
-            ->where('user_id', auth()->id())
+            ->where('user_id', $userId)
             ->with('categories')
             ->latest()
             ->get();
 
         $categories = Category::query()
+            ->whereHas('products', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
             ->orderBy('name')
             ->get(['id', 'name']);
 
@@ -39,8 +44,13 @@ class ProductController extends Controller
      */
     public function create()
     {
+        $userId = auth()->id();
+
         return Inertia::render('products/create', [
             'categories' => Category::query()
+                ->whereHas('products', function ($query) use ($userId) {
+                    $query->where('user_id', $userId);
+                })
                 ->orderBy('name')
                 ->get(['id', 'name']),
         ]);
@@ -129,8 +139,13 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Product $product): RedirectResponse
     {
-        //
+        abort_unless($product->user_id === auth()->id(), 403);
+
+        $product->categories()->detach();
+        $product->delete();
+
+        return to_route('products.index');
     }
 }

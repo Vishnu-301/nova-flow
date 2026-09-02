@@ -4,21 +4,39 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\User;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
-        $products = Product::count();
-        $categories = Category::withCount('products')->get();
-        $users = User::findOrFail(auth()->id());
+        $user = auth()->user();
+
+        $productsCount = Product::query()
+            ->where('user_id', $user->id)
+            ->count();
+
+        $categories = Category::query()
+            ->whereHas('products', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->withCount(['products' => function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            }])
+            ->get();
+
+        $userProducts = Product::query()
+            ->where('user_id', $user->id)
+            ->latest()
+            ->take(3)
+            ->pluck('name');
 
         return Inertia::render('dashboard', [
-            'products' => $products,
+            'products' => $productsCount,
             'categories' => $categories,
-            'users' => $users,
+            'users' => $user,
+            'userProducts' => $userProducts,
         ]);
     }
 }

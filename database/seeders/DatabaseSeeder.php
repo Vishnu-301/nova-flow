@@ -9,8 +9,6 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Schema;
 
-// use Illuminate\Support\Facades\DB;
-
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
@@ -20,19 +18,40 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // trauncate database on seed
+        // truncate database on seed
         Schema::disableForeignKeyConstraints();
         User::truncate();
         Product::truncate();
         Category::truncate();
         Schema::enableForeignKeyConstraints();
 
-        $testUser = User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@test.com',
-            'password' => bcrypt('12345678'),
-        ]);
+        $usersToSeed = [
+            [
+                'name' => 'Test User',
+                'email' => 'test@test.com',
+            ],
+            [
+                'name' => 'Vishnu',
+                'email' => 'vishnu@test.com',
+            ],
+        ];
 
+        foreach ($usersToSeed as $userData) {
+            $user = User::factory()->create([
+                'name' => $userData['name'],
+                'email' => $userData['email'],
+                'password' => bcrypt('12345678'),
+            ]);
+
+            $this->seedProductsAndCategoriesForUser($user);
+        }
+    }
+
+    /**
+     * Create categories and products (with pivot attachments) for a given user.
+     */
+    private function seedProductsAndCategoriesForUser(User $user): void
+    {
         $data = require database_path('data/products_and_categories.php');
 
         $createdCategories = [];
@@ -44,7 +63,7 @@ class DatabaseSeeder extends Seeder
             $categorySlugs = $prodData['category_slugs'] ?? [];
             unset($prodData['category_slugs']);
 
-            $product = $testUser->product()->create($prodData);
+            $product = $user->product()->create($prodData);
 
             $catIds = array_filter(array_map(
                 fn (string $slug) => $createdCategories[$slug]->id ?? null,
