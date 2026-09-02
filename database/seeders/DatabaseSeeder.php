@@ -27,28 +27,31 @@ class DatabaseSeeder extends Seeder
         Category::truncate();
         Schema::enableForeignKeyConstraints();
 
-        User::factory(10)->create();
-        Product::factory(10)->create();
-        Category::factory(4)->create();
-
-        // create test user + real products owned by them
         $testUser = User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@test.com',
-            'password' => 12345678,
+            'password' => bcrypt('12345678'),
         ]);
 
-        $newProducts = $testUser->product()->createMany(
-            Product::factory()->count(10)->make()->toArray()
-        );
-        // $newProducts is now a Collection of persisted Product models with real IDs
+        $data = require database_path('data/products_and_categories.php');
 
-        // create test category
-        $testCategory = Category::factory()->create([
-            'name' => 'Test Category',
-        ]);
+        $createdCategories = [];
+        foreach ($data['categories'] as $catData) {
+            $createdCategories[$catData['slug']] = Category::create($catData);
+        }
 
-        // attach the actual persisted products (or their IDs) to the category
-        $testCategory->product()->attach($newProducts);
+        foreach ($data['products'] as $prodData) {
+            $categorySlugs = $prodData['category_slugs'] ?? [];
+            unset($prodData['category_slugs']);
+
+            $product = $testUser->product()->create($prodData);
+
+            $catIds = array_filter(array_map(
+                fn (string $slug) => $createdCategories[$slug]->id ?? null,
+                $categorySlugs
+            ));
+
+            $product->categories()->attach($catIds);
+        }
     }
 }

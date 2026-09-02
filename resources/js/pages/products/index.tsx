@@ -8,9 +8,10 @@ import {
     Image as ImageIcon,
     AlertCircle,
     X,
+    Pencil,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { create as productsCreate } from '@/routes/products';
+import { create as productsCreate, edit as productsEdit } from '@/routes/products';
 
 interface CategoryProps {
     id: number;
@@ -258,6 +259,16 @@ export default function Products({
                                                     {product.stock_quantity} in stock
                                                 </span>
                                             )}
+                                        </div>
+
+                                        {/* Edit Product Button */}
+                                        <div className="mt-3 pt-3 border-t border-nf-line/40">
+                                            <Link
+                                                href={productsEdit(product.id)}
+                                                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-nf-bg px-4 py-2.5 text-xs font-extrabold text-nf-text border border-nf-line/80 hover:bg-nf-ink hover:text-white hover:border-transparent transition-all shadow-xs"
+                                            >
+                                                <Pencil className="size-3.5" /> Edit product
+                                            </Link>
                                         </div>
                                     </div>
                                 </article>

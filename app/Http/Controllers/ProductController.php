@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
@@ -82,17 +83,47 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Product $product)
     {
-        //
+        abort_unless($product->user_id === auth()->id(), 403);
+
+        return Inertia::render('products/edit', [
+            'product' => $product->load('categories'),
+            'categories' => Category::query()
+                ->orderBy('name')
+                ->get(['id', 'name']),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateProductRequest $request, Product $product): RedirectResponse
     {
-        //
+        abort_unless($product->user_id === auth()->id(), 403);
+
+        $validated = $request->validated();
+
+        $data = Arr::except($validated, ['category_ids', 'image', 'new_category']);
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        $product->update($data);
+
+        $categoryIds = $validated['category_ids'] ?? [];
+
+        if (filled($validated['new_category'] ?? null)) {
+            $categoryIds[] = Category::query()->firstOrCreate(
+                ['name' => $validated['new_category']],
+                ['slug' => Str::slug($validated['new_category'])],
+            )->id;
+        }
+
+        $product->categories()->sync($categoryIds);
+
+        return to_route('products.index');
     }
 
     /**

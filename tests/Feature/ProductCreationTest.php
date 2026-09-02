@@ -45,7 +45,7 @@ test('authenticated users can create a product and add a category', function () 
     $this->assertDatabaseHas('categories', ['name' => 'Audio', 'slug' => 'audio']);
 
     $product = $user->product()->where('name', 'Wireless Earbuds')->firstOrFail();
-    Storage::disk('public')->assertExists($product->image);
+    Storage::disk('public')->assertExists($product->getRawOriginal('image'));
     expect($product->categories()->pluck('name')->all())
         ->toEqualCanonicalizing(['Accessories', 'Audio']);
 });

@@ -1,0 +1,126 @@
+export interface CategoryData {
+    name: string;
+    slug: string;
+}
+
+export interface ProductData {
+    name: string;
+    description: string;
+    image: string;
+    price: number;
+    discount: number;
+    stock_quantity: number;
+    category_slugs: string[];
+}
+
+export const CATEGORIES_TEST_DATA: CategoryData[] = [
+    {
+        name: 'Electronics & Audio',
+        slug: 'electronics-audio',
+    },
+    {
+        name: 'Footwear & Sneakers',
+        slug: 'footwear-sneakers',
+    },
+    {
+        name: 'Minimalist Apparel',
+        slug: 'minimalist-apparel',
+    },
+    {
+        name: 'Modern Accessories',
+        slug: 'modern-accessories',
+    },
+];
+
+export const PRODUCTS_TEST_DATA: ProductData[] = [
+    {
+        name: 'Nova Studio Wireless Headphones',
+        description: 'Premium noise-canceling wireless headphones featuring spatial audio technology and up to 30 hours of battery life.',
+        image: '/images/nova-flow/haupes-I7iJOE4fsYo-unsplash.jpg',
+        price: 249.99,
+        discount: 30.00,
+        stock_quantity: 45,
+        category_slugs: ['electronics-audio'],
+    },
+    {
+        name: 'Urban Motion Street Sneakers',
+        description: 'Ergonomic street sneakers crafted with breathable knit mesh and impact-absorbing sole cushioning.',
+        image: '/images/nova-flow/i-m-zion-YZHHrVhyc9I-unsplash.jpg',
+        price: 135.00,
+        discount: 15.00,
+        stock_quantity: 28,
+        category_slugs: ['footwear-sneakers'],
+    },
+    {
+        name: 'Nova Essential Heavyweight Hoodie',
+        description: 'Relaxed-fit hoodie made from 450gsm organic French terry cotton with subtle embroidered detailing.',
+        image: '/images/nova-flow/lars-kaizer-WGiKqDlVUCI-unsplash.jpg',
+        price: 89.00,
+        discount: 0.00,
+        stock_quantity: 60,
+        category_slugs: ['minimalist-apparel'],
+    },
+    {
+        name: 'Aura Architectural Sunglasses',
+        description: 'Handcrafted matte-finish titanium sunglasses equipped with 100% UV polarized anti-glare lenses.',
+        image: '/images/nova-flow/oriol-pascual-4a717idftws-unsplash.jpg',
+        price: 159.00,
+        discount: 20.00,
+        stock_quantity: 15,
+        category_slugs: ['modern-accessories'],
+    },
+    {
+        name: 'Apex Sound Pro Portable Speaker',
+        description: 'Rugged waterproof Bluetooth speaker delivering 360-degree immersive sound and dynamic ambient light ring.',
+        image: '/images/nova-flow/haupes-I7iJOE4fsYo-unsplash.jpg',
+        price: 119.50,
+        discount: 10.00,
+        stock_quantity: 32,
+        category_slugs: ['electronics-audio'],
+    },
+    {
+        name: 'Velocity Runner Performance Shoes',
+        description: 'Lightweight long-distance running shoes featuring energy-returning foam midsoles and high-traction rubber outsoles.',
+        image: '/images/nova-flow/i-m-zion-YZHHrVhyc9I-unsplash.jpg',
+        price: 169.99,
+        discount: 25.00,
+        stock_quantity: 40,
+        category_slugs: ['footwear-sneakers'],
+    },
+    {
+        name: 'Minimalist Wool Utility Overshirt',
+        description: 'Structured wool-blend shirt jacket designed with dual chest flap pockets and hidden snap fasteners.',
+        image: '/images/nova-flow/lars-kaizer-WGiKqDlVUCI-unsplash.jpg',
+        price: 110.00,
+        discount: 12.00,
+        stock_quantity: 20,
+        category_slugs: ['minimalist-apparel'],
+    },
+    {
+        name: 'Nova Slim Italian Leather Cardholder',
+        description: 'Slimline vegetable-tanned Italian leather wallet featuring RFID blocking shield and room for 8 cards.',
+        image: '/images/nova-flow/oriol-pascual-4a717idftws-unsplash.jpg',
+        price: 49.00,
+        discount: 5.00,
+        stock_quantity: 85,
+        category_slugs: ['modern-accessories'],
+    },
+    {
+        name: 'Pulse True Wireless ANC Earbuds',
+        description: 'Compact in-ear wireless earbuds with custom dynamic drivers, transparency mode, and fast Qi wireless charging.',
+        image: '/images/nova-flow/haupes-I7iJOE4fsYo-unsplash.jpg',
+        price: 149.00,
+        discount: 20.00,
+        stock_quantity: 50,
+        category_slugs: ['electronics-audio'],
+    },
+    {
+        name: 'Heritage Waxed Canvas Backpack',
+        description: 'Durable water-resistant canvas backpack equipped with top-grain leather straps and dedicated 16-inch laptop pocket.',
+        image: '/images/nova-flow/i-m-zion-YZHHrVhyc9I-unsplash.jpg',
+        price: 175.00,
+        discount: 15.00,
+        stock_quantity: 18,
+        category_slugs: ['modern-accessories'],
+    },
+];
