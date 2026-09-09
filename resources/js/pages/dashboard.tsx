@@ -206,7 +206,7 @@ export default function Dashboard({
                 </div>
 
                 {/* ── Stat grid ── */}
-                <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
+                <div className="grid grid-cols-2 g      $categories = Category::where('user_id', $user)->get();ap-4 md:grid-cols-5">
                     {stats.map((s) => (
                         <div
                             key={s.label}

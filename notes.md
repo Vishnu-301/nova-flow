@@ -17,6 +17,9 @@ dashboard controller setup, test request for user data.
 - UI for links page alrady exists, adjustment and corrections to be made
 - links can be adjusted to hold/display a specific category/inventory
 
+### Ui for links create page
+
+
 ## BUG TO FIX
 - when adding products and category for a user, other available users can see them and add to their store.
     it might be from the data file i imported but it is not meant ot be evene with deo data file imported

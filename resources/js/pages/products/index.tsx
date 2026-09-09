@@ -378,4 +378,4 @@ export default function Products({
     );
 }
 
-Products.layout = { breadcrumbs: [{ title: 'Products', href: '/products' }] };
+Products.layout = { breadcrumbs: [{ title: 'Products', href: 'products' }] };

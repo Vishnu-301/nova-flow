@@ -61,4 +61,9 @@ class User extends Authenticatable implements PasskeyUser
     {
         return $this->hasMany(Category::class);
     }
+
+    public function link(): HasMany
+    {
+        return $this->hasMany(Link::class);
+    }
 }
