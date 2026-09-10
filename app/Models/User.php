@@ -15,7 +15,6 @@ use Laravel\Fortify\Contracts\PasskeyUser;
 use Laravel\Fortify\PasskeyAuthenticatable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
-
 /**
  * @property int $id
  * @property string $name
@@ -56,13 +55,18 @@ class User extends Authenticatable implements PasskeyUser
         return $this->hasMany(Product::class);
     }
 
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class);
+    }
+
     // user can have many categories
     public function category(): HasMany
     {
         return $this->hasMany(Category::class);
     }
 
-    public function link(): HasMany
+    public function links(): HasMany
     {
         return $this->hasMany(Link::class);
     }

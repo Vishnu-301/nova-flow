@@ -10,10 +10,13 @@ Route::inertia('/', 'welcome')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('links', LinksController::class);
-    // Route::inertia('links', 'links')->name('links');
+    Route::resource('links', LinksController::class)->except(['show']);
     Route::resource('products', ProductController::class);
     Route::resource('categories', CategoryController::class)->only(['destroy']);
 });
 
+Route::get('/links/{link}', [LinksController::class, 'show'])->name('links.show');
+
 require __DIR__.'/settings.php';
+
+Route::get('/{link:slug}', [LinksController::class, 'show'])->name('links.view');

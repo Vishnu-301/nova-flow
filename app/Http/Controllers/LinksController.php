@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreLinksRequest;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Illuminate\Support\Str;
-use App\Models\Link;
 use App\Models\Category;
-use App\Models\Product;
-use App\Models\User;
+use App\Models\Link;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use Inertia\Inertia;
 
 class LinksController extends Controller
 {
@@ -35,7 +34,8 @@ class LinksController extends Controller
             ->map(fn (Link $link) => [
                 'id' => $link->id,
                 'name' => Str::headline($link->slug),
-                'directory' => url('/' . $link->slug),
+                'slug' => $link->slug,
+                'directory' => url('/'.$link->slug),
             ])
             ->all();
 
@@ -60,16 +60,42 @@ class LinksController extends Controller
     public function store(StoreLinksRequest $request): RedirectResponse
     {
         $validated = $request->validated();
+        $user = $request->user();
 
-        $link = $request->user()->links()->create([
-            'slug' => Str::slug(implode('-', $request->category_names)) . '-' . Str::random(4),
-            'user_id' => auth()->id(),
+        $categoryIds = $validated['category_ids'];
+
+        if (! empty($validated['name'])) {
+            $baseSlug = Str::slug($validated['name']);
+        } else {
+            $categoryNames = Category::whereIn('id', $categoryIds)->pluck('name')->all();
+            $baseSlug = Str::slug(implode('-', $categoryNames));
+        }
+
+        if (empty($baseSlug)) {
+            $baseSlug = 'link';
+        }
+
+        $slug = $baseSlug;
+        if (Link::where('slug', $slug)->exists()) {
+            $field = ! empty($validated['name']) ? 'name' : 'category_ids';
+            $message = ! empty($validated['name'])
+                ? 'Link name not available. Please enter a different name.'
+                : 'A link for this category combination already exists. Please enter a custom link name.';
+
+            throw ValidationException::withMessages([
+                $field => $message,
+                'slug' => 'A link with this name already exists.',
+            ]);
+        }
+
+        $link = $user->links()->create([
+            'slug' => $slug,
+            'user_id' => $user->id,
         ]);
 
+        $link->categories()->attach($categoryIds);
 
-        $link->categories()->attach($request->category_ids);
-
-        return redirect("/{$link->slug}");
+        return redirect()->route('links.index');
     }
 
     /**
@@ -77,10 +103,16 @@ class LinksController extends Controller
      */
     public function show(Link $link)
     {
-        return Inertia::render('Links/index', [
-            'link' => $link->only('id', 'slug'),
+        $link->load('categories');
+
+        return Inertia::render('links/show', [
+            'link' => [
+                'id' => $link->id,
+                'name' => Str::headline($link->slug),
+                'slug' => $link->slug,
+            ],
             'categories' => $link->categories,
-            'products' => $link->products()->with('categories')->paginate(20),
+            'products' => $link->products()->with('categories')->latest()->paginate(20),
         ]);
     }
 
@@ -103,5 +135,13 @@ class LinksController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Link $link) {}
+    public function destroy(Link $link): RedirectResponse
+    {
+        abort_unless($link->user_id === auth()->id(), 403);
+
+        $link->categories()->detach();
+        $link->delete();
+
+        return redirect()->route('links.index');
+    }
 }

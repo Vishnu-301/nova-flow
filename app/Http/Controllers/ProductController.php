@@ -23,7 +23,7 @@ class ProductController extends Controller
         $products = Product::query()
             ->where('user_id', $userId)
             ->with('categories')
-            ->latest()import { store } from '@/actions/App/Http/Controllers/LinksController';
+            ->latest()
             ->get();
 
         $categories = Category::query()

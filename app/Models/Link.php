@@ -1,14 +1,18 @@
 <?php
 
 namespace App\Models;
-use App\Models\Category;
-use App\Models\Product;
+
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable('slug', 'user_id')]
 class Link extends Model
 {
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function categories()
     {
         return $this->belongsToMany(
@@ -19,12 +23,14 @@ class Link extends Model
         );
     }
 
-    // The actual product query — always live, never stale
+    // The actual product query — always live, never stale, scoped to link owner and selected categories
     public function products()
     {
-        return Product::whereHas('categories', function ($q) {
-            $q->whereIn('categories.id', $this->categories()->pluck('categories.id'));
-        });
+        return Product::query()
+            ->when($this->user_id, fn ($query) => $query->where('user_id', $this->user_id))
+            ->whereHas('categories', function ($q) {
+                $q->whereIn('categories.id', $this->categories()->pluck('categories.id'));
+            });
     }
 
     public function user()

@@ -23,7 +23,23 @@ class StoreLinksRequest extends FormRequest
     public function rules(): array
     {
         return [
-           "slug" => ["required", "string", "max:255", "unique:links,slug"],
+            'name' => ['nullable', 'string', 'max:255'],
+            'category_ids' => ['required', 'array', 'min:1'],
+            'category_ids.*' => ['integer', 'exists:categories,id'],
+            'slug' => ['nullable', 'string', 'max:255', 'unique:links,slug'],
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'category_ids.required' => 'Please select at least one category.',
+            'category_ids.min' => 'Please select at least one category.',
         ];
     }
 }
