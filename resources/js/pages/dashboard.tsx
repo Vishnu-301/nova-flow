@@ -1,6 +1,6 @@
 import { Head } from '@inertiajs/react';
-import { dashboard } from '@/routes';
 import { Link } from '@inertiajs/react';
+import { dashboard } from '@/routes';
 
 /* ─── Donut chart SVG (pure CSS/SVG, no libraries) ─── */
 function DonutChart() {
@@ -142,17 +142,19 @@ export default function Dashboard({
     categories = [],
     users,
     userProducts = [],
+    links,
 }: {
     products: number;
     categories: CategoryItem[];
     users: UserItem;
     userProducts?: string[];
+    links: any;
 }) {
     const stats = [
         { label: 'Total Products', value: products },
         { label: 'Total Revenue', value: '₦40,000' },
-        { label: 'Total Links', value: '4' },
-        { label: 'Total Link Clicks', value: '20' },
+        { label: 'Total Links', value: links.count },
+        { label: 'Total Link Clicks', value: links.clicks },
         { label: 'Total Categories', value: categories.length },
     ];
 

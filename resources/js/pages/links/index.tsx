@@ -39,6 +39,7 @@ export default function Links({ categories = [], links = [] }: LinksProps) {
         useForm({
             name: '',
             category_ids: [] as number[],
+            slug: '',
         });
 
     function toggleCategory(categoryId: number) {

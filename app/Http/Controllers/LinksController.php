@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Link;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -18,7 +19,7 @@ class LinksController extends Controller
      */
     public function index()
     {
-        $userId = auth()->id();
+        $userId = Auth::id();
 
         $categories = Category::query()
             ->whereHas('products', function ($query) use ($userId) {
@@ -103,6 +104,8 @@ class LinksController extends Controller
      */
     public function show(Link $link)
     {
+        $link->increment('clicks');
+
         $link->load('categories');
 
         return Inertia::render('links/show', [
@@ -137,7 +140,7 @@ class LinksController extends Controller
      */
     public function destroy(Link $link): RedirectResponse
     {
-        abort_unless($link->user_id === auth()->id(), 403);
+        abort_unless($link->user_id === Auth::id(), 403);
 
         $link->categories()->detach();
         $link->delete();

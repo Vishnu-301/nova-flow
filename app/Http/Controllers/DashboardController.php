@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Link;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -11,11 +13,19 @@ class DashboardController extends Controller
 {
     public function index(): Response
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         $productsCount = Product::query()
             ->where('user_id', $user->id)
             ->count();
+
+        $linksCount = Link::query()
+            ->where('user_id', $user->id)
+            ->count();
+
+        $linksClickCount = Link::query()
+            ->where('user_id', $user->id)
+            ->sum('clicks');
 
         $categories = Category::query()
             ->whereHas('products', function ($query) use ($user) {
@@ -37,6 +47,10 @@ class DashboardController extends Controller
             'categories' => $categories,
             'users' => $user,
             'userProducts' => $userProducts,
+            'links' => [
+                'count' => $linksCount,
+                'clicks' => $linksClickCount,
+            ],
         ]);
     }
 }

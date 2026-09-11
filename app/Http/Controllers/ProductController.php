@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -18,7 +19,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $userId = auth()->id();
+        $userId = Auth::id();
 
         $products = Product::query()
             ->where('user_id', $userId)
@@ -44,7 +45,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $userId = auth()->id();
+        $userId = Auth::id();
 
         return Inertia::render('products/create', [
             'categories' => Category::query()
@@ -95,7 +96,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        abort_unless($product->user_id === auth()->id(), 403);
+        abort_unless($product->user_id === Auth::id(), 403);
 
         return Inertia::render('products/edit', [
             'product' => $product->load('categories'),
@@ -110,7 +111,7 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product): RedirectResponse
     {
-        abort_unless($product->user_id === auth()->id(), 403);
+        abort_unless($product->user_id === Auth::id(), 403);
 
         $validated = $request->validated();
 
@@ -141,7 +142,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product): RedirectResponse
     {
-        abort_unless($product->user_id === auth()->id(), 403);
+        abort_unless($product->user_id === Auth::id(), 403);
 
         $product->categories()->detach();
         $product->delete();
