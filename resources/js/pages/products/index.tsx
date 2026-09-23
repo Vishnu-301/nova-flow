@@ -72,6 +72,7 @@ export default function Products({
 
     const formatCurrency = (val: number | string) => {
         const num = typeof val === 'string' ? parseFloat(val) : val;
+
         return isNaN(num)
             ? '0.00'
             : num.toLocaleString('en-NG', {

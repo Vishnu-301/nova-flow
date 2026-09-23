@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable('slug', 'user_id')]
+#[Fillable('slug', 'user_id', 'clicks')]
 class Link extends Model
 {
     public function getRouteKeyName(): string

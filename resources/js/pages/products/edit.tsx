@@ -48,6 +48,7 @@ export default function EditProduct({ product, categories }: EditProductProps) {
 
     function handleImageChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const file = event.target.files?.[0];
+
         if (file) {
             setImageName(file.name);
             setImagePreview(URL.createObjectURL(file));
