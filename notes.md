@@ -23,7 +23,6 @@ dashboard controller setup, test request for user data.
 
 ## next
 
-* using rechart to implement charts for links, acitvity and audience growth via number of links clicked
 * update settings page to use lavarel's default settings and warning template
 * enable push notification 
   + use artisan command to generate notifications table 

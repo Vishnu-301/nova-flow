@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import { Palette, ShieldCheck, User } from 'lucide-react';
 import type { PropsWithChildren } from 'react';
 import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
@@ -14,17 +15,17 @@ const sidebarNavItems: NavItem[] = [
     {
         title: 'Profile',
         href: edit(),
-        icon: null,
+        icon: User,
     },
     {
         title: 'Security',
         href: editSecurity(),
-        icon: null,
+        icon: ShieldCheck,
     },
     {
         title: 'Appearance',
         href: editAppearance(),
-        icon: null,
+        icon: Palette,
     },
 ];
 
@@ -32,16 +33,16 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
     const { isCurrentOrParentUrl } = useCurrentUrl();
 
     return (
-        <div className="px-4 py-6">
+        <div className="flex flex-1 flex-col p-6 md:p-8">
             <Heading
                 title="Settings"
                 description="Manage your profile and account settings"
             />
 
             <div className="flex flex-col lg:flex-row lg:space-x-12">
-                <aside className="w-full max-w-xl lg:w-48">
+                <aside className="w-full max-w-xl lg:w-56">
                     <nav
-                        className="flex flex-col space-y-1 space-x-0"
+                        className="flex flex-col space-y-1.5 space-x-0"
                         aria-label="Settings"
                     >
                         {sidebarNavItems.map((item, index) => (
@@ -50,13 +51,14 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                                 size="sm"
                                 variant="ghost"
                                 asChild
-                                className={cn('w-full justify-start', {
-                                    'bg-muted': isCurrentOrParentUrl(item.href),
+                                className={cn('w-full justify-start gap-2.5 rounded-xl px-3.5 py-2.5 text-[13.5px] transition-colors', {
+                                    'bg-nf-green-light font-bold text-nf-dark-green': isCurrentOrParentUrl(item.href),
+                                    'text-nf-muted hover:bg-white hover:text-nf-text': !isCurrentOrParentUrl(item.href),
                                 })}
                             >
                                 <Link href={item.href}>
                                     {item.icon && (
-                                        <item.icon className="h-4 w-4" />
+                                        <item.icon className="h-4 w-4 shrink-0" />
                                     )}
                                     {item.title}
                                 </Link>
