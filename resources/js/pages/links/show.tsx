@@ -1,6 +1,5 @@
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import {
-    BoxesIcon,
     Image as ImageIcon,
     PackageSearch,
     Search,
@@ -9,7 +8,6 @@ import {
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import AppLogo from '@/components/app-logo';
-import { dashboard } from '@/routes';
 
 interface CategoryProps {
     id: number;
@@ -51,8 +49,6 @@ export default function ShowLink({
     categories = [],
     products,
 }: ShowLinkProps) {
-    const { auth } = usePage().props as { auth?: { user?: unknown } };
-
     const productList = useMemo(() => {
         if (Array.isArray(products)) {
             return products;
@@ -108,31 +104,17 @@ export default function ShowLink({
             <div className="min-h-screen bg-nf-bg text-nf-text">
                 {/* Public Header */}
                 <header className="sticky top-0 z-30 border-b border-nf-line/70 bg-white/95 backdrop-blur-md">
-                    <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-                        <div className="flex items-center gap-3">
-                            <AppLogo />
-                            <span className="hidden font-extrabold tracking-tight text-nf-ink sm:inline">
-                                {link.name}
-                            </span>
-                        </div>
-
-                        <div className="flex items-center gap-3">
-                            {auth?.user ? (
-                                <Link
-                                    href={dashboard()}
-                                    className="inline-flex items-center gap-2 rounded-xl border border-nf-line bg-white px-4 py-2 text-xs font-bold text-nf-text shadow-xs transition-colors hover:bg-nf-bg"
-                                >
-                                    <BoxesIcon className="size-4" />
-                                    Dashboard
-                                </Link>
-                            ) : null}
-                        </div>
+                    <div className="mx-auto flex max-w-7xl min-w-0 items-center gap-3 px-3 py-3 sm:px-6 sm:py-4 lg:px-8">
+                        <AppLogo />
+                        <span className="min-w-0 truncate font-extrabold tracking-tight text-nf-ink">
+                            {link.name}
+                        </span>
                     </div>
                 </header>
 
-                <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+                <main className="mx-auto max-w-7xl px-3 py-5 sm:px-6 sm:py-8 lg:px-8">
                     {/* Filter & Search Bar */}
-                    <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                    <div className="mb-6 flex min-w-0 flex-col gap-4 sm:mb-8 lg:flex-row lg:items-center lg:justify-between">
                         {/* Search Input */}
                         <div className="relative w-full max-w-full lg:max-w-md">
                             <Search className="pointer-events-none absolute inset-y-0 left-3.5 my-auto size-4 text-nf-muted" />
@@ -156,7 +138,7 @@ export default function ShowLink({
 
                         {/* Category Filter Pills if more than 1 category */}
                         {categories.length > 1 && (
-                            <div className="flex flex-wrap items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+                            <div className="flex min-w-0 flex-wrap items-center gap-2 pb-1 sm:pb-0">
                                 <button
                                     type="button"
                                     onClick={() => setSelectedCategoryId('all')}
@@ -197,7 +179,7 @@ export default function ShowLink({
 
                     {/* Products Grid */}
                     {filteredProducts.length > 0 ? (
-                        <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        <section className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 2xl:grid-cols-4">
                             {filteredProducts.map((product) => {
                                 const isImageFailed = failedImages[product.id];
                                 const hasValidImage = product.image && !isImageFailed;
@@ -209,7 +191,7 @@ export default function ShowLink({
                                 return (
                                     <article
                                         key={product.id}
-                                        className="group relative flex flex-col overflow-hidden rounded-[var(--radius)] border border-nf-line/50 bg-white shadow-[0_10px_24px_rgba(20,18,27,.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(20,18,27,.08)]"
+                                        className="group relative flex min-w-0 flex-col overflow-hidden rounded-[var(--radius)] border border-nf-line/50 bg-white shadow-[0_10px_24px_rgba(20,18,27,.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(20,18,27,.08)]"
                                     >
                                         {/* Product Image Container */}
                                         <div className="relative aspect-[4/3] w-full overflow-hidden bg-nf-green-light/40">
