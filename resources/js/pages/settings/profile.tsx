@@ -29,7 +29,7 @@ export default function Profile({
 
             <h1 className="sr-only">Profile settings</h1>
 
-            <div className="space-y-6">
+            <div className="space-y-6 rounded-2xl border border-nf-line bg-nf-card p-5 shadow-sm sm:p-7">
                 <Heading
                     variant="small"
                     title="Profile information"
@@ -50,7 +50,7 @@ export default function Profile({
 
                                 <Input
                                     id="name"
-                                    className="mt-1 block w-full rounded-xl border-nf-line bg-white px-3 text-nf-text"
+                                    className="mt-1 block w-full rounded-xl border-nf-line bg-nf-bg px-3 text-nf-text"
                                     defaultValue={auth.user.name}
                                     name="name"
                                     required
@@ -70,7 +70,7 @@ export default function Profile({
                                 <Input
                                     id="email"
                                     type="email"
-                                    className="mt-1 block w-full rounded-xl border-nf-line bg-white px-3 text-nf-text"
+                                    className="mt-1 block w-full rounded-xl border-nf-line bg-nf-bg px-3 text-nf-text"
                                     defaultValue={auth.user.email}
                                     name="email"
                                     required
@@ -123,14 +123,14 @@ export default function Profile({
                 </Form>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-5 rounded-2xl border border-nf-line bg-nf-card p-5 shadow-sm sm:p-7">
                 <Heading
                     variant="small"
                     title="Notifications"
                     description="Configure your email and app notifications"
                 />
 
-                <div className="space-y-4 rounded-xl border border-nf-line bg-white p-5 shadow-[0_4px_16px_rgba(20,18,27,.04)]">
+                <div className="space-y-4">
                     {[
                         ['New link clicks', true],
                         ['Weekly performance summary', true],
@@ -147,7 +147,7 @@ export default function Profile({
                             <button
                                 type="button"
                                 aria-label={`${label}: ${enabled ? 'enabled' : 'disabled'}`}
-                                className={`relative h-5 w-10 rounded-full transition-colors ${enabled ? 'bg-nf-green' : 'bg-[#e6e5ee]'}`}
+                                className={`relative h-5 w-10 rounded-full transition-colors ${enabled ? 'bg-nf-green-dark' : 'bg-nf-line'}`}
                             >
                                 <span
                                     className={`absolute top-1 size-3 rounded-full bg-white transition-all ${enabled ? 'left-6' : 'left-1'}`}

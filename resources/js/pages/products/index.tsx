@@ -12,7 +12,11 @@ import {
 import { useMemo, useState } from 'react';
 import { destroy as destroyCategory } from '@/actions/App/Http/Controllers/CategoryController';
 import { destroy as destroyProduct } from '@/actions/App/Http/Controllers/ProductController';
-import { create as productsCreate, edit as productsEdit } from '@/routes/products';
+import {
+    create as productsCreate,
+    edit as productsEdit,
+    index as productsIndex,
+} from '@/routes/products';
 
 interface CategoryProps {
     id: number;
@@ -44,9 +48,16 @@ export default function Products({
     const [failedImages, setFailedImages] = useState<Record<number, boolean>>(
         {},
     );
+    const [loadedImages, setLoadedImages] = useState<Record<number, boolean>>(
+        {},
+    );
 
     const handleImageError = (productId: number) => {
         setFailedImages((prev) => ({ ...prev, [productId]: true }));
+    };
+
+    const handleImageLoad = (productId: number) => {
+        setLoadedImages((prev) => ({ ...prev, [productId]: true }));
     };
 
     const filteredProducts = useMemo(() => {
@@ -209,6 +220,7 @@ export default function Products({
                         {filteredProducts.map((product) => {
                             const isImageFailed = failedImages[product.id];
                             const hasValidImage = product.image && !isImageFailed;
+                            const isImageLoading = hasValidImage && !loadedImages[product.id];
                             const isLowStock =
                                 product.stock_quantity > 0 &&
                                 product.stock_quantity <= 5;
@@ -221,16 +233,30 @@ export default function Products({
                                 >
                                     {/* Product Image Container */}
                                     <div className="relative aspect-[4/3] w-full overflow-hidden bg-nf-green-light/40">
-                                        {hasValidImage ? (
+                                        {hasValidImage && (
                                             <img
                                                 src={product.image!}
                                                 alt={product.name}
-                                                onError={() =>
-                                                    handleImageError(product.id)
-                                                }
-                                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                                loading="lazy"
+                                                onLoad={() => handleImageLoad(product.id)}
+                                                onError={() => handleImageError(product.id)}
+                                                style={{ opacity: loadedImages[product.id] ? 1 : 0 }}
+                                                className="h-full w-full object-cover transition-[opacity,transform] duration-500 group-hover:scale-105"
                                             />
-                                        ) : (
+                                        )}
+                                        {isImageLoading ? (
+                                            <div
+                                                role="status"
+                                                aria-label={`Loading ${product.name} image`}
+                                                className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-nf-green-light/60 to-emerald-100/40"
+                                            >
+                                                <img
+                                                    src="/images/novaflow-symbol.png"
+                                                    alt=""
+                                                    className="size-12 animate-pulse object-contain"
+                                                />
+                                            </div>
+                                        ) : !hasValidImage ? (
                                             <div className="flex h-full w-full flex-col items-center justify-center bg-linear-to-br from-nf-green-light/60 to-emerald-100/40 p-4 text-nf-dark-green">
                                                 <div className="flex size-14 items-center justify-center rounded-2xl bg-white text-nf-dark-green shadow-xs">
                                                     <ImageIcon className="size-7 opacity-75" />
@@ -239,7 +265,7 @@ export default function Products({
                                                     No image available
                                                 </span>
                                             </div>
-                                        )}
+                                        ) : null}
 
                                         {/* Status & Discount Overlay Badges */}
                                         <div className="absolute inset-x-3 top-3 flex items-center justify-between gap-2">
@@ -379,4 +405,4 @@ export default function Products({
     );
 }
 
-Products.layout = { breadcrumbs: [{ title: 'Products', href: 'products' }] };
+Products.layout = { breadcrumbs: [{ title: 'Products', href: productsIndex() }] };

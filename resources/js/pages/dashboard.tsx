@@ -50,6 +50,11 @@ interface UserItem {
     email: string;
 }
 
+interface StockLevelPoint {
+    name: string;
+    quantity: number;
+}
+
 interface AudienceGrowthPoint {
     period: string;
     clicks: number;
@@ -280,100 +285,56 @@ return null;
     );
 }
 
-/* ─── Weekly bar chart (Recharts) ─── */
-function WeeklyBarChart() {
-    const days = [
-        { label: 'M', views: 55, clicks: 40 },
-        { label: 'T', views: 45, clicks: 50 },
-        { label: 'W', views: 60, clicks: 55 },
-        { label: 'TH', views: 70, clicks: 60 },
-        { label: 'F', views: 50, clicks: 45 },
-        { label: 'SA', views: 65, clicks: 55 },
-        { label: 'SU', views: 80, clicks: 70 },
-    ];
+/* ─── Stock levels bar chart (Recharts) ─── */
+function StockLevelsBarChart({ stockLevels }: { stockLevels: StockLevelPoint[] }) {
+    if (stockLevels.length === 0) {
+        return (
+            <div className="flex h-[170px] items-center justify-center text-[13px] text-nf-muted">
+                No products to show yet.
+            </div>
+        );
+    }
 
     return (
-        <div className="h-[150px] w-full min-w-0">
-            <ResponsiveContainer
-                width="100%"
-                height="100%"
-                minWidth={0}
-                minHeight={0}
-            >
+        <div className="h-[190px] w-full min-w-0">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <BarChart
-                    data={days}
-                    barGap={4}
+                    data={stockLevels}
+                    layout="vertical"
                     barCategoryGap="22%"
-                    margin={{ top: 10, right: 10, left: -25, bottom: 0 }}
+                    margin={{ top: 4, right: 12, left: 0, bottom: 4 }}
                 >
-                    <CartesianGrid
-                        strokeDasharray="3 3"
-                        vertical={false}
-                        stroke="#eaeaf2"
-                    />
+                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#eaeaf2" />
                     <XAxis
-                        dataKey="label"
-                        tickLine={false}
-                        axisLine={false}
-                        tick={{
-                            fontSize: 11.5,
-                            fill: '#8a8798',
-                            fontWeight: 600,
-                        }}
-                        dy={6}
-                    />
-                    <YAxis
+                        type="number"
                         tickLine={false}
                         axisLine={false}
                         tick={{ fontSize: 11, fill: '#8a8798' }}
                         allowDecimals={false}
                     />
+                    <YAxis
+                        type="category"
+                        dataKey="name"
+                        width={88}
+                        tickLine={false}
+                        axisLine={false}
+                        tick={{ fontSize: 11, fill: '#8a8798' }}
+                        tickFormatter={(name: string) => name.length > 12 ? `${name.slice(0, 11)}…` : name}
+                    />
                     <Tooltip
-                        content={({ active, payload, label }) => {
-                            if (!active || !payload?.length) {
-return null;
-}
-
-                            return (
-                                <div className="rounded-lg border border-nf-line bg-white px-2.5 py-1.5 shadow-[0_4px_16px_rgba(20,18,27,0.08)]">
-                                    <p className="mb-1 text-[11.5px] font-semibold text-nf-muted">
-                                        Day: {label}
-                                    </p>
-                                    {payload.map((item: any, i: number) => (
-                                        <div
-                                            key={i}
-                                            className="flex items-center gap-2 text-[12px]"
-                                        >
-                                            <span
-                                                className="inline-block h-2 w-2 rounded-full"
-                                                style={{
-                                                    backgroundColor: item.color,
-                                                }}
-                                            />
-                                            <span className="text-nf-muted">
-                                                {item.name}:
-                                            </span>
-                                            <b className="font-bold text-nf-text">
-                                                {item.value}
-                                            </b>
-                                        </div>
-                                    ))}
-                                </div>
-                            );
+                        formatter={(value) => [`${value} in stock`, 'Stock']}
+                        contentStyle={{
+                            borderRadius: 8,
+                            border: '1px solid #eaeaf2',
+                            boxShadow: '0 4px 16px rgba(20,18,27,0.08)',
+                            fontSize: 12,
                         }}
                     />
                     <Bar
-                        dataKey="views"
-                        name="Views"
-                        fill="#e9fbe7"
-                        stroke="#bcf7b7"
-                        radius={[4, 4, 0, 0]}
-                    />
-                    <Bar
-                        dataKey="clicks"
-                        name="Clicks"
+                        dataKey="quantity"
+                        name="Stock"
                         fill="#2f6b3f"
-                        radius={[4, 4, 0, 0]}
+                        radius={[0, 4, 4, 0]}
                     />
                 </BarChart>
             </ResponsiveContainer>
@@ -502,6 +463,7 @@ export default function Dashboard({
     userProducts = [],
     links,
     audienceGrowth,
+    stockLevels = [],
 }: {
     products?: number;
     categories?: CategoryItem[];
@@ -509,13 +471,13 @@ export default function Dashboard({
     userProducts?: string[];
     links?: LinksData;
     audienceGrowth?: AudienceGrowthPoint[];
+    stockLevels?: StockLevelPoint[];
 }) {
     const totalClicks = links?.clicks ?? 0;
     const linksList = links?.items ?? [];
 
     const stats = [
         { label: 'Total Products', value: products },
-        { label: 'Total Revenue', value: '₦40,000' },
         { label: 'Total Links', value: links?.count ?? 0 },
         { label: 'Total Link Clicks', value: totalClicks },
         { label: 'Total Categories', value: categories.length },
@@ -564,13 +526,13 @@ export default function Dashboard({
                 </div>
 
                 {/* ── Stat grid ── */}
-                <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
                     {stats.map((s) => (
                         <div
                             key={s.label}
-                            className="flex flex-col gap-1.5 rounded-[var(--radius)] bg-white p-5 shadow-[0_8px_24px_rgba(20,18,27,.06)]"
+                            className="flex min-w-0 flex-col gap-1.5 rounded-[var(--radius)] bg-white p-4 shadow-[0_8px_24px_rgba(20,18,27,.06)] sm:p-5"
                         >
-                            <span className="text-[12.5px] font-medium text-nf-muted">
+                            <span className="text-[12px] font-medium text-nf-muted sm:text-[12.5px]">
                                 {s.label}
                             </span>
                             <span className="text-[20px] font-extrabold tracking-tight text-nf-text">
@@ -619,14 +581,19 @@ export default function Dashboard({
                     </div>
                 </div>
 
-                {/* ── Weekly Performance + Audience Growth ── */}
+                {/* ── Stock Levels + Audience Growth ── */}
                 <div className="grid gap-5 md:grid-cols-2">
-                    {/* Weekly Performance */}
+                    {/* Stock Levels */}
                     <div className="flex flex-col gap-4 rounded-[var(--radius)] bg-white p-6 shadow-[0_8px_24px_rgba(20,18,27,.06)]">
-                        <h2 className="text-[15.5px] font-bold tracking-tight text-nf-text">
-                            Weekly Performance
-                        </h2>
-                        <WeeklyBarChart />
+                        <div>
+                            <h2 className="text-[15.5px] font-bold tracking-tight text-nf-text">
+                                Stock Levels
+                            </h2>
+                            <p className="mt-1 text-[12px] text-nf-muted">
+                                Top products by available stock
+                            </p>
+                        </div>
+                        <StockLevelsBarChart stockLevels={stockLevels} />
                     </div>
 
                     {/* Audience Growth */}

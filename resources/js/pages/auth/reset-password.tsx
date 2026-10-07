@@ -24,59 +24,72 @@ export default function ResetPassword({ token, email, passwordRules }: Props) {
                 resetOnSuccess={['password', 'password_confirmation']}
             >
                 {({ processing, errors }) => (
-                    <div className="grid gap-6">
-                        <div className="grid gap-2">
-                            <Label htmlFor="email">Email</Label>
+                    <div className="grid gap-4">
+                        <div className="grid gap-1.5">
+                            <Label
+                                htmlFor="email"
+                                className="text-xs font-semibold uppercase tracking-wider text-nf-ink/80 dark:text-zinc-300"
+                            >
+                                Email
+                            </Label>
                             <Input
                                 id="email"
                                 type="email"
                                 name="email"
                                 autoComplete="email"
                                 value={email}
-                                className="mt-1 block w-full"
+                                className="h-11 rounded-xl border-nf-line bg-[#fbfbfe] text-sm text-nf-muted opacity-80 dark:bg-white/5 dark:text-zinc-400"
                                 readOnly
                             />
                             <InputError
                                 message={errors.email}
-                                className="mt-2"
+                                className="mt-1"
                             />
                         </div>
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="password">Password</Label>
+                        <div className="grid gap-1.5">
+                            <Label
+                                htmlFor="password"
+                                className="text-xs font-semibold uppercase tracking-wider text-nf-ink/80 dark:text-zinc-300"
+                            >
+                                Password
+                            </Label>
                             <PasswordInput
                                 id="password"
                                 name="password"
                                 autoComplete="new-password"
-                                className="mt-1 block w-full"
                                 autoFocus
-                                placeholder="Password"
+                                placeholder="New password"
                                 passwordrules={passwordRules}
+                                className="h-11 rounded-xl border-nf-line bg-[#fbfbfe] text-sm text-nf-text placeholder:text-nf-muted transition-all duration-200 focus:border-nf-dark-green focus:bg-white focus:ring-2 focus:ring-nf-green/50 dark:bg-white/5 dark:text-white"
                             />
                             <InputError message={errors.password} />
                         </div>
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="password_confirmation">
+                        <div className="grid gap-1.5">
+                            <Label
+                                htmlFor="password_confirmation"
+                                className="text-xs font-semibold uppercase tracking-wider text-nf-ink/80 dark:text-zinc-300"
+                            >
                                 Confirm password
                             </Label>
                             <PasswordInput
                                 id="password_confirmation"
                                 name="password_confirmation"
                                 autoComplete="new-password"
-                                className="mt-1 block w-full"
-                                placeholder="Confirm password"
+                                placeholder="Confirm new password"
                                 passwordrules={passwordRules}
+                                className="h-11 rounded-xl border-nf-line bg-[#fbfbfe] text-sm text-nf-text placeholder:text-nf-muted transition-all duration-200 focus:border-nf-dark-green focus:bg-white focus:ring-2 focus:ring-nf-green/50 dark:bg-white/5 dark:text-white"
                             />
                             <InputError
                                 message={errors.password_confirmation}
-                                className="mt-2"
+                                className="mt-1"
                             />
                         </div>
 
                         <Button
                             type="submit"
-                            className="mt-4 w-full"
+                            className="mt-2 h-11 w-full rounded-xl bg-nf-ink text-sm font-semibold text-white shadow-md shadow-nf-ink/15 transition-all duration-200 hover:bg-nf-ink/90 hover:shadow-lg hover:shadow-nf-ink/25 active:scale-[0.99] disabled:opacity-50"
                             disabled={processing}
                             data-test="reset-password-button"
                         >

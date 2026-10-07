@@ -44,14 +44,14 @@ export default function ManagePasskeys(props: Props) {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-5 rounded-2xl border border-nf-line bg-nf-card p-5 shadow-sm sm:p-7">
             <Heading
                 variant="small"
                 title="Passkeys"
                 description="Manage your passkeys for passwordless sign-in"
             />
 
-            <div className="overflow-hidden rounded-lg border border-border">
+            <div className="overflow-hidden rounded-xl border border-nf-line bg-nf-bg/50">
                 {passkeys.length > 0 ? (
                     passkeys.map((passkey) => (
                         <PasskeyItem

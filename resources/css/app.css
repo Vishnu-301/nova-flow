@@ -61,21 +61,33 @@
     --color-sidebar-ring: var(--sidebar-ring);
 
     /* NovaFlow custom colors */
-    --color-nf-ink: #123524;
-    --color-nf-green: #bcf7b7;
-    --color-nf-green-light: #e9fbe7;
-    --color-nf-green-dark: #4caf50;
-    --color-nf-dark-green: #2f6b3f;
-    --color-nf-teal: #2dd4bf;
-    --color-nf-amber: #ffb545;
-    --color-nf-bg: #f4f4fa;
-    --color-nf-card: #ffffff;
-    --color-nf-line: #eaeaf2;
-    --color-nf-text: #1c1a24;
-    --color-nf-muted: #8a8798;
+    --color-nf-ink: var(--nf-ink);
+    --color-nf-green: var(--nf-green);
+    --color-nf-green-light: var(--nf-green-light);
+    --color-nf-green-dark: var(--nf-green-dark);
+    --color-nf-dark-green: var(--nf-dark-green);
+    --color-nf-teal: var(--nf-teal);
+    --color-nf-amber: var(--nf-amber);
+    --color-nf-bg: var(--nf-bg);
+    --color-nf-card: var(--nf-card);
+    --color-nf-line: var(--nf-line);
+    --color-nf-text: var(--nf-text);
+    --color-nf-muted: var(--nf-muted);
 }
 
 :root {
+    --nf-ink: #123524;
+    --nf-green: #bcf7b7;
+    --nf-green-light: #e9fbe7;
+    --nf-green-dark: #4caf50;
+    --nf-dark-green: #2f6b3f;
+    --nf-teal: #2dd4bf;
+    --nf-amber: #ffb545;
+    --nf-bg: #f4f4fa;
+    --nf-card: #ffffff;
+    --nf-line: #eaeaf2;
+    --nf-text: #1c1a24;
+    --nf-muted: #777586;
     --background: #f4f4fa;
     --foreground: #1c1a24;
     --card: #ffffff;
@@ -112,38 +124,59 @@
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.145 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.145 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.985 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
+    color-scheme: dark;
+    --nf-ink: #132d24;
+    --nf-green: #b8e7bd;
+    --nf-green-light: #203b30;
+    --nf-green-dark: #81c98a;
+    --nf-dark-green: #9bd4a2;
+    --nf-teal: #66cdb8;
+    --nf-amber: #f2bd70;
+    --nf-bg: #17211e;
+    --nf-card: #202d28;
+    --nf-line: #35443e;
+    --nf-text: #e8eee9;
+    --nf-muted: #a4b2aa;
+    --background: #17211e;
+    --foreground: #e8eee9;
+    --card: #202d28;
+    --card-foreground: #e8eee9;
+    --popover: #25332d;
+    --popover-foreground: #e8eee9;
+    --primary: #b8e7bd;
+    --primary-foreground: #173026;
+    --secondary: #293c32;
+    --secondary-foreground: #d5e9d8;
+    --muted: #293630;
+    --muted-foreground: #a4b2aa;
+    --accent: #294237;
+    --accent-foreground: #d5e9d8;
     --destructive: oklch(0.396 0.141 25.723);
     --destructive-foreground: oklch(0.637 0.237 25.331);
-    --border: oklch(0.269 0 0);
-    --input: oklch(0.269 0 0);
-    --ring: oklch(0.439 0 0);
-    --chart-1: oklch(0.488 0.243 264.376);
-    --chart-2: oklch(0.696 0.17 162.48);
-    --chart-3: oklch(0.769 0.188 70.08);
-    --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.985 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(0.269 0 0);
-    --sidebar-ring: oklch(0.439 0 0);
+    --border: #35443e;
+    --input: #405149;
+    --ring: #81c98a;
+    --chart-1: #8e83ef;
+    --chart-2: #66cdb8;
+    --chart-3: #f2bd70;
+    --chart-4: #b8e7bd;
+    --chart-5: #81c98a;
+    --sidebar: #13201b;
+    --sidebar-foreground: #e8eee9;
+    --sidebar-primary: #b8e7bd;
+    --sidebar-primary-foreground: #173026;
+    --sidebar-accent: #294237;
+    --sidebar-accent-foreground: #e8eee9;
+    --sidebar-border: #2d3b35;
+    --sidebar-ring: #81c98a;
+}
+
+.dark [class~='bg-white'] {
+    background-color: var(--nf-card);
+}
+
+.dark [class~='bg-nf-bg'] {
+    background-color: #293630;
 }
 
 @layer base {

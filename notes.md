@@ -27,3 +27,4 @@ dashboard controller setup, test request for user data.
 * enable push notification 
   + use artisan command to generate notifications table 
     - notifications for stocks, new link click, weekly activities
+* remove laravel default login and register page 

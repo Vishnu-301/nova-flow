@@ -20,27 +20,33 @@ export default function ForgotPassword({ status }: { status?: string }) {
                 </div>
             )}
 
-            <div className="space-y-6">
+            <div className="space-y-5">
                 <Form {...email.form()}>
                     {({ processing, errors }) => (
                         <>
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
+                            <div className="grid gap-1.5">
+                                <Label
+                                    htmlFor="email"
+                                    className="text-xs font-semibold uppercase tracking-wider text-nf-ink/80 dark:text-zinc-300"
+                                >
+                                    Email address
+                                </Label>
                                 <Input
                                     id="email"
                                     type="email"
                                     name="email"
                                     autoComplete="off"
                                     autoFocus
-                                    placeholder="email@example.com"
+                                    placeholder="name@example.com"
+                                    className="h-11 rounded-xl border-nf-line bg-[#fbfbfe] text-sm text-nf-text placeholder:text-nf-muted transition-all duration-200 focus:border-nf-dark-green focus:bg-white focus:ring-2 focus:ring-nf-green/50 dark:bg-white/5 dark:text-white"
                                 />
 
                                 <InputError message={errors.email} />
                             </div>
 
-                            <div className="my-6 flex items-center justify-start">
+                            <div className="my-5 flex items-center justify-start">
                                 <Button
-                                    className="w-full"
+                                    className="h-11 w-full rounded-xl bg-nf-ink text-sm font-semibold text-white shadow-md shadow-nf-ink/15 transition-all duration-200 hover:bg-nf-ink/90 hover:shadow-lg hover:shadow-nf-ink/25 active:scale-[0.99] disabled:opacity-50"
                                     disabled={processing}
                                     data-test="email-password-reset-link-button"
                                 >
@@ -54,9 +60,14 @@ export default function ForgotPassword({ status }: { status?: string }) {
                     )}
                 </Form>
 
-                <div className="space-x-1 text-center text-sm text-muted-foreground">
+                <div className="space-x-1 text-center text-sm text-nf-muted dark:text-zinc-400">
                     <span>Or, return to</span>
-                    <TextLink href={login()}>log in</TextLink>
+                    <TextLink
+                        href={login()}
+                        className="font-bold text-nf-dark-green hover:text-nf-ink hover:underline dark:text-nf-green"
+                    >
+                        log in
+                    </TextLink>
                 </div>
             </div>
         </>

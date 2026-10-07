@@ -28,23 +28,29 @@ export default function ConfirmPassword() {
 
             <Form {...store.form()} resetOnSuccess={['password']}>
                 {({ processing, errors }) => (
-                    <div className="space-y-6">
-                        <div className="grid gap-2">
-                            <Label htmlFor="password">Password</Label>
+                    <div className="space-y-4">
+                        <div className="grid gap-1.5">
+                            <Label
+                                htmlFor="password"
+                                className="text-xs font-semibold uppercase tracking-wider text-nf-ink/80 dark:text-zinc-300"
+                            >
+                                Password
+                            </Label>
                             <PasswordInput
                                 id="password"
                                 name="password"
-                                placeholder="Password"
+                                placeholder="Enter password"
                                 autoComplete="current-password"
                                 autoFocus
+                                className="h-11 rounded-xl border-nf-line bg-[#fbfbfe] text-sm text-nf-text placeholder:text-nf-muted transition-all duration-200 focus:border-nf-dark-green focus:bg-white focus:ring-2 focus:ring-nf-green/50 dark:bg-white/5 dark:text-white"
                             />
 
                             <InputError message={errors.password} />
                         </div>
 
-                        <div className="flex items-center">
+                        <div className="flex items-center pt-1">
                             <Button
-                                className="w-full"
+                                className="h-11 w-full rounded-xl bg-nf-ink text-sm font-semibold text-white shadow-md shadow-nf-ink/15 transition-all duration-200 hover:bg-nf-ink/90 hover:shadow-lg hover:shadow-nf-ink/25 active:scale-[0.99] disabled:opacity-50"
                                 disabled={processing}
                                 data-test="confirm-password-button"
                             >

@@ -1,6 +1,7 @@
 import { Head, router, useForm } from '@inertiajs/react';
 import { Check, Copy, ExternalLink, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { index as linksIndex } from '@/routes/links';
 import {
     destroy as destroyLink,
     store,
@@ -330,4 +331,4 @@ export default function Links({ categories = [], links = [] }: LinksProps) {
     );
 }
 
-Links.layout = { breadcrumbs: [{ title: 'Links', href: 'links' }] };
+Links.layout = { breadcrumbs: [{ title: 'Links', href: linksIndex() }] };

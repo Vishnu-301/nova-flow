@@ -53,6 +53,17 @@ class DashboardController extends Controller
             ->take(3)
             ->pluck('name');
 
+        $stockLevels = Product::query()
+            ->where('user_id', $user->id)
+            ->orderByDesc('stock_quantity')
+            ->take(6)
+            ->get(['name', 'stock_quantity'])
+            ->map(fn (Product $product): array => [
+                'name' => $product->name,
+                'quantity' => (int) $product->stock_quantity,
+            ])
+            ->values();
+
         $audienceGrowth = $this->calculateAudienceGrowth($linksClickCount);
 
         return Inertia::render('dashboard', [
@@ -60,6 +71,7 @@ class DashboardController extends Controller
             'categories' => $categories,
             'users' => $user,
             'userProducts' => $userProducts,
+            'stockLevels' => $stockLevels,
             'links' => [
                 'count' => $linksCount,
                 'clicks' => $linksClickCount,

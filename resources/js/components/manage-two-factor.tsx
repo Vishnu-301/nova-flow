@@ -45,7 +45,7 @@ export default function ManageTwoFactor(props: Props) {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-5 rounded-2xl border border-nf-line bg-nf-card p-5 shadow-sm sm:p-7">
             <Heading
                 variant="small"
                 title="Two-factor authentication"
@@ -53,7 +53,7 @@ export default function ManageTwoFactor(props: Props) {
             />
             {twoFactorEnabled ? (
                 <div className="flex flex-col items-start justify-start space-y-4">
-                    <p className="text-sm text-muted-foreground">
+                    <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
                         You will be prompted for a secure, random pin during
                         login, which you can retrieve from the TOTP-supported
                         application on your phone.

@@ -19,6 +19,8 @@ import {
     SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import { index as linksIndex } from '@/routes/links';
+import { index as productsIndex } from '@/routes/products';
 import { edit as editProfile } from '@/routes/profile';
 import type { NavItem } from '@/types';
 
@@ -30,12 +32,12 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Links',
-        href: 'links',
+        href: linksIndex(),
         icon: LinkIcon,
     },
     {
         title: 'Products',
-        href: 'products',
+        href: productsIndex(),
         icon: BoxesIcon,
     },
     {
@@ -54,7 +56,7 @@ export function AppSidebar() {
                         <SidebarMenuButton
                             size="lg"
                             asChild
-                            className="group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0 hover:bg-transparent active:bg-transparent group-data-[collapsible=icon]:[&>div:first-child]:size-4 group-data-[collapsible=icon]:[&>div:last-child]:hidden"
+                            className="group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0 hover:bg-transparent active:bg-transparent group-data-[collapsible=icon]:[&>div>div:last-child]:hidden"
                         >
                             <Link href={dashboard()} prefetch>
                                 <AppLogo />
