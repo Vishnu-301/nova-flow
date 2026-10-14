@@ -8,7 +8,10 @@ use App\Http\Requests\Settings\ProfileUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -30,15 +33,38 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $validated = $request->validated();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user->fill(Arr::except($validated, ['avatar', 'reset_avatar']));
+
+        if ($request->hasFile('avatar')) {
+            $oldAvatar = $user->getRawOriginal('avatar');
+            if ($oldAvatar && ! Str::startsWith($oldAvatar, ['/images/', 'http://', 'https://']) && Storage::disk('public')->exists($oldAvatar)) {
+                Storage::disk('public')->delete($oldAvatar);
+            }
+
+            $user->avatar = $request->file('avatar')->store('avatars', 'public');
+        } elseif ($request->boolean('reset_avatar')) {
+            $oldAvatar = $user->getRawOriginal('avatar');
+            if ($oldAvatar && ! Str::startsWith($oldAvatar, ['/images/', 'http://', 'https://']) && Storage::disk('public')->exists($oldAvatar)) {
+                Storage::disk('public')->delete($oldAvatar);
+            }
+
+            $user->avatar = '/images/default-user.jpeg';
         }
 
-        $request->user()->save();
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Profile updated.')]);
+
+        if ($request->header('X-Inertia') && $request->headers->get('referer') && Str::contains($request->headers->get('referer'), '/dashboard')) {
+            return to_route('dashboard');
+        }
 
         return to_route('profile.edit');
     }

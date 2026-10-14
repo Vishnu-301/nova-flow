@@ -1,4 +1,6 @@
 import { Form, Head, Link, usePage } from '@inertiajs/react';
+import { Camera, Pencil, Trash2 } from 'lucide-react';
+import { useRef, useState } from 'react';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/components/delete-user';
 import Heading from '@/components/heading';
@@ -22,6 +24,30 @@ export default function Profile({
     status?: string;
 }) {
     const { auth } = usePage<PageProps>().props;
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+    const [resetAvatar, setResetAvatar] = useState(false);
+
+    const defaultAvatar = '/images/default-user.jpeg';
+    const userAvatar = auth.user?.avatar || defaultAvatar;
+    const currentAvatar = avatarPreview || (resetAvatar ? defaultAvatar : userAvatar);
+    const isCustomAvatar = !resetAvatar && (avatarPreview !== null || userAvatar !== defaultAvatar);
+
+    const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setAvatarPreview(URL.createObjectURL(file));
+            setResetAvatar(false);
+        }
+    };
+
+    const handleResetAvatar = () => {
+        setAvatarPreview(null);
+        setResetAvatar(true);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
 
     return (
         <>
@@ -33,18 +59,96 @@ export default function Profile({
                 <Heading
                     variant="small"
                     title="Profile information"
-                    description="Update your name and email address"
+                    description="Update your profile photo, name, and email address"
                 />
 
                 <Form
                     {...ProfileController.update.form()}
                     options={{
                         preserveScroll: true,
+                        onSuccess: () => {
+                            setAvatarPreview(null);
+                            setResetAvatar(false);
+                            if (fileInputRef.current) {
+                                fileInputRef.current.value = '';
+                            }
+                        },
                     }}
+                    encType="multipart/form-data"
                     className="space-y-6"
                 >
                     {({ processing, errors }) => (
                         <>
+                            <input type="hidden" name="_method" value="PATCH" />
+
+                            {/* Avatar Section */}
+                            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                                <div className="group relative size-20 shrink-0 overflow-hidden rounded-full border-2 border-nf-line bg-nf-bg shadow-sm sm:size-24">
+                                    <img
+                                        src={currentAvatar}
+                                        alt={auth.user.name}
+                                        className="h-full w-full object-cover"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => fileInputRef.current?.click()}
+                                        className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/45 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                                        aria-label="Change photo"
+                                    >
+                                        <Camera className="size-6" />
+                                    </button>
+                                </div>
+
+                                <div className="flex flex-col gap-2">
+                                    <span className="text-sm font-bold text-nf-text">
+                                        Profile photo
+                                    </span>
+                                    <div className="flex flex-wrap items-center gap-2.5">
+                                        <input
+                                            ref={fileInputRef}
+                                            id="avatar"
+                                            name="avatar"
+                                            type="file"
+                                            accept="image/png,image/jpeg,image/webp,image/gif"
+                                            className="hidden"
+                                            onChange={handleAvatarChange}
+                                        />
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => fileInputRef.current?.click()}
+                                            className="rounded-xl border-nf-line font-semibold text-nf-text hover:border-nf-green-dark hover:bg-nf-green-light hover:text-nf-dark-green"
+                                        >
+                                            <Pencil className="mr-1.5 size-3.5" />
+                                            {isCustomAvatar ? 'Change picture' : 'Upload picture'}
+                                        </Button>
+
+                                        {isCustomAvatar && (
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={handleResetAvatar}
+                                                className="text-xs text-nf-muted hover:text-destructive"
+                                            >
+                                                <Trash2 className="mr-1 size-3" />
+                                                Reset to default
+                                            </Button>
+                                        )}
+                                    </div>
+
+                                    {resetAvatar && (
+                                        <input type="hidden" name="reset_avatar" value="1" />
+                                    )}
+
+                                    <p className="text-xs text-nf-muted">
+                                        JPG, PNG, GIF or WEBP up to 5MB.
+                                    </p>
+                                    <InputError message={errors.avatar} />
+                                </div>
+                            </div>
+
                             <div className="grid gap-2">
                                 <Label htmlFor="name">Name</Label>
 

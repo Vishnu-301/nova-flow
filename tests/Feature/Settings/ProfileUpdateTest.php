@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 test('profile page is displayed', function () {
     $user = User::factory()->create();
@@ -82,4 +84,82 @@ test('correct password must be provided to delete account', function () {
         ->assertRedirect(route('profile.edit'));
 
     expect($user->fresh())->not->toBeNull();
+});
+
+test('user has default avatar when logged in', function () {
+    $user = User::factory()->create(['avatar' => null]);
+
+    expect($user->avatar)->toBe('/images/default-user.jpeg');
+});
+
+test('user can update their avatar to a preferred picture', function () {
+    Storage::fake('public');
+
+    $user = User::factory()->create();
+
+    $file = UploadedFile::fake()->image('custom-avatar.jpg');
+
+    $response = $this
+        ->actingAs($user)
+        ->patch(route('profile.update'), [
+            'name' => $user->name,
+            'email' => $user->email,
+            'avatar' => $file,
+        ]);
+
+    $response
+        ->assertSessionHasNoErrors()
+        ->assertRedirect(route('profile.edit'));
+
+    $user->refresh();
+
+    expect($user->getRawOriginal('avatar'))->not->toBeNull();
+    Storage::disk('public')->assertExists($user->getRawOriginal('avatar'));
+    expect($user->avatar)->toBe(Storage::url($user->getRawOriginal('avatar')));
+});
+
+test('user can reset their avatar to default picture', function () {
+    Storage::fake('public');
+
+    $file = UploadedFile::fake()->image('custom-avatar.jpg');
+    $path = $file->store('avatars', 'public');
+
+    $user = User::factory()->create(['avatar' => $path]);
+    Storage::disk('public')->assertExists($path);
+
+    $response = $this
+        ->actingAs($user)
+        ->patch(route('profile.update'), [
+            'name' => $user->name,
+            'email' => $user->email,
+            'reset_avatar' => true,
+        ]);
+
+    $response
+        ->assertSessionHasNoErrors()
+        ->assertRedirect(route('profile.edit'));
+
+    $user->refresh();
+
+    Storage::disk('public')->assertMissing($path);
+    expect($user->avatar)->toBe('/images/default-user.jpeg');
+});
+
+test('avatar validation rejects non image files', function () {
+    $user = User::factory()->create();
+
+    $file = UploadedFile::fake()->create('document.pdf', 100);
+
+    $response = $this
+        ->actingAs($user)
+        ->from(route('profile.edit'))
+        ->patch(route('profile.update'), [
+            'name' => $user->name,
+            'email' => $user->email,
+            'avatar' => $file,
+        ]);
+
+    $response
+        ->assertSessionHasErrors('avatar')
+        ->assertRedirect(route('profile.edit'));
 });

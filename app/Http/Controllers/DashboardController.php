@@ -26,6 +26,7 @@ class DashboardController extends Controller
         $linksCount = (clone $linksQuery)->count();
         $linksClickCount = (int) (clone $linksQuery)->sum('clicks');
 
+        // get links ordered by clicks and then by creation date, with a limit of 10
         $userLinks = (clone $linksQuery)
             ->orderByDesc('clicks')
             ->orderByDesc('created_at')
@@ -53,6 +54,7 @@ class DashboardController extends Controller
             ->take(3)
             ->pluck('name');
 
+        // get stock levesl for chart
         $stockLevels = Product::query()
             ->where('user_id', $user->id)
             ->orderByDesc('stock_quantity')

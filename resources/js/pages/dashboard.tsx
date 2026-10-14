@@ -1,4 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
+import { Pencil } from 'lucide-react';
 import { useMemo } from 'react';
 import {
     Bar,
@@ -15,6 +16,7 @@ import {
     YAxis,
 } from 'recharts';
 import { dashboard } from '@/routes';
+import { edit } from '@/routes/profile';
 
 const LINK_COLORS = [
     '#6c5ce7', // NovaFlow purple
@@ -48,6 +50,7 @@ interface UserItem {
     id: number;
     name: string;
     email: string;
+    avatar?: string;
 }
 
 interface StockLevelPoint {
@@ -492,12 +495,20 @@ export default function Dashboard({
             <div className="flex flex-1 flex-col gap-6 p-6 md:p-8">
                 {/* ── Welcome card ── */}
                 <div className="flex overflow-hidden rounded-[var(--radius)] bg-white shadow-[0_8px_24px_rgba(20,18,27,.06)]">
-                    <div className="hidden w-[220px] shrink-0 md:block">
+                    <div className="group relative hidden w-[220px] shrink-0 md:block">
                         <img
-                            src="/images/avatar.jpeg"
+                            src={users?.avatar || '/images/default-user.jpeg'}
                             alt="Welcome"
                             className="h-full w-full object-cover"
                         />
+                        <Link
+                            href={edit()}
+                            className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-lg bg-black/60 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm transition-all hover:bg-black/85 hover:scale-105"
+                            title="Edit profile photo"
+                        >
+                            <Pencil className="size-3" />
+                            <span>Edit photo</span>
+                        </Link>
                     </div>
                     <div className="flex flex-1 flex-col justify-center gap-3 p-7">
                         <span className="text-[13px] font-semibold tracking-[0.06em] text-nf-dark-green uppercase">
