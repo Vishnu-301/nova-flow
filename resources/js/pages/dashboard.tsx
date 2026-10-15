@@ -185,7 +185,7 @@ function BestPerformingLinksChart({
     }
 
     return (
-        <div className="flex items-center gap-6">
+        <div className="flex min-w-0 flex-col items-center gap-4 2xl:flex-row 2xl:gap-6">
             <div className="relative h-[130px] w-[130px] shrink-0">
                 <ResponsiveContainer
                     width="100%"
@@ -197,8 +197,8 @@ function BestPerformingLinksChart({
                         <Tooltip
                             content={({ active, payload }) => {
                                 if (!active || !payload?.length) {
-return null;
-}
+                                    return null;
+                                }
 
                                 const item = payload[0].payload as {
                                     name: string;
@@ -208,8 +208,8 @@ return null;
                                 };
 
                                 if (item.isPlaceholder) {
-return null;
-}
+                                    return null;
+                                }
 
                                 return (
                                     <div className="rounded-lg border border-nf-line bg-white px-2.5 py-1.5 shadow-[0_4px_16px_rgba(20,18,27,0.08)]">
@@ -258,11 +258,11 @@ return null;
                 )}
             </div>
 
-            <ul className="flex flex-1 flex-col gap-2.5">
+            <ul className="flex w-full min-w-0 flex-1 flex-col gap-2.5">
                 {legendItems.map((item) => (
                     <li
                         key={item.name}
-                        className="flex items-center gap-2.5 text-[13.5px]"
+                        className="flex min-w-0 items-center gap-2 text-[13px] sm:gap-2.5 sm:text-[13.5px]"
                     >
                         <span
                             className="inline-block h-[9px] w-[9px] shrink-0 rounded-full"
@@ -274,11 +274,11 @@ return null;
                         >
                             {item.name}
                         </span>
-                        <span className="text-[12px] text-nf-muted">
+                        <span className="shrink-0 text-[11px] whitespace-nowrap text-nf-muted sm:text-[12px]">
                             {item.clicks}{' '}
                             {item.clicks === 1 ? 'click' : 'clicks'}
                         </span>
-                        <b className="font-extrabold text-nf-text">
+                        <b className="shrink-0 font-extrabold whitespace-nowrap text-nf-text">
                             {item.pct}%
                         </b>
                     </li>
@@ -289,7 +289,11 @@ return null;
 }
 
 /* ─── Stock levels bar chart (Recharts) ─── */
-function StockLevelsBarChart({ stockLevels }: { stockLevels: StockLevelPoint[] }) {
+function StockLevelsBarChart({
+    stockLevels,
+}: {
+    stockLevels: StockLevelPoint[];
+}) {
     if (stockLevels.length === 0) {
         return (
             <div className="flex h-[170px] items-center justify-center text-[13px] text-nf-muted">
@@ -300,14 +304,23 @@ function StockLevelsBarChart({ stockLevels }: { stockLevels: StockLevelPoint[] }
 
     return (
         <div className="h-[190px] w-full min-w-0">
-            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+            <ResponsiveContainer
+                width="100%"
+                height="100%"
+                minWidth={0}
+                minHeight={0}
+            >
                 <BarChart
                     data={stockLevels}
                     layout="vertical"
                     barCategoryGap="22%"
                     margin={{ top: 4, right: 12, left: 0, bottom: 4 }}
                 >
-                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#eaeaf2" />
+                    <CartesianGrid
+                        strokeDasharray="3 3"
+                        horizontal={false}
+                        stroke="#eaeaf2"
+                    />
                     <XAxis
                         type="number"
                         tickLine={false}
@@ -322,7 +335,9 @@ function StockLevelsBarChart({ stockLevels }: { stockLevels: StockLevelPoint[] }
                         tickLine={false}
                         axisLine={false}
                         tick={{ fontSize: 11, fill: '#8a8798' }}
-                        tickFormatter={(name: string) => name.length > 12 ? `${name.slice(0, 11)}…` : name}
+                        tickFormatter={(name: string) =>
+                            name.length > 12 ? `${name.slice(0, 11)}…` : name
+                        }
                     />
                     <Tooltip
                         formatter={(value) => [`${value} in stock`, 'Stock']}
@@ -416,8 +431,8 @@ function GrowthChart({
                     <Tooltip
                         content={({ active, payload, label }) => {
                             if (!active || !payload?.length) {
-return null;
-}
+                                return null;
+                            }
 
                             const clicks = payload[0].value as number;
 
@@ -494,7 +509,7 @@ export default function Dashboard({
             <Head title="Dashboard" />
             <div className="flex flex-1 flex-col gap-6 p-6 md:p-8">
                 {/* ── Welcome card ── */}
-                <div className="flex overflow-hidden rounded-[var(--radius)] bg-white shadow-[0_8px_24px_rgba(20,18,27,.06)]">
+                <div className="flex min-w-0 overflow-hidden rounded-[var(--radius)] bg-white shadow-[0_8px_24px_rgba(20,18,27,.06)]">
                     <div className="group relative hidden w-[220px] shrink-0 md:block">
                         <img
                             src={users?.avatar || '/images/default-user.jpeg'}
@@ -503,18 +518,18 @@ export default function Dashboard({
                         />
                         <Link
                             href={edit()}
-                            className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-lg bg-black/60 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm transition-all hover:bg-black/85 hover:scale-105"
+                            className="absolute right-3 bottom-3 flex items-center gap-1.5 rounded-lg bg-black/60 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm transition-all hover:scale-105 hover:bg-black/85"
                             title="Edit profile photo"
                         >
                             <Pencil className="size-3" />
                             <span>Edit photo</span>
                         </Link>
                     </div>
-                    <div className="flex flex-1 flex-col justify-center gap-3 p-7">
+                    <div className="flex min-w-0 flex-1 flex-col justify-center gap-3 p-4 sm:p-7">
                         <span className="text-[13px] font-semibold tracking-[0.06em] text-nf-dark-green uppercase">
                             Good to see you
                         </span>
-                        <h1 className="text-[28px] font-extrabold tracking-tight text-nf-text">
+                        <h1 className="text-[24px] font-extrabold tracking-tight break-words text-nf-text sm:text-[28px]">
                             Welcome {users?.name ?? 'User'}
                         </h1>
                         <div className="flex flex-wrap gap-2">
@@ -546,7 +561,7 @@ export default function Dashboard({
                             <span className="text-[12px] font-medium text-nf-muted sm:text-[12.5px]">
                                 {s.label}
                             </span>
-                            <span className="text-[20px] font-extrabold tracking-tight text-nf-text">
+                            <span className="text-[20px] font-extrabold tracking-tight break-words text-nf-text">
                                 {s.value}
                             </span>
                         </div>
@@ -554,14 +569,14 @@ export default function Dashboard({
                 </div>
 
                 {/* ── Best Performing Links + Active Categories ── */}
-                <div className="grid gap-5 md:grid-cols-2">
+                <div className="grid min-w-0 gap-5 lg:grid-cols-2">
                     {/* Best Performing Links */}
-                    <div className="flex flex-col gap-4 rounded-[var(--radius)] bg-white p-6 shadow-[0_8px_24px_rgba(20,18,27,.06)]">
-                        <div className="flex items-center justify-between">
-                            <h2 className="text-[15.5px] font-bold tracking-tight text-nf-text">
+                    <div className="flex min-w-0 flex-col gap-4 rounded-[var(--radius)] bg-white p-4 shadow-[0_8px_24px_rgba(20,18,27,.06)] sm:p-6">
+                        <div className="flex flex-wrap items-start justify-between gap-2">
+                            <h2 className="min-w-0 text-[15.5px] font-bold tracking-tight text-nf-text">
                                 Best Performing Links
                             </h2>
-                            <span className="text-[12px] font-medium text-nf-muted">
+                            <span className="shrink-0 text-[12px] font-medium text-nf-muted">
                                 Based on clicks
                             </span>
                         </div>
@@ -572,7 +587,7 @@ export default function Dashboard({
                     </div>
 
                     {/* Active Categories */}
-                    <div className="flex flex-col gap-4 rounded-[var(--radius)] bg-white p-6 shadow-[0_8px_24px_rgba(20,18,27,.06)]">
+                    <div className="flex min-w-0 flex-col gap-4 rounded-[var(--radius)] bg-white p-4 shadow-[0_8px_24px_rgba(20,18,27,.06)] sm:p-6">
                         <h2 className="text-[15.5px] font-bold tracking-tight text-nf-text">
                             Active Categories
                         </h2>
@@ -580,10 +595,12 @@ export default function Dashboard({
                             {categories.map((cat: any) => (
                                 <li
                                     key={cat.id}
-                                    className="flex items-center justify-between rounded-xl bg-nf-bg px-3.5 py-2.5 text-[13.5px] font-medium"
+                                    className="flex min-w-0 items-center justify-between gap-3 rounded-xl bg-nf-bg px-3.5 py-2.5 text-[13.5px] font-medium"
                                 >
-                                    <span>{cat.name}</span>
-                                    <span className="rounded-full bg-nf-green-light px-2.5 py-0.5 text-[11.5px] font-bold text-nf-dark-green">
+                                    <span className="min-w-0 truncate">
+                                        {cat.name}
+                                    </span>
+                                    <span className="shrink-0 rounded-full bg-nf-green-light px-2.5 py-0.5 text-[11.5px] font-bold text-nf-dark-green">
                                         {cat.products_count}
                                     </span>
                                 </li>
@@ -593,9 +610,9 @@ export default function Dashboard({
                 </div>
 
                 {/* ── Stock Levels + Audience Growth ── */}
-                <div className="grid gap-5 md:grid-cols-2">
+                <div className="grid min-w-0 gap-5 lg:grid-cols-2">
                     {/* Stock Levels */}
-                    <div className="flex flex-col gap-4 rounded-[var(--radius)] bg-white p-6 shadow-[0_8px_24px_rgba(20,18,27,.06)]">
+                    <div className="flex min-w-0 flex-col gap-4 rounded-[var(--radius)] bg-white p-4 shadow-[0_8px_24px_rgba(20,18,27,.06)] sm:p-6">
                         <div>
                             <h2 className="text-[15.5px] font-bold tracking-tight text-nf-text">
                                 Stock Levels
@@ -608,8 +625,8 @@ export default function Dashboard({
                     </div>
 
                     {/* Audience Growth */}
-                    <div className="flex flex-col gap-4 rounded-[var(--radius)] bg-white p-6 shadow-[0_8px_24px_rgba(20,18,27,.06)]">
-                        <div className="flex items-center justify-between">
+                    <div className="flex min-w-0 flex-col gap-4 rounded-[var(--radius)] bg-white p-4 shadow-[0_8px_24px_rgba(20,18,27,.06)] sm:p-6">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
                             <h2 className="text-[15.5px] font-bold tracking-tight text-nf-text">
                                 Audience Growth
                             </h2>

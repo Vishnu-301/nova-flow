@@ -27,23 +27,96 @@ export default function Profile({
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
     const [resetAvatar, setResetAvatar] = useState(false);
+    const [avatarCropError, setAvatarCropError] = useState<string | null>(null);
 
     const defaultAvatar = '/images/default-user.jpeg';
     const userAvatar = auth.user?.avatar || defaultAvatar;
-    const currentAvatar = avatarPreview || (resetAvatar ? defaultAvatar : userAvatar);
-    const isCustomAvatar = !resetAvatar && (avatarPreview !== null || userAvatar !== defaultAvatar);
+    const currentAvatar =
+        avatarPreview || (resetAvatar ? defaultAvatar : userAvatar);
+    const isCustomAvatar =
+        !resetAvatar &&
+        (avatarPreview !== null || userAvatar !== defaultAvatar);
 
-    const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleAvatarChange = async (
+        event: React.ChangeEvent<HTMLInputElement>,
+    ) => {
         const file = event.target.files?.[0];
-        if (file) {
-            setAvatarPreview(URL.createObjectURL(file));
+        const input = fileInputRef.current;
+
+        if (!file || !input) {
+            return;
+        }
+
+        setAvatarCropError(null);
+
+        try {
+            const image = await createImageBitmap(file);
+            const cropSize = Math.min(image.width, image.height);
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            if (!context) {
+                throw new Error('Canvas is unavailable');
+            }
+
+            canvas.width = 512;
+            canvas.height = 512;
+            context.drawImage(
+                image,
+                (image.width - cropSize) / 2,
+                (image.height - cropSize) / 2,
+                cropSize,
+                cropSize,
+                0,
+                0,
+                canvas.width,
+                canvas.height,
+            );
+            image.close();
+
+            const croppedBlob = await new Promise<Blob>((resolve, reject) => {
+                canvas.toBlob(
+                    (blob) => {
+                        if (blob) {
+                            resolve(blob);
+                        } else {
+                            reject(new Error('Could not crop this image'));
+                        }
+                    },
+                    'image/jpeg',
+                    0.9,
+                );
+            });
+
+            const croppedFile = new File(
+                [croppedBlob],
+                `${file.name.replace(/\.[^.]+$/, '')}.jpg`,
+                { type: 'image/jpeg' },
+            );
+            const transfer = new DataTransfer();
+            transfer.items.add(croppedFile);
+            input.files = transfer.files;
+
+            if (avatarPreview) {
+                URL.revokeObjectURL(avatarPreview);
+            }
+            setAvatarPreview(URL.createObjectURL(croppedFile));
             setResetAvatar(false);
+        } catch {
+            input.value = '';
+            setAvatarCropError(
+                'This image could not be cropped. Please try another image.',
+            );
         }
     };
 
     const handleResetAvatar = () => {
+        if (avatarPreview) {
+            URL.revokeObjectURL(avatarPreview);
+        }
         setAvatarPreview(null);
         setResetAvatar(true);
+        setAvatarCropError(null);
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }
@@ -66,13 +139,16 @@ export default function Profile({
                     {...ProfileController.update.form()}
                     options={{
                         preserveScroll: true,
-                        onSuccess: () => {
-                            setAvatarPreview(null);
-                            setResetAvatar(false);
-                            if (fileInputRef.current) {
-                                fileInputRef.current.value = '';
-                            }
-                        },
+                    }}
+                    onSuccess={() => {
+                        if (avatarPreview) {
+                            URL.revokeObjectURL(avatarPreview);
+                        }
+                        setAvatarPreview(null);
+                        setResetAvatar(false);
+                        if (fileInputRef.current) {
+                            fileInputRef.current.value = '';
+                        }
                     }}
                     encType="multipart/form-data"
                     className="space-y-6"
@@ -91,7 +167,9 @@ export default function Profile({
                                     />
                                     <button
                                         type="button"
-                                        onClick={() => fileInputRef.current?.click()}
+                                        onClick={() =>
+                                            fileInputRef.current?.click()
+                                        }
                                         className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/45 text-white opacity-0 transition-opacity group-hover:opacity-100"
                                         aria-label="Change photo"
                                     >
@@ -117,11 +195,15 @@ export default function Profile({
                                             type="button"
                                             variant="outline"
                                             size="sm"
-                                            onClick={() => fileInputRef.current?.click()}
+                                            onClick={() =>
+                                                fileInputRef.current?.click()
+                                            }
                                             className="rounded-xl border-nf-line font-semibold text-nf-text hover:border-nf-green-dark hover:bg-nf-green-light hover:text-nf-dark-green"
                                         >
                                             <Pencil className="mr-1.5 size-3.5" />
-                                            {isCustomAvatar ? 'Change picture' : 'Upload picture'}
+                                            {isCustomAvatar
+                                                ? 'Change picture'
+                                                : 'Upload picture'}
                                         </Button>
 
                                         {isCustomAvatar && (
@@ -139,12 +221,25 @@ export default function Profile({
                                     </div>
 
                                     {resetAvatar && (
-                                        <input type="hidden" name="reset_avatar" value="1" />
+                                        <input
+                                            type="hidden"
+                                            name="reset_avatar"
+                                            value="1"
+                                        />
                                     )}
 
                                     <p className="text-xs text-nf-muted">
-                                        JPG, PNG, GIF or WEBP up to 5MB.
+                                        JPG, PNG, GIF or WEBP up to 5MB. Images
+                                        are center-cropped to a square.
                                     </p>
+                                    {avatarCropError && (
+                                        <p
+                                            className="text-sm text-destructive"
+                                            role="alert"
+                                        >
+                                            {avatarCropError}
+                                        </p>
+                                    )}
                                     <InputError message={errors.avatar} />
                                 </div>
                             </div>
@@ -205,11 +300,11 @@ export default function Profile({
 
                                         {status ===
                                             'verification-link-sent' && (
-                                            <div className="mt-2 text-sm font-medium text-green-600">
-                                                A new verification link has been
-                                                sent to your email address.
-                                            </div>
-                                        )}
+                                                <div className="mt-2 text-sm font-medium text-green-600">
+                                                    A new verification link has been
+                                                    sent to your email address.
+                                                </div>
+                                            )}
                                     </div>
                                 )}
 
@@ -226,8 +321,8 @@ export default function Profile({
                     )}
                 </Form>
             </div>
-
-            <div className="space-y-5 rounded-2xl border border-nf-line bg-nf-card p-5 shadow-sm sm:p-7">
+            {/* notification section */}
+            {/* <div className="space-y-5 rounded-2xl border border-nf-line bg-nf-card p-5 shadow-sm sm:p-7">
                 <Heading
                     variant="small"
                     title="Notifications"
@@ -260,7 +355,7 @@ export default function Profile({
                         </div>
                     ))}
                 </div>
-            </div>
+            </div> */}
 
             <DeleteUser />
         </>
