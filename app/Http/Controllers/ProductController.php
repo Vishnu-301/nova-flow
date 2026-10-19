@@ -11,13 +11,14 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         $userId = Auth::id();
 
@@ -43,7 +44,7 @@ class ProductController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): Response
     {
         return Inertia::render('products/create', [
             'categories' => Category::query()
@@ -59,37 +60,20 @@ class ProductController extends Controller
     {
         $validated = $request->validated();
 
-        $product = $request->user()->product()->create([
+        $product = $request->user()->products()->create([
             ...Arr::except($validated, ['category_ids', 'image', 'new_category']),
             'image' => $request->file('image')->store('products', 'public'),
         ]);
 
-        $categoryIds = $validated['category_ids'] ?? [];
-
-        if (filled($validated['new_category'] ?? null)) {
-            $categoryIds[] = Category::query()->firstOrCreate(
-                ['name' => $validated['new_category']],
-                ['slug' => Str::slug($validated['new_category'])],
-            )->id;
-        }
-
-        $product->categories()->sync($categoryIds);
+        $this->syncCategories($product, $validated);
 
         return to_route('products.index');
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function edit(Product $product): Response
     {
         abort_unless($product->user_id === Auth::id(), 403);
 
@@ -118,16 +102,7 @@ class ProductController extends Controller
 
         $product->update($data);
 
-        $categoryIds = $validated['category_ids'] ?? [];
-
-        if (filled($validated['new_category'] ?? null)) {
-            $categoryIds[] = Category::query()->firstOrCreate(
-                ['name' => $validated['new_category']],
-                ['slug' => Str::slug($validated['new_category'])],
-            )->id;
-        }
-
-        $product->categories()->sync($categoryIds);
+        $this->syncCategories($product, $validated);
 
         return to_route('products.index');
     }
@@ -143,5 +118,24 @@ class ProductController extends Controller
         $product->delete();
 
         return to_route('products.index');
+    }
+
+    /**
+     * Synchronize product categories including any new category provided.
+     *
+     * @param  array<string, mixed>  $validated
+     */
+    private function syncCategories(Product $product, array $validated): void
+    {
+        $categoryIds = $validated['category_ids'] ?? [];
+
+        if (filled($validated['new_category'] ?? null)) {
+            $categoryIds[] = Category::query()->firstOrCreate(
+                ['name' => $validated['new_category']],
+                ['slug' => Str::slug($validated['new_category'])],
+            )->id;
+        }
+
+        $product->categories()->sync($categoryIds);
     }
 }

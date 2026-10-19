@@ -100,6 +100,7 @@ export default function Profile({
             if (avatarPreview) {
                 URL.revokeObjectURL(avatarPreview);
             }
+
             setAvatarPreview(URL.createObjectURL(croppedFile));
             setResetAvatar(false);
         } catch {
@@ -114,9 +115,11 @@ export default function Profile({
         if (avatarPreview) {
             URL.revokeObjectURL(avatarPreview);
         }
+
         setAvatarPreview(null);
         setResetAvatar(true);
         setAvatarCropError(null);
+
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }
@@ -144,8 +147,10 @@ export default function Profile({
                         if (avatarPreview) {
                             URL.revokeObjectURL(avatarPreview);
                         }
+
                         setAvatarPreview(null);
                         setResetAvatar(false);
+                        
                         if (fileInputRef.current) {
                             fileInputRef.current.value = '';
                         }
@@ -321,41 +326,6 @@ export default function Profile({
                     )}
                 </Form>
             </div>
-            {/* notification section */}
-            {/* <div className="space-y-5 rounded-2xl border border-nf-line bg-nf-card p-5 shadow-sm sm:p-7">
-                <Heading
-                    variant="small"
-                    title="Notifications"
-                    description="Configure your email and app notifications"
-                />
-
-                <div className="space-y-4">
-                    {[
-                        ['New link clicks', true],
-                        ['Weekly performance summary', true],
-                        ['Low stock alerts', false],
-                        ['Product comments', true],
-                    ].map(([label, enabled]) => (
-                        <div
-                            key={label as string}
-                            className="flex items-center justify-between gap-4"
-                        >
-                            <span className="text-sm font-medium text-nf-text">
-                                {label}
-                            </span>
-                            <button
-                                type="button"
-                                aria-label={`${label}: ${enabled ? 'enabled' : 'disabled'}`}
-                                className={`relative h-5 w-10 rounded-full transition-colors ${enabled ? 'bg-nf-green-dark' : 'bg-nf-line'}`}
-                            >
-                                <span
-                                    className={`absolute top-1 size-3 rounded-full bg-white transition-all ${enabled ? 'left-6' : 'left-1'}`}
-                                />
-                            </button>
-                        </div>
-                    ))}
-                </div>
-            </div> */}
 
             <DeleteUser />
         </>

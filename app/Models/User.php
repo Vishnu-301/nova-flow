@@ -73,21 +73,17 @@ class User extends Authenticatable implements PasskeyUser
         );
     }
 
-    // user can have many products
-    public function product(): HasMany
-    {
-        return $this->hasMany(Product::class);
-    }
-
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
     }
 
-    // user can have many categories
-    public function category(): HasMany
+    /**
+     * Alias for products relation for backwards compatibility.
+     */
+    public function product(): HasMany
     {
-        return $this->hasMany(Category::class);
+        return $this->products();
     }
 
     public function links(): HasMany

@@ -12,13 +12,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class LinksController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         $userId = Auth::id();
 
@@ -31,33 +32,26 @@ class LinksController extends Controller
 
         $links = Link::query()
             ->where('user_id', $userId)
-            ->orderBy('created_at', 'desc')
+            ->orderByDesc('created_at')
             ->get(['id', 'slug'])
             ->map(fn (Link $link) => [
                 'id' => $link->id,
                 'name' => Str::headline($link->slug),
                 'slug' => $link->slug,
-                'directory' => url('/'.$link->slug),
+                'directory' => url($link->slug),
             ])
             ->all();
 
         return Inertia::render('links/index', [
-            'user' => $userId,
             'categories' => $categories,
             'links' => $links,
         ]);
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        // return Inertia::render('links/create');
-    }
-
-    /**
      * Store a newly created resource in storage.
+     *
+     * @throws ValidationException
      */
     public function store(StoreLinksRequest $request): RedirectResponse
     {
@@ -92,18 +86,17 @@ class LinksController extends Controller
 
         $link = $user->links()->create([
             'slug' => $slug,
-            'user_id' => $user->id,
         ]);
 
         $link->categories()->attach($categoryIds);
 
-        return redirect()->route('links.index');
+        return to_route('links.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, Link $link, string|Product|null $product = null)
+    public function show(Request $request, Link $link, string|Product|null $product = null): Response
     {
         $link->increment('clicks');
 
@@ -118,6 +111,13 @@ class LinksController extends Controller
         } else {
             $productIdentifier = $request->query('product') ?? $request->query('products');
         }
+
+        $linkPayload = [
+            'id' => $link->id,
+            'name' => Str::headline($link->slug),
+            'slug' => $link->slug,
+            'directory' => url($link->slug),
+        ];
 
         if ($productIdentifier !== null && $productIdentifier !== '') {
             $selectedProduct = $link->products()
@@ -136,12 +136,7 @@ class LinksController extends Controller
                 ->firstOrFail();
 
             return Inertia::render('links/show', [
-                'link' => [
-                    'id' => $link->id,
-                    'name' => Str::headline($link->slug),
-                    'slug' => $link->slug,
-                    'directory' => url('/'.$link->slug),
-                ],
+                'link' => $linkPayload,
                 'categories' => $link->categories,
                 'selectedProduct' => $selectedProduct,
                 'products' => [$selectedProduct],
@@ -149,32 +144,11 @@ class LinksController extends Controller
         }
 
         return Inertia::render('links/show', [
-            'link' => [
-                'id' => $link->id,
-                'name' => Str::headline($link->slug),
-                'slug' => $link->slug,
-                'directory' => url('/'.$link->slug),
-            ],
+            'link' => $linkPayload,
             'categories' => $link->categories,
             'selectedProduct' => null,
             'products' => $link->products()->with('categories')->latest()->paginate(20),
         ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
     }
 
     /**
@@ -187,6 +161,6 @@ class LinksController extends Controller
         $link->categories()->detach();
         $link->delete();
 
-        return redirect()->route('links.index');
+        return to_route('links.index');
     }
 }

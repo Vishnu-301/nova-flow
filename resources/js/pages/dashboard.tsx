@@ -592,7 +592,7 @@ export default function Dashboard({
                             Active Categories
                         </h2>
                         <ul className="flex flex-col gap-3">
-                            {categories.map((cat: any) => (
+                            {categories.map((cat: CategoryItem) => (
                                 <li
                                     key={cat.id}
                                     className="flex min-w-0 items-center justify-between gap-3 rounded-xl bg-nf-bg px-3.5 py-2.5 text-[13.5px] font-medium"

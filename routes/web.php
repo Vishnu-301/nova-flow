@@ -10,8 +10,8 @@ Route::inertia('/', 'welcome')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('links', LinksController::class)->except(['show']);
-    Route::resource('products', ProductController::class);
+    Route::resource('links', LinksController::class)->only(['index', 'store', 'destroy']);
+    Route::resource('products', ProductController::class)->except(['show']);
     Route::resource('categories', CategoryController::class)->only(['destroy']);
 });
 

@@ -1,7 +1,6 @@
 import { Head, router, useForm } from '@inertiajs/react';
 import { Check, Copy, ExternalLink, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { index as linksIndex } from '@/routes/links';
 import {
     destroy as destroyLink,
     store,
@@ -19,6 +18,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { index as linksIndex } from '@/routes/links';
 
 interface LinkRow {
     id: number;
@@ -28,7 +28,7 @@ interface LinkRow {
 }
 
 interface LinksProps {
-    user: number;
+    user?: number;
     categories: { id: number; name: string }[];
     links: LinkRow[];
 }

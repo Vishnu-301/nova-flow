@@ -10,3 +10,15 @@ export function cn(...inputs: ClassValue[]) {
 export function toUrl(url: NonNullable<InertiaLinkProps['href']>): string {
     return typeof url === 'string' ? url : url.url;
 }
+
+export function formatCurrency(val: number | string): string {
+    const num = typeof val === 'string' ? parseFloat(val) : val;
+
+    return isNaN(num)
+        ? '0.00'
+        : num.toLocaleString('en-NG', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+          });
+}
+

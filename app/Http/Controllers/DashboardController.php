@@ -16,17 +16,13 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        $productsCount = Product::query()
-            ->where('user_id', $user->id)
-            ->count();
+        $productsCount = $user->products()->count();
 
-        $linksQuery = Link::query()
-            ->where('user_id', $user->id);
+        $linksQuery = $user->links();
 
         $linksCount = (clone $linksQuery)->count();
         $linksClickCount = (int) (clone $linksQuery)->sum('clicks');
 
-        // get links ordered by clicks and then by creation date, with a limit of 10
         $userLinks = (clone $linksQuery)
             ->orderByDesc('clicks')
             ->orderByDesc('created_at')
@@ -48,15 +44,12 @@ class DashboardController extends Controller
             }])
             ->get();
 
-        $userProducts = Product::query()
-            ->where('user_id', $user->id)
+        $userProducts = $user->products()
             ->latest()
             ->take(3)
             ->pluck('name');
 
-        // get stock levesl for chart
-        $stockLevels = Product::query()
-            ->where('user_id', $user->id)
+        $stockLevels = $user->products()
             ->orderByDesc('stock_quantity')
             ->take(6)
             ->get(['name', 'stock_quantity'])

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Settings;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ProfileDeleteRequest;
 use App\Http\Requests\Settings\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -39,18 +40,10 @@ class ProfileController extends Controller
         $user->fill(Arr::except($validated, ['avatar', 'reset_avatar']));
 
         if ($request->hasFile('avatar')) {
-            $oldAvatar = $user->getRawOriginal('avatar');
-            if ($oldAvatar && ! Str::startsWith($oldAvatar, ['/images/', 'http://', 'https://']) && Storage::disk('public')->exists($oldAvatar)) {
-                Storage::disk('public')->delete($oldAvatar);
-            }
-
+            $this->deleteOldAvatar($user);
             $user->avatar = $request->file('avatar')->store('avatars', 'public');
         } elseif ($request->boolean('reset_avatar')) {
-            $oldAvatar = $user->getRawOriginal('avatar');
-            if ($oldAvatar && ! Str::startsWith($oldAvatar, ['/images/', 'http://', 'https://']) && Storage::disk('public')->exists($oldAvatar)) {
-                Storage::disk('public')->delete($oldAvatar);
-            }
-
+            $this->deleteOldAvatar($user);
             $user->avatar = '/images/default-user.jpeg';
         }
 
@@ -61,10 +54,6 @@ class ProfileController extends Controller
         $user->save();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Profile updated.')]);
-
-        if ($request->header('X-Inertia') && $request->headers->get('referer') && Str::contains($request->headers->get('referer'), '/dashboard')) {
-            return to_route('dashboard');
-        }
 
         return to_route('profile.edit');
     }
@@ -84,5 +73,17 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    /**
+     * Delete previously uploaded avatar file from storage if present.
+     */
+    private function deleteOldAvatar(User $user): void
+    {
+        $oldAvatar = $user->getRawOriginal('avatar');
+
+        if ($oldAvatar && ! Str::startsWith($oldAvatar, ['/images/', 'http://', 'https://']) && Storage::disk('public')->exists($oldAvatar)) {
+            Storage::disk('public')->delete($oldAvatar);
+        }
     }
 }

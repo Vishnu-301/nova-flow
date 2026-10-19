@@ -12,6 +12,7 @@ import {
 import { useMemo, useState } from 'react';
 import { destroy as destroyCategory } from '@/actions/App/Http/Controllers/CategoryController';
 import { destroy as destroyProduct } from '@/actions/App/Http/Controllers/ProductController';
+import { formatCurrency } from '@/lib/utils';
 import {
     create as productsCreate,
     edit as productsEdit,
@@ -80,17 +81,6 @@ export default function Products({
             return matchesSearch && matchesCategory;
         });
     }, [products, searchQuery, selectedCategoryId]);
-
-    const formatCurrency = (val: number | string) => {
-        const num = typeof val === 'string' ? parseFloat(val) : val;
-
-        return isNaN(num)
-            ? '0.00'
-            : num.toLocaleString('en-NG', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-              });
-    };
 
     return (
         <>

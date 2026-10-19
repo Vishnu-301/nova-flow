@@ -13,6 +13,7 @@ import {
 import { useMemo, useState, useSyncExternalStore } from 'react';
 import { toast } from 'sonner';
 import AppLogo from '@/components/app-logo';
+import { formatCurrency } from '@/lib/utils';
 
 interface CategoryProps {
     id: number;
@@ -82,17 +83,6 @@ export default function ShowLink({
 
     const handleImageError = (productId: number) => {
         setFailedImages((prev) => ({ ...prev, [productId]: true }));
-    };
-
-    const formatCurrency = (val: number | string) => {
-        const num = typeof val === 'string' ? parseFloat(val) : val;
-
-        return isNaN(num)
-            ? '0.00'
-            : num.toLocaleString('en-NG', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-            });
     };
 
     const getProductSlug = (product: ProductProps): string => {
