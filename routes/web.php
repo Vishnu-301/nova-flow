@@ -16,7 +16,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::get('/links/{link}', [LinksController::class, 'show'])->name('links.show');
+Route::get('/links/{link}/products/{product}', [LinksController::class, 'show'])->name('links.show.product');
+Route::get('/links/{link}/{product}', [LinksController::class, 'show'])->name('links.show.item');
 
 require __DIR__.'/settings.php';
 
 Route::get('/{link:slug}', [LinksController::class, 'show'])->name('links.view');
+Route::get('/{link:slug}/products/{product}', [LinksController::class, 'show'])->name('links.view.products');
+Route::get('/{link:slug}/{product}', [LinksController::class, 'show'])->name('links.view.product');

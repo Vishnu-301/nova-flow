@@ -45,13 +45,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $userId = Auth::id();
-
         return Inertia::render('products/create', [
             'categories' => Category::query()
-                ->whereHas('products', function ($query) use ($userId) {
-                    $query->where('user_id', $userId);
-                })
                 ->orderBy('name')
                 ->get(['id', 'name']),
         ]);

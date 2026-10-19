@@ -242,3 +242,120 @@ test('user cannot delete another users link', function () {
     $response->assertForbidden();
     $this->assertDatabaseHas('links', ['id' => $otherUserLink->id]);
 });
+
+test('when product link is accessed only the copied product can be seen', function () {
+    $user = User::factory()->create();
+    $category = Category::factory()->create(['name' => 'Fashion']);
+
+    $product1 = Product::factory()->create([
+        'user_id' => $user->id,
+        'name' => 'Blue Denim Jacket',
+        'price' => 15000,
+        'discount' => 2000,
+    ]);
+    $product1->categories()->attach($category->id);
+
+    $product2 = Product::factory()->create([
+        'user_id' => $user->id,
+        'name' => 'White Cotton T-Shirt',
+        'price' => 5000,
+    ]);
+    $product2->categories()->attach($category->id);
+
+    $link = Link::create([
+        'slug' => 'spring-fashion',
+        'user_id' => $user->id,
+    ]);
+    $link->categories()->attach($category->id);
+
+    // Access via query param ?product={id}
+    $responseQuery = $this->get('/spring-fashion?product='.$product1->id);
+    $responseQuery->assertOk();
+    $responseQuery->assertInertia(fn ($page) => $page
+        ->component('links/show')
+        ->where('link.slug', 'spring-fashion')
+        ->where('selectedProduct.id', $product1->id)
+        ->where('selectedProduct.name', 'Blue Denim Jacket')
+        ->has('products', 1)
+        ->where('products.0.id', $product1->id)
+    );
+
+    // Access via direct path /{link:slug}/{product_slug}
+    $responseSlug = $this->get('/spring-fashion/'.$product1->slug);
+    $responseSlug->assertOk();
+    $responseSlug->assertInertia(fn ($page) => $page
+        ->component('links/show')
+        ->where('selectedProduct.id', $product1->id)
+        ->where('selectedProduct.name', 'Blue Denim Jacket')
+        ->where('selectedProduct.slug', 'blue-denim-jacket')
+        ->has('products', 1)
+        ->where('products.0.id', $product1->id)
+    );
+
+    // Access via direct path /{link:slug}/products/{product}
+    $responsePath = $this->get('/spring-fashion/products/'.$product1->slug);
+    $responsePath->assertOk();
+    $responsePath->assertInertia(fn ($page) => $page
+        ->component('links/show')
+        ->where('selectedProduct.id', $product1->id)
+        ->has('products', 1)
+    );
+});
+
+test('accessing product from another user via link product parameter returns 404', function () {
+    $userA = User::factory()->create();
+    $userB = User::factory()->create();
+    $category = Category::factory()->create(['name' => 'Tech']);
+
+    $productA = Product::factory()->create([
+        'user_id' => $userA->id,
+        'name' => 'User A Phone',
+    ]);
+    $productA->categories()->attach($category->id);
+
+    $productB = Product::factory()->create([
+        'user_id' => $userB->id,
+        'name' => 'User B Laptop',
+    ]);
+    $productB->categories()->attach($category->id);
+
+    $linkA = Link::create([
+        'slug' => 'user-a-tech',
+        'user_id' => $userA->id,
+    ]);
+    $linkA->categories()->attach($category->id);
+
+    // Trying to view User B's product under User A's link must fail
+    $response = $this->get('/user-a-tech?product='.$productB->id);
+    $response->assertNotFound();
+
+    $responsePath = $this->get('/user-a-tech/products/'.$productB->id);
+    $responsePath->assertNotFound();
+});
+
+test('accessing product from unselected category via link product parameter returns 404', function () {
+    $user = User::factory()->create();
+    $selectedCategory = Category::factory()->create(['name' => 'Kitchen']);
+    $unselectedCategory = Category::factory()->create(['name' => 'Garden']);
+
+    $kitchenProduct = Product::factory()->create([
+        'user_id' => $user->id,
+        'name' => 'Blender',
+    ]);
+    $kitchenProduct->categories()->attach($selectedCategory->id);
+
+    $gardenProduct = Product::factory()->create([
+        'user_id' => $user->id,
+        'name' => 'Lawn Mower',
+    ]);
+    $gardenProduct->categories()->attach($unselectedCategory->id);
+
+    $link = Link::create([
+        'slug' => 'kitchen-deals',
+        'user_id' => $user->id,
+    ]);
+    $link->categories()->attach($selectedCategory->id);
+
+    $response = $this->get('/kitchen-deals?product='.$gardenProduct->id);
+    $response->assertNotFound();
+});

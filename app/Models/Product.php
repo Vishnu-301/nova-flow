@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 
 #[Fillable(
     'name',
+    'slug',
     'description',
     'image',
     'price',
@@ -24,6 +25,17 @@ class Product extends Model
 {
     /** @use HasFactory<ProductsFactory> */
     use HasFactory;
+
+    protected $appends = ['slug'];
+
+    protected static function booted(): void
+    {
+        static::saving(function (Product $product) {
+            if (empty($product->slug) && ! empty($product->name)) {
+                $product->slug = Str::slug($product->name);
+            }
+        });
+    }
 
     public function user(): BelongsTo
     {
@@ -52,6 +64,16 @@ class Product extends Model
 
                 return Storage::url($value);
             }
+        );
+    }
+
+    /**
+     * Get the product's slug attribute.
+     */
+    protected function slug(): Attribute
+    {
+        return Attribute::make(
+            get: fn (?string $value) => $value ?: Str::slug($this->name),
         );
     }
 }

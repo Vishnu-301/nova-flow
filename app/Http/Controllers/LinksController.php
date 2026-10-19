@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreLinksRequest;
 use App\Models\Category;
 use App\Models\Link;
+use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -102,19 +103,60 @@ class LinksController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Link $link)
+    public function show(Request $request, Link $link, string|Product|null $product = null)
     {
         $link->increment('clicks');
 
         $link->load('categories');
+
+        $productIdentifier = null;
+
+        if ($product instanceof Product) {
+            $productIdentifier = $product->slug ?: $product->id;
+        } elseif (is_string($product) || is_numeric($product)) {
+            $productIdentifier = $product;
+        } else {
+            $productIdentifier = $request->query('product') ?? $request->query('products');
+        }
+
+        if ($productIdentifier !== null && $productIdentifier !== '') {
+            $selectedProduct = $link->products()
+                ->with('categories')
+                ->where(function ($query) use ($productIdentifier) {
+                    $query->where('products.slug', $productIdentifier);
+
+                    if (is_numeric($productIdentifier)) {
+                        $query->orWhere('products.id', (int) $productIdentifier);
+                    }
+
+                    $nameSlug = str_replace('-', ' ', (string) $productIdentifier);
+                    $query->orWhereRaw('LOWER(products.name) = ?', [strtolower($nameSlug)])
+                        ->orWhereRaw('LOWER(products.name) = ?', [strtolower((string) $productIdentifier)]);
+                })
+                ->firstOrFail();
+
+            return Inertia::render('links/show', [
+                'link' => [
+                    'id' => $link->id,
+                    'name' => Str::headline($link->slug),
+                    'slug' => $link->slug,
+                    'directory' => url('/'.$link->slug),
+                ],
+                'categories' => $link->categories,
+                'selectedProduct' => $selectedProduct,
+                'products' => [$selectedProduct],
+            ]);
+        }
 
         return Inertia::render('links/show', [
             'link' => [
                 'id' => $link->id,
                 'name' => Str::headline($link->slug),
                 'slug' => $link->slug,
+                'directory' => url('/'.$link->slug),
             ],
             'categories' => $link->categories,
+            'selectedProduct' => null,
             'products' => $link->products()->with('categories')->latest()->paginate(20),
         ]);
     }
