@@ -42,7 +42,7 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
             <div className="flex flex-col gap-6 lg:flex-row lg:gap-10">
                 <aside className="w-full shrink-0 lg:w-56">
                     <nav
-                        className="flex flex-row gap-2 overflow-x-auto rounded-2xl border border-nf-line bg-nf-card p-2 lg:flex-col lg:gap-1.5 lg:overflow-visible"
+                        className="flex flex-col gap-1.5 rounded-2xl border border-nf-line bg-nf-card p-2"
                         aria-label="Settings"
                     >
                         {sidebarNavItems.map((item, index) => (

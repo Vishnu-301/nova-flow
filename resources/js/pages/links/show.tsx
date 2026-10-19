@@ -10,7 +10,7 @@ import {
     Tag,
     X,
 } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState, useSyncExternalStore } from 'react';
 import { toast } from 'sonner';
 import AppLogo from '@/components/app-logo';
 
@@ -52,6 +52,10 @@ interface ShowLinkProps {
     products: ProductProps[] | PaginatedProducts;
 }
 
+const subscribe = () => () => { };
+const getCanShare = () => typeof navigator !== 'undefined' && typeof navigator.share === 'function';
+const getServerSnapshot = () => false;
+
 export default function ShowLink({
     link,
     categories = [],
@@ -70,13 +74,11 @@ export default function ShowLink({
     const [selectedCategoryId, setSelectedCategoryId] = useState<number | 'all'>('all');
     const [failedImages, setFailedImages] = useState<Record<number, boolean>>({});
     const [copiedProductId, setCopiedProductId] = useState<number | null>(null);
-    const [canShare, setCanShare] = useState(false);
-
-    useEffect(() => {
-        if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
-            setCanShare(true);
-        }
-    }, []);
+    const canShare = useSyncExternalStore(
+        subscribe,
+        getCanShare,
+        getServerSnapshot,
+    );
 
     const handleImageError = (productId: number) => {
         setFailedImages((prev) => ({ ...prev, [productId]: true }));
@@ -129,6 +131,7 @@ export default function ShowLink({
         }
 
         const cleanPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+
         return `${window.location.origin}${cleanPath}`;
     };
 
