@@ -151,11 +151,10 @@ export default function Products({
                             return (
                                 <div
                                     key={category.id}
-                                    className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-bold transition-all ${
-                                        isSelected
+                                    className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-bold transition-all ${isSelected
                                             ? 'border-nf-ink bg-nf-ink text-white shadow-xs'
                                             : 'border-nf-line bg-white text-nf-text hover:border-nf-green'
-                                    }`}
+                                        }`}
                                 >
                                     <button
                                         type="button"
@@ -164,9 +163,8 @@ export default function Products({
                                     >
                                         <span>{category.name}</span>
                                         <span
-                                            className={`text-xs ${
-                                                isSelected ? 'text-white/70' : 'text-nf-muted'
-                                            }`}
+                                            className={`text-xs ${isSelected ? 'text-white/70' : 'text-nf-muted'
+                                                }`}
                                         >
                                             ({count})
                                         </span>
@@ -189,11 +187,10 @@ export default function Products({
                                                     e.preventDefault();
                                                 }
                                             }}
-                                            className={`inline-flex size-5 items-center justify-center rounded-full transition-colors ${
-                                                isSelected
+                                            className={`inline-flex size-5 items-center justify-center rounded-full transition-colors ${isSelected
                                                     ? 'text-white/70 hover:bg-white/20 hover:text-white'
                                                     : 'text-nf-muted hover:bg-rose-50 hover:text-rose-600'
-                                            }`}
+                                                }`}
                                         >
                                             <Trash2 className="size-3" />
                                         </button>

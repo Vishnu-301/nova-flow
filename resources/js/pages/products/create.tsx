@@ -293,7 +293,7 @@ export default function CreateProduct({ categories }: CreateProductProps) {
                                         onChange={(event) =>
                                             setImageName(
                                                 event.target.files?.[0]?.name ??
-                                                    null,
+                                                null,
                                             )
                                         }
                                     />

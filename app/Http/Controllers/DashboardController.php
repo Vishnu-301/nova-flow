@@ -27,7 +27,7 @@ class DashboardController extends Controller
             ->orderByDesc('clicks')
             ->orderByDesc('created_at')
             ->get(['id', 'slug', 'clicks'])
-            ->map(fn (Link $link): array => [
+            ->map(fn(Link $link): array => [
                 'id' => $link->id,
                 'name' => Str::headline($link->slug),
                 'slug' => $link->slug,
@@ -53,7 +53,7 @@ class DashboardController extends Controller
             ->orderByDesc('stock_quantity')
             ->take(6)
             ->get(['name', 'stock_quantity'])
-            ->map(fn (Product $product): array => [
+            ->map(fn(Product $product): array => [
                 'name' => $product->name,
                 'quantity' => (int) $product->stock_quantity,
             ])
@@ -86,7 +86,7 @@ class DashboardController extends Controller
         $periods = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
         if ($totalClicks <= 0) {
-            return array_map(fn (string $period): array => [
+            return array_map(fn(string $period): array => [
                 'period' => $period,
                 'clicks' => 0,
             ], $periods);
