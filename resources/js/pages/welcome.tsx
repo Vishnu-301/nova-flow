@@ -2,179 +2,166 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import {
     ArrowRight,
     BarChart3,
-    Bell,
-    Boxes,
+    Check,
+    CheckCircle2,
+    Copy,
     Eye,
     Globe,
+    Layers,
     LayoutGrid,
     Link2,
     Menu,
+    MessageCircle,
     Monitor,
     MousePointerClick,
     Package,
+    QrCode,
+    Share2,
     ShieldCheck,
     Smartphone,
     Sparkles,
     Tablet,
-    TrendingUp,
     X,
 } from 'lucide-react';
 import { useState } from 'react';
 import AppLogo from '@/components/app-logo';
 import { dashboard, login, register } from '@/routes';
 
-interface SampleProduct {
-    id: number;
+interface CategoryItem {
+    id: string;
     name: string;
-    category: string;
-    categorySlug: string;
-    price: string;
-    tag: string;
-    description: string;
-    inStock: boolean;
+    slug: string;
+    productCount: number;
+    sampleProduct: string;
+    priceRange: string;
 }
 
-const SAMPLE_PRODUCTS: SampleProduct[] = [
+const AVAILABLE_CATEGORIES: CategoryItem[] = [
     {
-        id: 1,
-        name: 'Unique Beaded Necklace',
-        category: 'Necklaces',
-        categorySlug: 'necklaces',
-        price: '₦7,000',
-        tag: 'Standout style',
-        description:
-            'Distinctive handcrafted beaded necklace designed to make a personal statement solo or layered.',
-        inStock: true,
+        id: 'cat-1',
+        name: 'Waistbeads',
+        slug: 'waistbeads',
+        productCount: 7,
+        sampleProduct: 'Vancleef Waistbeads with Chain',
+        priceRange: '₦10,000 - ₦25,000',
     },
     {
-        id: 2,
-        name: 'WHIMSY Bracelet',
-        category: 'Bracelets',
-        categorySlug: 'bracelets',
-        price: '₦6,000',
-        tag: 'Delicate glow',
-        description:
-            'Delicate glow beads styled for effortless stacking or clean solo wear.',
-        inStock: true,
+        id: 'cat-2',
+        name: 'Bracelets',
+        slug: 'bracelets',
+        productCount: 4,
+        sampleProduct: 'WHIMSY Glow Bracelet',
+        priceRange: '₦6,000 - ₦20,000',
     },
     {
-        id: 3,
-        name: 'Vancleef Waistbeads with Chain',
-        category: 'Waistbeads',
-        categorySlug: 'waistbeads',
-        price: '₦25,000',
-        tag: 'With chain detail',
-        description:
-            'Black and white waistbeads finished with an artisan metallic chain accent.',
-        inStock: true,
+        id: 'cat-3',
+        name: 'Necklaces',
+        slug: 'necklaces',
+        productCount: 5,
+        sampleProduct: 'Handcrafted Beaded Choker',
+        priceRange: '₦7,000 - ₦30,000',
     },
     {
-        id: 4,
-        name: 'Dove Grace Anklet',
-        category: 'Anklets',
-        categorySlug: 'anklets',
-        price: '₦4,000',
-        tag: 'Dove detail',
-        description:
-            'Refined lightweight anklet bringing a soft, graceful statement to everyday outfits.',
-        inStock: true,
-    },
-    {
-        id: 5,
-        name: 'Fierce Bracelet Set',
-        category: 'Bracelets',
-        categorySlug: 'bracelets',
-        price: '₦20,000',
-        tag: "Men's collection",
-        description:
-            'Bold dual-strand set designed for a confident, structured wrist stack.',
-        inStock: true,
-    },
-    {
-        id: 6,
-        name: 'Brown & Gold Vancleef',
-        category: 'Waistbeads',
-        categorySlug: 'waistbeads',
-        price: '₦15,000',
-        tag: 'Warm polished',
-        description:
-            'Earth-toned strands accented with gold-plated beads for a rich, warm gleam.',
-        inStock: true,
+        id: 'cat-4',
+        name: 'Anklets',
+        slug: 'anklets',
+        productCount: 3,
+        sampleProduct: 'Dove Grace Soft Anklet',
+        priceRange: '₦4,000 - ₦5,000',
     },
 ];
 
-const FEATURES = [
+const STOREFRONT_USE_CASES = [
+    {
+        title: 'The WhatsApp & Direct Message Drop',
+        badge: 'Direct Commerce',
+        icon: MessageCircle,
+        scenario:
+            'A buyer asks: "Do you have any gold waistbeads and matching bracelets?"',
+        solution:
+            'Instead of sending 30 loose photos that clutter their chat, select Waistbeads + Bracelets in your dashboard. Novaflow generates a dedicated, live link in two seconds.',
+        slug: 'novaflow.com/zals/gold-waistbeads-and-bracelets',
+        actionLabel:
+            'Client taps link → views curated selection with live stock',
+    },
+    {
+        title: 'The Link-in-Bio Campaign',
+        badge: 'Social Traffic',
+        icon: Share2,
+        scenario:
+            'You are promoting a seasonal collection on Instagram Stories and TikTok.',
+        solution:
+            'Create a custom slug for your new drop. Customers browse your curated collection instantly on mobile without signup gates, while you watch click milestones roll in.',
+        slug: 'novaflow.com/zals/summer-artisan-drop',
+        actionLabel: 'Followers tap bio → fast, focused collection checkout',
+    },
+    {
+        title: 'In-Person Pop-ups & Market QR Codes',
+        badge: 'Physical to Digital',
+        icon: QrCode,
+        scenario:
+            'Shoppers at your market stall want to see available sizes, colors, and prices.',
+        solution:
+            'Generate a link for the categories on display and print a single tabletop QR code. Shoppers scan and browse your exact booth catalogue on their own smartphones.',
+        slug: 'novaflow.com/zals/market-day-showcase',
+        actionLabel:
+            'Shoppers scan QR → browse entire inventory on their phones',
+    },
+    {
+        title: 'Private VIP & Repeat Buyer Previews',
+        badge: 'Exclusive Drops',
+        icon: Sparkles,
+        scenario:
+            'You want loyal repeat clients to access new handcrafted items before public release.',
+        solution:
+            'Compile your unreleased items into a private link slug. Share the link exclusively with VIP clients to take early requests before announcing to the public.',
+        slug: 'novaflow.com/zals/vip-early-access',
+        actionLabel: 'VIPs get first pick → zero public stock confusion',
+    },
+];
+
+const PLATFORM_FEATURES = [
     {
         number: '01',
-        title: 'Overview dashboard',
+        title: 'Category-to-Link Engine',
         description:
-            'One calm screen for live inventory, category distribution, and audience traffic the second you sign in.',
-        icon: LayoutGrid,
-        color: 'from-emerald-500/10 to-teal-500/10 text-emerald-700 dark:text-emerald-400',
+            'Combine any combination of categories into a single, clean URL. Each link shows only the items you selected, perfectly compiled.',
+        icon: Link2,
     },
     {
         number: '02',
-        title: 'Product management',
+        title: 'Instant Mobile Storefronts',
         description:
-            'Upload high-res imagery, organize into clean collections, and keep stock counts honest with automatic low-stock alerts.',
-        icon: Package,
-        color: 'from-blue-500/10 to-indigo-500/10 text-blue-700 dark:text-blue-400',
+            'Customers experience a lightweight, ultra-fast storefront with zero friction, live category filters, and single-item focus modes.',
+        icon: Smartphone,
     },
     {
         number: '03',
-        title: 'Personalized links',
+        title: 'Real-Time Click Tracking',
         description:
-            'Generate custom slugs tied directly to targeted categories. Share them on Instagram, WhatsApp, or TikTok seamlessly.',
-        icon: Link2,
-        color: 'from-amber-500/10 to-orange-500/10 text-amber-700 dark:text-amber-400',
+            'Every link visit is tracked automatically. Monitor which campaign links, story drops, and custom slugs generate the most interest.',
+        icon: MousePointerClick,
     },
     {
         number: '04',
-        title: 'Real-time analytics',
+        title: 'Honest Inventory Management',
         description:
-            'Visual donut distributions, hourly click milestones, and audience growth charts you can interpret at a glance.',
-        icon: BarChart3,
-        color: 'from-purple-500/10 to-pink-500/10 text-purple-700 dark:text-purple-400',
+            'Upload product imagery, set stock quantities, and adjust pricing. When stock hits low levels, your dashboard alerts you immediately.',
+        icon: Package,
     },
     {
         number: '05',
-        title: 'Public portfolio gallery',
+        title: 'Multi-Tenant Data Isolation',
         description:
-            'A boutique digital storefront that feels like a curated gallery. Visitors browse without cumbersome login gates.',
-        icon: Globe,
-        color: 'from-teal-500/10 to-cyan-500/10 text-teal-700 dark:text-teal-400',
+            'Each seller operates in an isolated environment. Your products, custom links, customer traffic, and analytics belong strictly to you.',
+        icon: ShieldCheck,
     },
     {
         number: '06',
-        title: 'Private by design',
+        title: 'Portfolio-Grade Presentation',
         description:
-            "Strict multi-tenant architecture. Every seller's products, customers, and analytics belong exclusively to them.",
-        icon: ShieldCheck,
-        color: 'from-lime-500/10 to-emerald-500/10 text-lime-700 dark:text-lime-400',
-    },
-];
-
-const STEPS = [
-    {
-        step: '01',
-        title: 'List your products',
-        description:
-            'Upload high-resolution photos, tag categories, and set stock levels. Your catalogue goes live in your private dashboard instantly.',
-        badge: 'Catalogue setup',
-    },
-    {
-        step: '02',
-        title: 'Generate a link',
-        description:
-            'Select your custom slug, attach the collections you want to highlight, and share it anywhere your audience discovers you.',
-        badge: 'Custom URL',
-    },
-    {
-        step: '03',
-        title: 'Read the results',
-        description:
-            'Watch real-time link clicks and orders move on your analytics dashboard, then decide what bestsellers to restock next.',
-        badge: 'Growth insights',
+            'Designed specifically for makers, artisans, and boutique shops who care about craftsmanship and clean, un-bloated customer presentation.',
+        icon: Globe,
     },
 ];
 
@@ -184,81 +171,99 @@ export default function Welcome() {
     const [activeDevice, setActiveDevice] = useState<
         'desktop' | 'tablet' | 'mobile'
     >('desktop');
-    const [selectedCategory, setSelectedCategory] = useState<string>('all');
-    const [copiedSlug, setCopiedSlug] = useState(false);
+    const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([
+        'cat-1',
+        'cat-2',
+    ]);
+    const [customSlugName, setCustomSlugName] = useState('summer-artisan-drop');
+    const [copiedUrl, setCopiedUrl] = useState(false);
 
-    const filteredProducts =
-        selectedCategory === 'all'
-            ? SAMPLE_PRODUCTS
-            : SAMPLE_PRODUCTS.filter(
-                  (p) => p.categorySlug === selectedCategory,
-              );
+    const toggleCategorySelection = (id: string) => {
+        setSelectedCategoryIds((prev) => {
+            if (prev.includes(id)) {
+                if (prev.length === 1) {
+                    return prev;
+                }
 
-    const handleCopyDemoLink = () => {
-        navigator.clipboard?.writeText('https://novaflow.com/zals-beadworks');
-        setCopiedSlug(true);
-        setTimeout(() => setCopiedSlug(false), 2000);
+                return prev.filter((item) => item !== id);
+            }
+
+            return [...prev, id];
+        });
+    };
+
+    const selectedCategories = AVAILABLE_CATEGORIES.filter((c) =>
+        selectedCategoryIds.includes(c.id),
+    );
+    const totalCompiledProducts = selectedCategories.reduce(
+        (sum, c) => sum + c.productCount,
+        0,
+    );
+
+    const fullDemoUrl = `novaflow.com/zals-beadworks/${customSlugName || 'custom-collection'}`;
+
+    const handleCopyUrl = () => {
+        navigator.clipboard?.writeText(`https://${fullDemoUrl}`);
+        setCopiedUrl(true);
+        setTimeout(() => setCopiedUrl(false), 2200);
     };
 
     return (
         <>
-            <Head title="Nova Flow — Multi-Tenant Commerce & Showcase Platform" />
+            <Head title="Nova Flow — Compile & Share Products in Curated Storefront Links" />
 
             <div className="min-h-screen bg-[#f4f4fa] font-sans text-[#1c1a24] selection:bg-[#bcf7b7] selection:text-[#123524] dark:bg-[#050806] dark:text-[#edf7ef]">
-                {/* Top Navigation */}
-                <header className="sticky top-0 z-50 border-b border-[#eaeaf2]/80 bg-[#f4f4fa]/90 backdrop-blur-md transition-colors dark:border-[#1a2a1e] dark:bg-[#050806]/90">
+                {/* Navigation Header */}
+                <header className="sticky top-0 z-50 border-b border-[#eaeaf2] bg-[#f4f4fa]/95 backdrop-blur-sm dark:border-[#1a2a1e] dark:bg-[#050806]/95">
                     <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
                         {/* Logo */}
-                        <Link
-                            href="/"
-                            className="flex items-center gap-2 transition hover:opacity-95"
-                        >
+                        <Link href="/" className="flex items-center gap-2">
                             <AppLogo
                                 textClassName="text-[#123524] dark:text-[#edf7ef]"
                                 iconClassName="size-9"
                             />
                         </Link>
 
-                        {/* Desktop Navigation Links */}
-                        <nav className="hidden items-center gap-8 text-sm font-semibold text-[#636171] md:flex dark:text-[#9FB8A4]">
+                        {/* Desktop Nav Links */}
+                        <nav className="hidden items-center gap-7 text-sm font-semibold text-[#636171] md:flex dark:text-[#9FB8A4]">
+                            <a
+                                href="#link-engine"
+                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                            >
+                                Link Engine
+                            </a>
+                            <a
+                                href="#storefronts"
+                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                            >
+                                Storefronts
+                            </a>
+                            <a
+                                href="#prototypes"
+                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                            >
+                                Multi-Device
+                            </a>
                             <a
                                 href="#features"
-                                className="transition hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
                             >
                                 Features
                             </a>
                             <a
                                 href="#how"
-                                className="transition hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
                             >
-                                How it works
-                            </a>
-                            <a
-                                href="#prototype"
-                                className="transition hover:text-[#123524] dark:hover:text-[#bcf7b7]"
-                            >
-                                Prototypes
-                            </a>
-                            <a
-                                href="#gallery"
-                                className="transition hover:text-[#123524] dark:hover:text-[#bcf7b7]"
-                            >
-                                Gallery
-                            </a>
-                            <a
-                                href="#alerts"
-                                className="transition hover:text-[#123524] dark:hover:text-[#bcf7b7]"
-                            >
-                                Alerts
+                                How It Works
                             </a>
                         </nav>
 
-                        {/* Auth Action Buttons */}
+                        {/* Auth Navigation */}
                         <div className="hidden items-center gap-3 sm:flex">
                             {auth.user ? (
                                 <Link
                                     href={dashboard()}
-                                    className="inline-flex items-center gap-2 rounded-xl bg-[#123524] px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#1a4430] dark:bg-[#bcf7b7] dark:text-[#06140b] dark:hover:bg-[#a6ec9f]"
+                                    className="inline-flex items-center gap-2 rounded-xl bg-[#123524] px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-[#1a4430] dark:bg-[#bcf7b7] dark:text-[#06140b] dark:hover:bg-[#a6ec9f]"
                                 >
                                     <LayoutGrid className="size-4" />
                                     <span>Dashboard</span>
@@ -267,29 +272,29 @@ export default function Welcome() {
                                 <>
                                     <Link
                                         href={login()}
-                                        className="rounded-xl px-4 py-2.5 text-sm font-bold text-[#123524] transition hover:text-[#2f6b3f] dark:text-[#edf7ef] dark:hover:text-[#bcf7b7]"
+                                        className="rounded-xl px-4 py-2.5 text-sm font-bold text-[#123524] hover:text-[#2f6b3f] dark:text-[#edf7ef] dark:hover:text-[#bcf7b7]"
                                     >
                                         Sign in
                                     </Link>
                                     <Link
                                         href={register()}
-                                        className="inline-flex items-center gap-1.5 rounded-xl bg-[#123524] px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#1a4430] dark:bg-[#bcf7b7] dark:text-[#06140b] dark:hover:bg-[#a6ec9f]"
+                                        className="inline-flex items-center gap-1.5 rounded-xl bg-[#123524] px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-[#1a4430] dark:bg-[#bcf7b7] dark:text-[#06140b] dark:hover:bg-[#a6ec9f]"
                                     >
-                                        <span>Create seller account</span>
+                                        <span>Create store</span>
                                         <ArrowRight className="size-4" />
                                     </Link>
                                 </>
                             )}
                         </div>
 
-                        {/* Mobile Menu Button */}
-                        <div className="flex items-center gap-2 md:hidden">
+                        {/* Mobile Hamburger Toggle */}
+                        <div className="flex items-center md:hidden">
                             <button
                                 type="button"
                                 onClick={() =>
                                     setMobileMenuOpen(!mobileMenuOpen)
                                 }
-                                className="rounded-xl p-2 text-[#123524] hover:bg-black/5 dark:text-[#edf7ef] dark:hover:bg-white/5"
+                                className="rounded-xl p-2 text-[#123524] hover:bg-[#eaeaf2] dark:text-[#edf7ef] dark:hover:bg-[#1a2a1e]"
                                 aria-label="Toggle navigation"
                             >
                                 {mobileMenuOpen ? (
@@ -301,44 +306,44 @@ export default function Welcome() {
                         </div>
                     </div>
 
-                    {/* Mobile Drawer */}
+                    {/* Mobile Navigation Drawer */}
                     {mobileMenuOpen && (
                         <div className="border-b border-[#eaeaf2] bg-white px-5 py-6 sm:px-6 md:hidden dark:border-[#1a2a1e] dark:bg-[#0b120d]">
                             <div className="flex flex-col gap-4 text-base font-semibold text-[#123524] dark:text-[#edf7ef]">
                                 <a
+                                    href="#link-engine"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="py-1 hover:text-[#2f6b3f] dark:hover:text-[#bcf7b7]"
+                                >
+                                    Link Engine
+                                </a>
+                                <a
+                                    href="#storefronts"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="py-1 hover:text-[#2f6b3f] dark:hover:text-[#bcf7b7]"
+                                >
+                                    Storefronts
+                                </a>
+                                <a
+                                    href="#prototypes"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="py-1 hover:text-[#2f6b3f] dark:hover:text-[#bcf7b7]"
+                                >
+                                    Multi-Device
+                                </a>
+                                <a
                                     href="#features"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="py-1 transition hover:text-[#2f6b3f] dark:hover:text-[#bcf7b7]"
+                                    className="py-1 hover:text-[#2f6b3f] dark:hover:text-[#bcf7b7]"
                                 >
                                     Features
                                 </a>
                                 <a
                                     href="#how"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="py-1 transition hover:text-[#2f6b3f] dark:hover:text-[#bcf7b7]"
+                                    className="py-1 hover:text-[#2f6b3f] dark:hover:text-[#bcf7b7]"
                                 >
-                                    How it works
-                                </a>
-                                <a
-                                    href="#prototype"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="py-1 transition hover:text-[#2f6b3f] dark:hover:text-[#bcf7b7]"
-                                >
-                                    Prototypes
-                                </a>
-                                <a
-                                    href="#gallery"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="py-1 transition hover:text-[#2f6b3f] dark:hover:text-[#bcf7b7]"
-                                >
-                                    Gallery
-                                </a>
-                                <a
-                                    href="#alerts"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="py-1 transition hover:text-[#2f6b3f] dark:hover:text-[#bcf7b7]"
-                                >
-                                    Alerts
+                                    How It Works
                                 </a>
                             </div>
 
@@ -363,7 +368,7 @@ export default function Welcome() {
                                             href={register()}
                                             className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#123524] py-3 text-sm font-bold text-white dark:bg-[#bcf7b7] dark:text-[#06140b]"
                                         >
-                                            <span>Create seller account</span>
+                                            <span>Create store</span>
                                             <ArrowRight className="size-4" />
                                         </Link>
                                     </>
@@ -373,47 +378,30 @@ export default function Welcome() {
                     )}
                 </header>
 
-                {/* Hero Section with Curving Flow Wave Background (Inspired by Reference Image & Novaflow.html) */}
-                <section className="relative overflow-hidden bg-gradient-to-b from-[#e9fbe7]/60 via-[#f4f4fa] to-[#f4f4fa] pt-12 pb-20 sm:pt-20 sm:pb-28 lg:pt-24 lg:pb-36 dark:from-[#0b1610] dark:via-[#050806] dark:to-[#050806]">
-                    {/* Ambient subtle glow */}
-                    <div className="pointer-events-none absolute -top-24 left-1/2 h-[450px] w-[1000px] -translate-x-1/2 rounded-full bg-gradient-to-r from-[#bcf7b7]/30 to-[#2dd4bf]/20 opacity-70 blur-3xl dark:opacity-20" />
-
-                    <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                {/* Hero Section (Standard Clean Solid Style — No Gradients) */}
+                <section className="border-b border-[#eaeaf2] bg-[#f4f4fa] pt-14 pb-18 sm:pt-20 sm:pb-24 dark:border-[#1a2a1e] dark:bg-[#050806]">
+                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                         <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
-                            {/* Left Column: Headline and Positioning */}
+                            {/* Left Column: Clear Core Value Proposition */}
                             <div className="space-y-6 lg:col-span-7">
-                                {/* Eyebrow Tag */}
-                                <div className="inline-flex items-center gap-2 rounded-full border border-[#2f6b3f]/20 bg-[#e9fbe7] px-4 py-1.5 text-xs font-bold tracking-wide text-[#123524] dark:border-[#bcf7b7]/30 dark:bg-[#123524]/60 dark:text-[#bcf7b7]">
+                                <div className="inline-flex items-center gap-2 rounded-full border border-[#2f6b3f] bg-[#e9fbe7] px-3.5 py-1 text-xs font-bold tracking-wider text-[#123524] uppercase dark:border-[#bcf7b7] dark:bg-[#123524] dark:text-[#bcf7b7]">
                                     <Sparkles className="size-3.5 text-[#2f6b3f] dark:text-[#bcf7b7]" />
-                                    <span>MULTI-TENANT SELLER PLATFORM</span>
+                                    <span>
+                                        Category-to-Link Commerce Platform
+                                    </span>
                                 </div>
 
-                                <h1 className="text-4xl font-extrabold tracking-tight text-[#123524] sm:text-6xl lg:text-[64px] lg:leading-[1.08] dark:text-[#edf7ef]">
-                                    Your shop, your links, your numbers —{' '}
-                                    <span className="relative inline-block text-[#2f6b3f] dark:text-[#bcf7b7]">
-                                        in one flow.
-                                        <svg
-                                            className="absolute -bottom-2 left-0 w-full text-[#bcf7b7] dark:text-[#2f6b3f]"
-                                            viewBox="0 0 260 12"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M3 9C60 3 190 3 257 9"
-                                                stroke="currentColor"
-                                                strokeWidth="4"
-                                                strokeLinecap="round"
-                                            />
-                                        </svg>
-                                    </span>
+                                <h1 className="text-4xl font-extrabold tracking-tight text-[#123524] sm:text-6xl lg:text-[62px] lg:leading-[1.1] dark:text-[#edf7ef]">
+                                    Compile products into curated links. Share
+                                    your storefront anywhere.
                                 </h1>
 
                                 <p className="max-w-2xl text-lg leading-relaxed text-[#636171] sm:text-xl dark:text-[#9FB8A4]">
-                                    Novaflow gives independent sellers a private
-                                    dashboard to manage products, generate
-                                    trackable links, and read live traffic
-                                    analytics — plus a public gallery that shows
-                                    the work.
+                                    Nova Flow gives sellers their own branded
+                                    digital storefronts with an effortless way
+                                    to organize inventory: select categories,
+                                    generate custom shareable links in seconds,
+                                    and track live clicks.
                                 </p>
 
                                 {/* Action Buttons */}
@@ -421,227 +409,517 @@ export default function Welcome() {
                                     {auth.user ? (
                                         <Link
                                             href={dashboard()}
-                                            className="inline-flex items-center gap-2.5 rounded-2xl bg-[#123524] px-7 py-4 text-base font-bold text-white shadow-lg shadow-[#123524]/15 transition hover:bg-[#1a4430] hover:shadow-xl dark:bg-[#bcf7b7] dark:text-[#06140b] dark:shadow-none dark:hover:bg-[#a6ec9f]"
+                                            className="inline-flex items-center gap-2.5 rounded-xl bg-[#123524] px-7 py-4 text-base font-bold text-white shadow-sm hover:bg-[#1a4430] dark:bg-[#bcf7b7] dark:text-[#06140b] dark:hover:bg-[#a6ec9f]"
                                         >
                                             <LayoutGrid className="size-5" />
-                                            <span>Open your dashboard</span>
+                                            <span>Open Dashboard</span>
                                         </Link>
                                     ) : (
                                         <>
                                             <Link
                                                 href={register()}
-                                                className="inline-flex items-center gap-2.5 rounded-2xl bg-[#123524] px-7 py-4 text-base font-bold text-white shadow-lg shadow-[#123524]/15 transition hover:bg-[#1a4430] hover:shadow-xl dark:bg-[#bcf7b7] dark:text-[#06140b] dark:shadow-none dark:hover:bg-[#a6ec9f]"
+                                                className="inline-flex items-center gap-2.5 rounded-xl bg-[#123524] px-7 py-4 text-base font-bold text-white shadow-sm hover:bg-[#1a4430] dark:bg-[#bcf7b7] dark:text-[#06140b] dark:hover:bg-[#a6ec9f]"
                                             >
-                                                <span>Open your dashboard</span>
+                                                <span>
+                                                    Start your store free
+                                                </span>
                                                 <ArrowRight className="size-5" />
                                             </Link>
                                             <a
-                                                href="#gallery"
-                                                className="inline-flex items-center gap-2 rounded-2xl border border-[#eaeaf2] bg-white px-6 py-4 text-base font-bold text-[#123524] shadow-sm transition hover:border-[#123524]/30 hover:bg-[#f9f9fc] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#edf7ef] dark:hover:bg-[#14291b]"
+                                                href="#link-engine"
+                                                className="inline-flex items-center gap-2 rounded-xl border border-[#eaeaf2] bg-white px-6 py-4 text-base font-bold text-[#123524] shadow-sm hover:border-[#123524] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#edf7ef]"
                                             >
-                                                <Eye className="size-5 text-[#2f6b3f] dark:text-[#bcf7b7]" />
-                                                <span>Browse the gallery</span>
+                                                <Link2 className="size-5 text-[#2f6b3f] dark:text-[#bcf7b7]" />
+                                                <span>Try the Link Engine</span>
                                             </a>
                                         </>
                                     )}
                                 </div>
 
-                                {/* Key Highlights */}
-                                <div className="grid grid-cols-3 gap-4 border-t border-[#eaeaf2] pt-6 dark:border-[#1a2a1e]">
-                                    <div>
-                                        <p className="text-2xl font-black text-[#123524] dark:text-[#edf7ef]">
-                                            100%
-                                        </p>
-                                        <p className="text-xs font-medium text-[#636171] dark:text-[#9FB8A4]">
-                                            Private by design
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p className="text-2xl font-black text-[#123524] dark:text-[#edf7ef]">
-                                            Instant
-                                        </p>
-                                        <p className="text-xs font-medium text-[#636171] dark:text-[#9FB8A4]">
-                                            Trackable link slugs
+                                {/* Three Solid Core Highlights */}
+                                <div className="grid grid-cols-1 gap-4 border-t border-[#eaeaf2] pt-4 sm:grid-cols-3 dark:border-[#1a2a1e]">
+                                    <div className="rounded-xl border border-[#eaeaf2] bg-white p-3.5 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                                        <div className="flex items-center gap-2 text-xs font-bold text-[#2f6b3f] dark:text-[#bcf7b7]">
+                                            <CheckCircle2 className="size-4" />
+                                            <span>Multi-Category</span>
+                                        </div>
+                                        <p className="mt-1 text-xs text-[#636171] dark:text-[#9FB8A4]">
+                                            Bundle multiple categories into one
+                                            link
                                         </p>
                                     </div>
-                                    <div>
-                                        <p className="text-2xl font-black text-[#123524] dark:text-[#edf7ef]">
-                                            Zero
+                                    <div className="rounded-xl border border-[#eaeaf2] bg-white p-3.5 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                                        <div className="flex items-center gap-2 text-xs font-bold text-[#2f6b3f] dark:text-[#bcf7b7]">
+                                            <CheckCircle2 className="size-4" />
+                                            <span>Click Tracking</span>
+                                        </div>
+                                        <p className="mt-1 text-xs text-[#636171] dark:text-[#9FB8A4]">
+                                            Count visits per link in real-time
                                         </p>
-                                        <p className="text-xs font-medium text-[#636171] dark:text-[#9FB8A4]">
-                                            Bloat or setup fee
+                                    </div>
+                                    <div className="rounded-xl border border-[#eaeaf2] bg-white p-3.5 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                                        <div className="flex items-center gap-2 text-xs font-bold text-[#2f6b3f] dark:text-[#bcf7b7]">
+                                            <CheckCircle2 className="size-4" />
+                                            <span>Zero Bloat</span>
+                                        </div>
+                                        <p className="mt-1 text-xs text-[#636171] dark:text-[#9FB8A4]">
+                                            Fast mobile catalog for buyers
                                         </p>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Right Column: Interactive Mini Dashboard Preview Widget (from novaflow.html) */}
-                            <div className="relative lg:col-span-5">
-                                <div className="relative mx-auto w-full max-w-lg rounded-3xl border border-[#eaeaf2] bg-white p-6 shadow-2xl shadow-emerald-950/5 dark:border-[#1f3324] dark:bg-[#0b120d] dark:shadow-none">
-                                    {/* Mock Browser Dots */}
+                            {/* Right Column: Clean Structural Overview Card */}
+                            <div className="lg:col-span-5">
+                                <div className="rounded-3xl border border-[#eaeaf2] bg-white p-6 shadow-sm dark:border-[#1a2a1e] dark:bg-[#0b120d]">
                                     <div className="flex items-center justify-between border-b border-[#eaeaf2] pb-4 dark:border-[#1a2a1e]">
-                                        <div className="flex gap-1.5">
-                                            <span className="size-3 rounded-full bg-rose-400" />
-                                            <span className="size-3 rounded-full bg-amber-400" />
-                                            <span className="size-3 rounded-full bg-emerald-400" />
+                                        <div className="flex items-center gap-2">
+                                            <div className="flex size-8 items-center justify-center rounded-lg bg-[#123524] text-sm font-extrabold text-[#bcf7b7]">
+                                                NF
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-bold text-[#123524] dark:text-[#edf7ef]">
+                                                    Zal's Beadworks
+                                                </p>
+                                                <p className="text-[11px] text-[#636171] dark:text-[#9FB8A4]">
+                                                    Active Storefront
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div className="flex items-center gap-1.5 rounded-full bg-[#f4f4fa] px-3 py-1 font-mono text-xs font-medium text-[#636171] dark:bg-[#123524] dark:text-[#bcf7b7]">
-                                            <span className="size-2 animate-pulse rounded-full bg-emerald-500" />
-                                            <span>zalum.novaflow.com</span>
+                                        <span className="rounded-full bg-[#e9fbe7] px-2.5 py-1 text-xs font-bold text-[#123524] dark:bg-[#123524] dark:text-[#bcf7b7]">
+                                            ● Live
+                                        </span>
+                                    </div>
+
+                                    {/* Stats grid */}
+                                    <div className="mt-5 grid grid-cols-2 gap-3">
+                                        <div className="rounded-xl border border-[#eaeaf2] bg-[#f4f4fa] p-3.5 dark:border-[#1a2a1e] dark:bg-[#050806]">
+                                            <span className="text-xs text-[#636171] dark:text-[#9FB8A4]">
+                                                Total Products
+                                            </span>
+                                            <p className="mt-1 text-2xl font-black text-[#123524] dark:text-[#edf7ef]">
+                                                19
+                                            </p>
+                                        </div>
+                                        <div className="rounded-xl border border-[#eaeaf2] bg-[#f4f4fa] p-3.5 dark:border-[#1a2a1e] dark:bg-[#050806]">
+                                            <span className="text-xs text-[#636171] dark:text-[#9FB8A4]">
+                                                Categories
+                                            </span>
+                                            <p className="mt-1 text-2xl font-black text-[#123524] dark:text-[#edf7ef]">
+                                                4
+                                            </p>
+                                        </div>
+                                        <div className="rounded-xl border border-[#eaeaf2] bg-[#f4f4fa] p-3.5 dark:border-[#1a2a1e] dark:bg-[#050806]">
+                                            <span className="text-xs text-[#636171] dark:text-[#9FB8A4]">
+                                                Generated Links
+                                            </span>
+                                            <p className="mt-1 text-2xl font-black text-[#123524] dark:text-[#edf7ef]">
+                                                3
+                                            </p>
+                                        </div>
+                                        <div className="rounded-xl border border-[#eaeaf2] bg-[#f4f4fa] p-3.5 dark:border-[#1a2a1e] dark:bg-[#050806]">
+                                            <span className="text-xs text-[#636171] dark:text-[#9FB8A4]">
+                                                Total Link Clicks
+                                            </span>
+                                            <p className="mt-1 text-2xl font-black text-[#2f6b3f] dark:text-[#bcf7b7]">
+                                                4
+                                            </p>
                                         </div>
                                     </div>
 
-                                    {/* Simulated Dashboard Content */}
-                                    <div className="mt-5 grid grid-cols-12 gap-4">
-                                        {/* Left Mini Sidebar */}
-                                        <div className="col-span-4 flex flex-col justify-between rounded-2xl bg-[#123524] p-3 text-white">
-                                            <div className="space-y-3">
-                                                <div className="flex items-center gap-2">
-                                                    <div className="flex size-6 items-center justify-center rounded-lg bg-[#bcf7b7] text-xs font-black text-[#123524]">
-                                                        N
-                                                    </div>
-                                                    <span className="text-xs font-extrabold tracking-tight">
-                                                        Nova Flow
-                                                    </span>
-                                                </div>
-                                                <div className="space-y-1.5 pt-2">
-                                                    <div className="rounded-lg bg-[#bcf7b7] px-2 py-1 text-[11px] font-bold text-[#123524]">
-                                                        Overview
-                                                    </div>
-                                                    <div className="rounded-lg px-2 py-1 text-[11px] text-white/70">
-                                                        Products (19)
-                                                    </div>
-                                                    <div className="rounded-lg px-2 py-1 text-[11px] text-white/70">
-                                                        Links (3)
-                                                    </div>
-                                                    <div className="rounded-lg px-2 py-1 text-[11px] text-white/70">
-                                                        Settings
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="pt-4 text-[10px] text-white/50">
-                                                Zal's Beadworks
-                                            </div>
+                                    {/* Active Link Item */}
+                                    <div className="mt-4 rounded-xl border border-[#eaeaf2] bg-[#f4f4fa] p-3.5 dark:border-[#1a2a1e] dark:bg-[#050806]">
+                                        <div className="flex items-center justify-between text-xs font-semibold text-[#636171] dark:text-[#9FB8A4]">
+                                            <span>Featured Drop Link</span>
+                                            <span className="text-[#2f6b3f] dark:text-[#bcf7b7]">
+                                                3 clicks (75%)
+                                            </span>
                                         </div>
-
-                                        {/* Right Mini Stats & Charts */}
-                                        <div className="col-span-8 space-y-3">
-                                            {/* Donut Category Breakdown Card */}
-                                            <div className="rounded-2xl border border-[#eaeaf2] bg-[#f4f4fa] p-3 dark:border-[#1a2a1e] dark:bg-[#0f1a12]">
-                                                <div className="flex items-center gap-3">
-                                                    {/* Custom Donut Circle */}
-                                                    <div
-                                                        className="size-14 flex-shrink-0 rounded-full"
-                                                        style={{
-                                                            background:
-                                                                'conic-gradient(#2f6b3f 0% 40%, #2dd4bf 40% 75%, #ffb545 75% 100%)',
-                                                            mask: 'radial-gradient(circle 18px, transparent 98%, #000)',
-                                                            WebkitMask:
-                                                                'radial-gradient(circle 18px, transparent 98%, #000)',
-                                                        }}
-                                                    />
-                                                    <div className="space-y-1 text-[11px] leading-tight font-medium">
-                                                        <p className="font-bold text-[#123524] dark:text-[#edf7ef]">
-                                                            Inventory Status
-                                                        </p>
-                                                        <div className="flex items-center gap-1.5 text-[#2f6b3f] dark:text-[#bcf7b7]">
-                                                            <span className="size-1.5 rounded-full bg-[#2f6b3f] dark:bg-[#bcf7b7]" />
-                                                            <span>
-                                                                15 In stock
-                                                                (78%)
-                                                            </span>
-                                                        </div>
-                                                        <div className="flex items-center gap-1.5 text-[#636171] dark:text-[#9FB8A4]">
-                                                            <span className="size-1.5 rounded-full bg-[#ffb545]" />
-                                                            <span>
-                                                                4 Low stock
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Link Performance Mini Bars */}
-                                            <div className="rounded-2xl border border-[#eaeaf2] bg-[#f4f4fa] p-3 dark:border-[#1a2a1e] dark:bg-[#0f1a12]">
-                                                <div className="flex items-center justify-between text-[11px] font-bold text-[#123524] dark:text-[#edf7ef]">
-                                                    <span>
-                                                        Live Link Clicks
-                                                    </span>
-                                                    <span className="font-mono text-[#2f6b3f] dark:text-[#bcf7b7]">
-                                                        4 clicks today
-                                                    </span>
-                                                </div>
-                                                <div className="mt-2.5 flex h-10 items-end gap-1.5">
-                                                    <div className="h-3 flex-1 rounded-md bg-[#2f6b3f]/30 dark:bg-[#2f6b3f]/50" />
-                                                    <div className="h-5 flex-1 rounded-md bg-[#2f6b3f]/40 dark:bg-[#2f6b3f]/60" />
-                                                    <div className="h-4 flex-1 rounded-md bg-[#2f6b3f]/30 dark:bg-[#2f6b3f]/50" />
-                                                    <div className="h-7 flex-1 rounded-md bg-[#2f6b3f]/50 dark:bg-[#2f6b3f]/70" />
-                                                    <div className="h-6 flex-1 rounded-md bg-[#2f6b3f]/40 dark:bg-[#2f6b3f]/60" />
-                                                    <div className="h-10 flex-1 rounded-md bg-[#2f6b3f] dark:bg-[#bcf7b7]" />
-                                                    <div className="h-8 flex-1 rounded-md bg-[#2f6b3f]/70 dark:bg-[#2f6b3f]/90" />
-                                                </div>
-                                            </div>
-
-                                            {/* Clickable Custom Slug Link Simulator */}
-                                            <div
-                                                onClick={handleCopyDemoLink}
-                                                className="group flex cursor-pointer items-center justify-between rounded-xl border border-[#eaeaf2] bg-white px-3 py-2 font-mono text-xs font-medium transition hover:border-[#2f6b3f] dark:border-[#1a2a1e] dark:bg-[#050806]"
-                                            >
-                                                <div className="flex items-center gap-1.5 text-[#123524] dark:text-[#edf7ef]">
-                                                    <Link2 className="size-3.5 text-[#2f6b3f] dark:text-[#bcf7b7]" />
-                                                    <span>
-                                                        /exclusive-waistbeads
-                                                    </span>
-                                                </div>
-                                                <span className="font-sans text-[10px] font-bold text-[#2f6b3f] group-hover:underline dark:text-[#bcf7b7]">
-                                                    {copiedSlug
-                                                        ? 'Copied URL!'
-                                                        : 'Click to copy'}
-                                                </span>
-                                            </div>
+                                        <div className="mt-2 flex items-center justify-between rounded-lg border border-[#eaeaf2] bg-white px-3 py-2 font-mono text-xs text-[#123524] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#edf7ef]">
+                                            <span>/exclusive-waist-beads</span>
+                                            <span className="rounded bg-[#e9fbe7] px-2 py-0.5 font-sans text-[10px] font-bold text-[#123524] dark:bg-[#123524] dark:text-[#bcf7b7]">
+                                                Active
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </section>
 
-                    {/* Smooth Organic Wave Divider (Connecting Hero to Content Below) */}
-                    <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-12 w-full overflow-hidden leading-none">
-                        <svg
-                            className="relative block h-full w-full text-white dark:text-[#0b120d]"
-                            viewBox="0 0 1200 120"
-                            preserveAspectRatio="none"
-                        >
-                            <path
-                                d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,50 L1200,120 L0,120 Z"
-                                fill="currentColor"
-                            />
-                        </svg>
+                {/* Section: Interactive Category-to-Link Engine Studio (The Core Mechanism of Nova Flow) */}
+                <section
+                    id="link-engine"
+                    className="border-b border-[#eaeaf2] bg-white py-20 sm:py-28 dark:border-[#1a2a1e] dark:bg-[#08100a]"
+                >
+                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                        <div className="max-w-3xl">
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e9fbe7] px-3.5 py-1 text-xs font-bold tracking-wider text-[#123524] uppercase dark:bg-[#123524] dark:text-[#bcf7b7]">
+                                <Layers className="size-3.5" />
+                                <span>The Core Feature</span>
+                            </span>
+                            <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-[#123524] sm:text-5xl dark:text-[#edf7ef]">
+                                Select categories. Put them into a link. Share
+                                with one tap.
+                            </h2>
+                            <p className="mt-4 text-lg text-[#636171] dark:text-[#9FB8A4]">
+                                Try the interactive simulator below: check or
+                                uncheck categories to see how Nova Flow compiles
+                                your products into a clean custom link with
+                                instant storefront preview.
+                            </p>
+                        </div>
+
+                        {/* Interactive Link Composer Studio */}
+                        <div className="mt-14 grid items-start gap-8 lg:grid-cols-12">
+                            {/* Left Side: Seller Controls */}
+                            <div className="rounded-3xl border border-[#eaeaf2] bg-[#f4f4fa] p-6 sm:p-8 lg:col-span-6 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                                <div className="flex items-center justify-between border-b border-[#eaeaf2] pb-4 dark:border-[#1a2a1e]">
+                                    <div className="flex items-center gap-2">
+                                        <span className="flex size-7 items-center justify-center rounded-lg bg-[#123524] text-xs font-bold text-white dark:bg-[#bcf7b7] dark:text-[#06140b]">
+                                            1
+                                        </span>
+                                        <h3 className="font-bold text-[#123524] dark:text-[#edf7ef]">
+                                            Choose Categories to Compile
+                                        </h3>
+                                    </div>
+                                    <span className="text-xs text-[#636171] dark:text-[#9FB8A4]">
+                                        {selectedCategoryIds.length} selected
+                                    </span>
+                                </div>
+
+                                {/* Category Selection Checkboxes */}
+                                <div className="mt-6 space-y-3">
+                                    {AVAILABLE_CATEGORIES.map((cat) => {
+                                        const isSelected =
+                                            selectedCategoryIds.includes(
+                                                cat.id,
+                                            );
+
+                                        return (
+                                            <div
+                                                key={cat.id}
+                                                onClick={() =>
+                                                    toggleCategorySelection(
+                                                        cat.id,
+                                                    )
+                                                }
+                                                className={`flex cursor-pointer items-center justify-between rounded-2xl border p-4 transition ${
+                                                    isSelected
+                                                        ? 'border-[#2f6b3f] bg-white dark:border-[#bcf7b7] dark:bg-[#123524]/40'
+                                                        : 'border-[#eaeaf2] bg-white/60 hover:bg-white dark:border-[#1a2a1e] dark:bg-[#050806] dark:hover:bg-[#0f1a12]'
+                                                }`}
+                                            >
+                                                <div className="flex items-center gap-3">
+                                                    <div
+                                                        className={`flex size-5 items-center justify-center rounded-md border ${
+                                                            isSelected
+                                                                ? 'border-[#123524] bg-[#123524] text-white dark:border-[#bcf7b7] dark:bg-[#bcf7b7] dark:text-[#06140b]'
+                                                                : 'border-[#eaeaf2] bg-white dark:border-[#1a2a1e] dark:bg-[#08100a]'
+                                                        }`}
+                                                    >
+                                                        {isSelected && (
+                                                            <Check className="size-3.5" />
+                                                        )}
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-sm font-bold text-[#123524] dark:text-[#edf7ef]">
+                                                            {cat.name}
+                                                        </p>
+                                                        <p className="text-xs text-[#636171] dark:text-[#9FB8A4]">
+                                                            Sample:{' '}
+                                                            {cat.sampleProduct}{' '}
+                                                            ({cat.priceRange})
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <span className="rounded-lg bg-[#f4f4fa] px-2.5 py-1 text-xs font-bold text-[#123524] dark:bg-[#050806] dark:text-[#edf7ef]">
+                                                    {cat.productCount} items
+                                                </span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* Step 2: Slug Customizer */}
+                                <div className="mt-6 border-t border-[#eaeaf2] pt-6 dark:border-[#1a2a1e]">
+                                    <div className="mb-3 flex items-center gap-2">
+                                        <span className="flex size-7 items-center justify-center rounded-lg bg-[#123524] text-xs font-bold text-white dark:bg-[#bcf7b7] dark:text-[#06140b]">
+                                            2
+                                        </span>
+                                        <label
+                                            htmlFor="slug-input"
+                                            className="text-sm font-bold text-[#123524] dark:text-[#edf7ef]"
+                                        >
+                                            Customize Your Link Slug
+                                        </label>
+                                    </div>
+
+                                    <div className="flex items-center rounded-xl border border-[#eaeaf2] bg-white px-3 py-2 dark:border-[#1a2a1e] dark:bg-[#050806]">
+                                        <span className="font-mono text-xs text-[#636171] dark:text-[#9FB8A4]">
+                                            novaflow.com/zals/
+                                        </span>
+                                        <input
+                                            id="slug-input"
+                                            type="text"
+                                            value={customSlugName}
+                                            onChange={(e) =>
+                                                setCustomSlugName(
+                                                    e.target.value
+                                                        .toLowerCase()
+                                                        .replace(
+                                                            /[^a-z0-9-]/g,
+                                                            '-',
+                                                        ),
+                                                )
+                                            }
+                                            className="w-full bg-transparent px-1 font-mono text-xs font-bold text-[#123524] outline-none dark:text-[#bcf7b7]"
+                                            placeholder="custom-collection-name"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Step 3: Copy / Share URL Button */}
+                                <div className="mt-6 border-t border-[#eaeaf2] pt-6 dark:border-[#1a2a1e]">
+                                    <button
+                                        type="button"
+                                        onClick={handleCopyUrl}
+                                        className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#123524] py-3.5 text-sm font-bold text-white shadow-sm hover:bg-[#1a4430] dark:bg-[#bcf7b7] dark:text-[#06140b] dark:hover:bg-[#a6ec9f]"
+                                    >
+                                        {copiedUrl ? (
+                                            <Check className="size-4" />
+                                        ) : (
+                                            <Copy className="size-4" />
+                                        )}
+                                        <span>
+                                            {copiedUrl
+                                                ? 'Copied to Clipboard!'
+                                                : 'Copy Shareable Storefront Link'}
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Right Side: What the Customer Sees in That Generated Link */}
+                            <div className="rounded-3xl border border-[#eaeaf2] bg-white p-6 sm:p-8 lg:col-span-6 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                                <div className="flex items-center justify-between border-b border-[#eaeaf2] pb-4 dark:border-[#1a2a1e]">
+                                    <div className="flex items-center gap-2">
+                                        <Eye className="size-5 text-[#2f6b3f] dark:text-[#bcf7b7]" />
+                                        <h3 className="font-bold text-[#123524] dark:text-[#edf7ef]">
+                                            Live Customer View of This Link
+                                        </h3>
+                                    </div>
+                                    <span className="rounded-full bg-[#e9fbe7] px-3 py-1 text-xs font-bold text-[#123524] dark:bg-[#123524] dark:text-[#bcf7b7]">
+                                        {totalCompiledProducts} Products
+                                        Compiled
+                                    </span>
+                                </div>
+
+                                {/* Active URL Address Bar */}
+                                <div className="mt-5 flex items-center justify-between rounded-xl border border-[#eaeaf2] bg-[#f4f4fa] px-3.5 py-2.5 font-mono text-xs text-[#123524] dark:border-[#1a2a1e] dark:bg-[#050806] dark:text-[#edf7ef]">
+                                    <div className="flex items-center gap-2 truncate">
+                                        <Globe className="size-4 shrink-0 text-[#2f6b3f] dark:text-[#bcf7b7]" />
+                                        <span className="truncate">
+                                            https://{fullDemoUrl}
+                                        </span>
+                                    </div>
+                                    <span className="shrink-0 font-sans text-[11px] font-bold text-[#2f6b3f] dark:text-[#bcf7b7]">
+                                        Instant View
+                                    </span>
+                                </div>
+
+                                {/* Simulated Storefront Header */}
+                                <div className="mt-6 rounded-2xl border border-[#eaeaf2] bg-[#f4f4fa] p-5 dark:border-[#1a2a1e] dark:bg-[#050806]">
+                                    <div className="flex items-start justify-between">
+                                        <div>
+                                            <p className="text-xs font-bold text-[#2f6b3f] uppercase dark:text-[#bcf7b7]">
+                                                Artisan Collection
+                                            </p>
+                                            <h4 className="mt-1 text-xl font-extrabold text-[#123524] dark:text-[#edf7ef]">
+                                                Zal's Beadworks
+                                            </h4>
+                                            <p className="mt-1 text-xs text-[#636171] dark:text-[#9FB8A4]">
+                                                Compiled categories:{' '}
+                                                {selectedCategories
+                                                    .map((c) => c.name)
+                                                    .join(' & ')}
+                                            </p>
+                                        </div>
+                                        <span className="rounded-lg border border-[#eaeaf2] bg-white px-2.5 py-1 text-xs font-bold text-[#123524] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#edf7ef]">
+                                            Curated Drop
+                                        </span>
+                                    </div>
+
+                                    {/* Category Filter Badges */}
+                                    <div className="mt-4 flex flex-wrap items-center gap-2">
+                                        <span className="rounded-lg bg-[#123524] px-3 py-1 text-xs font-bold text-white dark:bg-[#bcf7b7] dark:text-[#06140b]">
+                                            All in this link (
+                                            {totalCompiledProducts})
+                                        </span>
+                                        {selectedCategories.map((c) => (
+                                            <span
+                                                key={c.id}
+                                                className="rounded-lg border border-[#eaeaf2] bg-white px-3 py-1 text-xs font-medium text-[#123524] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#edf7ef]"
+                                            >
+                                                {c.name} ({c.productCount})
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Compiled Products Showcase within the Link */}
+                                <div className="mt-5 space-y-3">
+                                    {selectedCategories.map((cat) => (
+                                        <div
+                                            key={cat.id}
+                                            className="flex items-center justify-between rounded-xl border border-[#eaeaf2] bg-white p-3.5 dark:border-[#1a2a1e] dark:bg-[#050806]"
+                                        >
+                                            <div>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="rounded bg-[#e9fbe7] px-2 py-0.5 text-[10px] font-bold text-[#123524] dark:bg-[#123524] dark:text-[#bcf7b7]">
+                                                        {cat.name}
+                                                    </span>
+                                                    <p className="text-sm font-bold text-[#123524] dark:text-[#edf7ef]">
+                                                        {cat.sampleProduct}
+                                                    </p>
+                                                </div>
+                                                <p className="mt-1 text-xs text-[#636171] dark:text-[#9FB8A4]">
+                                                    Direct Product Link:{' '}
+                                                    <span className="font-mono">
+                                                        /zals/{cat.slug}
+                                                    </span>
+                                                </p>
+                                            </div>
+
+                                            <div className="text-right">
+                                                <p className="text-xs font-bold text-[#123524] dark:text-[#edf7ef]">
+                                                    {cat.priceRange}
+                                                </p>
+                                                <span className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+                                                    In Stock
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Link Analytics Indicator */}
+                                <div className="mt-6 flex items-center justify-between rounded-xl border border-[#eaeaf2] bg-[#f4f4fa] px-4 py-3 text-xs dark:border-[#1a2a1e] dark:bg-[#050806]">
+                                    <div className="flex items-center gap-2 text-[#636171] dark:text-[#9FB8A4]">
+                                        <BarChart3 className="size-4 text-[#2f6b3f] dark:text-[#bcf7b7]" />
+                                        <span>
+                                            Traffic to this link increments live
+                                            in your private dashboard
+                                        </span>
+                                    </div>
+                                    <span className="font-bold text-[#2f6b3f] dark:text-[#bcf7b7]">
+                                        Auto-Tracked
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
-                {/* Section: Prototype Showcase / Multi-Device Experience (Using public/images/novaflow-homepage) */}
+                {/* Section: Creative Storefronts & Real-World Use Cases (Remodeled Section!) */}
                 <section
-                    id="prototype"
-                    className="relative bg-white py-20 sm:py-28 dark:bg-[#0b120d]"
+                    id="storefronts"
+                    className="border-b border-[#eaeaf2] bg-[#f4f4fa] py-20 sm:py-28 dark:border-[#1a2a1e] dark:bg-[#050806]"
+                >
+                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                        <div className="max-w-3xl">
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e9fbe7] px-3.5 py-1 text-xs font-bold tracking-wider text-[#123524] uppercase dark:bg-[#123524] dark:text-[#bcf7b7]">
+                                <Globe className="size-3.5" />
+                                <span>Creative Commerce In Practice</span>
+                            </span>
+                            <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-[#123524] sm:text-5xl dark:text-[#edf7ef]">
+                                How sellers use compiled links to sell more with
+                                less friction.
+                            </h2>
+                            <p className="mt-4 text-lg text-[#636171] dark:text-[#9FB8A4]">
+                                Nova Flow isn't just an inventory grid. It is an
+                                agile link engine built for modern social
+                                sellers, pop-up artisans, and boutique creators.
+                            </p>
+                        </div>
+
+                        {/* 4 Creative Storefront Use Case Cards */}
+                        <div className="mt-14 grid gap-8 md:grid-cols-2">
+                            {STOREFRONT_USE_CASES.map((item, idx) => {
+                                const Icon = item.icon;
+
+                                return (
+                                    <div
+                                        key={idx}
+                                        className="rounded-3xl border border-[#eaeaf2] bg-white p-8 shadow-sm dark:border-[#1a2a1e] dark:bg-[#0b120d]"
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex size-11 items-center justify-center rounded-xl bg-[#e9fbe7] text-[#123524] dark:bg-[#123524] dark:text-[#bcf7b7]">
+                                                <Icon className="size-5" />
+                                            </div>
+                                            <span className="rounded-full bg-[#f4f4fa] px-3 py-1 text-xs font-bold text-[#123524] dark:bg-[#050806] dark:text-[#edf7ef]">
+                                                {item.badge}
+                                            </span>
+                                        </div>
+
+                                        <h3 className="mt-5 text-2xl font-bold text-[#123524] dark:text-[#edf7ef]">
+                                            {item.title}
+                                        </h3>
+
+                                        {/* Real-world Scenario */}
+                                        <div className="mt-4 rounded-xl border border-[#eaeaf2] bg-[#f4f4fa] p-3.5 text-xs text-[#636171] dark:border-[#1a2a1e] dark:bg-[#050806] dark:text-[#9FB8A4]">
+                                            <span className="font-bold text-[#123524] dark:text-[#edf7ef]">
+                                                Scenario:{' '}
+                                            </span>
+                                            {item.scenario}
+                                        </div>
+
+                                        {/* The Nova Flow Solution */}
+                                        <p className="mt-4 text-sm leading-relaxed text-[#636171] dark:text-[#9FB8A4]">
+                                            {item.solution}
+                                        </p>
+
+                                        {/* Mock Link & Result */}
+                                        <div className="mt-6 border-t border-[#eaeaf2] pt-5 dark:border-[#1a2a1e]">
+                                            <div className="flex items-center justify-between font-mono text-xs text-[#123524] dark:text-[#edf7ef]">
+                                                <span className="truncate font-bold text-[#2f6b3f] dark:text-[#bcf7b7]">
+                                                    {item.slug}
+                                                </span>
+                                            </div>
+                                            <div className="mt-2 flex items-center gap-2 text-xs font-medium text-[#636171] dark:text-[#9FB8A4]">
+                                                <CheckCircle2 className="size-4 text-[#2f6b3f] dark:text-[#bcf7b7]" />
+                                                <span>{item.actionLabel}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </section>
+
+                {/* Section: Improved Multi-Device Prototypes (NO Dark Backgrounds) */}
+                <section
+                    id="prototypes"
+                    className="border-b border-[#eaeaf2] bg-white py-20 sm:py-28 dark:border-[#1a2a1e] dark:bg-[#08100a]"
                 >
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                         <div className="mx-auto max-w-3xl text-center">
-                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e9fbe7] px-4 py-1 text-xs font-bold tracking-wider text-[#123524] uppercase dark:bg-[#123524] dark:text-[#bcf7b7]">
-                                Real-World Experience
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e9fbe7] px-3.5 py-1 text-xs font-bold tracking-wider text-[#123524] uppercase dark:bg-[#123524] dark:text-[#bcf7b7]">
+                                Responsive Across Devices
                             </span>
                             <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-[#123524] sm:text-5xl dark:text-[#edf7ef]">
-                                Crafted for every screen your business touches.
+                                Clean, seamless design on every device.
                             </h2>
                             <p className="mt-4 text-lg text-[#636171] dark:text-[#9FB8A4]">
-                                Whether managing inventory on desktop or
-                                checking link traffic on the go, Nova Flow
-                                adapts seamlessly with responsive speed.
+                                From comprehensive desktop management to fast
+                                on-the-go tablet counters and mobile customer
+                                storefronts.
                             </p>
 
-                            {/* Device Switcher Controls */}
+                            {/* Clean Standard Device Switcher */}
                             <div className="mt-8 inline-flex items-center gap-2 rounded-2xl border border-[#eaeaf2] bg-[#f4f4fa] p-1.5 dark:border-[#1a2a1e] dark:bg-[#050806]">
                                 <button
                                     type="button"
@@ -653,7 +931,7 @@ export default function Welcome() {
                                     }`}
                                 >
                                     <Monitor className="size-4" />
-                                    <span>Desktop (Full Dashboard)</span>
+                                    <span>Desktop Dashboard</span>
                                 </button>
                                 <button
                                     type="button"
@@ -665,7 +943,7 @@ export default function Welcome() {
                                     }`}
                                 >
                                     <Tablet className="size-4" />
-                                    <span>Tablet (iPad)</span>
+                                    <span>Tablet (Clean Mockup)</span>
                                 </button>
                                 <button
                                     type="button"
@@ -677,90 +955,109 @@ export default function Welcome() {
                                     }`}
                                 >
                                     <Smartphone className="size-4" />
-                                    <span>Mobile (Phone)</span>
+                                    <span>Mobile Phone (Clean Mockup)</span>
                                 </button>
                             </div>
                         </div>
 
-                        {/* Device Frame Display with Authentic Prototype Images */}
+                        {/* Device Frame Display (Transparent Clean Mockups — Zero Dark Box Wrapping) */}
                         <div className="mt-12 flex justify-center">
+                            {/* Desktop View */}
                             {activeDevice === 'desktop' && (
-                                <div className="w-full max-w-5xl rounded-2xl border border-[#eaeaf2] bg-white p-2 shadow-2xl shadow-emerald-950/10 dark:border-[#1a2a1e] dark:bg-[#08100a]">
-                                    <div className="flex items-center gap-2 border-b border-[#eaeaf2] px-4 py-3 dark:border-[#1a2a1e]">
+                                <div className="w-full max-w-5xl rounded-2xl border border-[#eaeaf2] bg-white p-2 shadow-sm dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                                    <div className="flex items-center justify-between border-b border-[#eaeaf2] px-4 py-2.5 dark:border-[#1a2a1e]">
                                         <div className="flex gap-1.5">
-                                            <span className="size-3 rounded-full bg-rose-400" />
-                                            <span className="size-3 rounded-full bg-amber-400" />
-                                            <span className="size-3 rounded-full bg-emerald-400" />
+                                            <span className="size-2.5 rounded-full bg-[#eaeaf2] dark:bg-[#1a2a1e]" />
+                                            <span className="size-2.5 rounded-full bg-[#eaeaf2] dark:bg-[#1a2a1e]" />
+                                            <span className="size-2.5 rounded-full bg-[#eaeaf2] dark:bg-[#1a2a1e]" />
                                         </div>
-                                        <span className="mx-auto rounded-lg bg-[#f4f4fa] px-6 py-1 font-mono text-xs text-[#636171] dark:bg-[#123524] dark:text-[#bcf7b7]">
-                                            https://novaflow.app/dashboard
+                                        <span className="rounded bg-[#f4f4fa] px-4 py-0.5 font-mono text-xs text-[#636171] dark:bg-[#050806] dark:text-[#9FB8A4]">
+                                            https://novaflow.com/dashboard
+                                        </span>
+                                        <span className="text-xs font-semibold text-[#2f6b3f] dark:text-[#bcf7b7]">
+                                            Desktop Suite
                                         </span>
                                     </div>
                                     <img
                                         src="/images/novaflow-homepage/novaflowdesktop.png"
-                                        alt="Nova Flow Desktop Prototype Showcase"
+                                        alt="Nova Flow Desktop View"
                                         className="w-full rounded-xl object-contain"
                                     />
                                 </div>
                             )}
 
+                            {/* Tablet View (Clean transparent mockup — no dark devtools background) */}
                             {activeDevice === 'tablet' && (
-                                <div className="w-full max-w-3xl rounded-3xl border-8 border-[#1c1a24] bg-white shadow-2xl dark:border-[#222]">
-                                    <img
-                                        src="/images/novaflow-homepage/novaflowtablet.png"
-                                        alt="Nova Flow Tablet Prototype Showcase"
-                                        className="w-full rounded-2xl object-contain"
-                                    />
+                                <div className="flex flex-col items-center">
+                                    <div className="rounded-3xl border border-[#eaeaf2] bg-[#f4f4fa] p-6 shadow-sm dark:border-[#1a2a1e] dark:bg-[#050806]">
+                                        <img
+                                            src="/images/novaflow-homepage/novaflowtablet-clean.png"
+                                            alt="Nova Flow Tablet Clean View"
+                                            className="max-h-[720px] w-auto object-contain drop-shadow-md"
+                                        />
+                                    </div>
+                                    <p className="mt-4 text-xs font-medium text-[#636171] dark:text-[#9FB8A4]">
+                                        Full tablet layout with collapsible
+                                        sidebar and touch-friendly controls.
+                                    </p>
                                 </div>
                             )}
 
+                            {/* Mobile View (Clean transparent mockup — no dark devtools background) */}
                             {activeDevice === 'mobile' && (
-                                <div className="w-full max-w-sm overflow-hidden rounded-[42px] border-8 border-[#1c1a24] bg-white shadow-2xl dark:border-[#222]">
-                                    <img
-                                        src="/images/novaflow-homepage/novsflowmobile.png"
-                                        alt="Nova Flow Mobile Prototype Showcase"
-                                        className="w-full object-contain"
-                                    />
+                                <div className="flex flex-col items-center">
+                                    <div className="rounded-3xl border border-[#eaeaf2] bg-[#f4f4fa] p-6 shadow-sm dark:border-[#1a2a1e] dark:bg-[#050806]">
+                                        <img
+                                            src="/images/novaflow-homepage/novsflowmobile-clean.png"
+                                            alt="Nova Flow Mobile Clean View"
+                                            className="max-h-[640px] w-auto object-contain drop-shadow-md"
+                                        />
+                                    </div>
+                                    <p className="mt-4 text-xs font-medium text-[#636171] dark:text-[#9FB8A4]">
+                                        Lightweight mobile storefront with
+                                        instant category tabs and click
+                                        tracking.
+                                    </p>
                                 </div>
                             )}
                         </div>
                     </div>
                 </section>
 
-                {/* Section: Features Grid (from novaflow.html - "What's inside: Everything a seller needs, nothing they don't") */}
+                {/* Section: Comprehensive Platform Features (Clean Solid Cards) */}
                 <section
                     id="features"
-                    className="bg-[#f4f4fa] py-20 sm:py-28 dark:bg-[#050806]"
+                    className="border-b border-[#eaeaf2] bg-[#f4f4fa] py-20 sm:py-28 dark:border-[#1a2a1e] dark:bg-[#050806]"
                 >
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                         <div className="max-w-2xl">
-                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e9fbe7] px-4 py-1 text-xs font-bold tracking-wider text-[#123524] uppercase dark:bg-[#123524] dark:text-[#bcf7b7]">
-                                WHAT'S INSIDE
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e9fbe7] px-3.5 py-1 text-xs font-bold tracking-wider text-[#123524] uppercase dark:bg-[#123524] dark:text-[#bcf7b7]">
+                                Platform Architecture
                             </span>
                             <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-[#123524] sm:text-5xl dark:text-[#edf7ef]">
-                                Everything a seller needs, nothing they don't.
+                                Everything a seller needs. Nothing they don't.
                             </h2>
                             <p className="mt-4 text-lg text-[#636171] dark:text-[#9FB8A4]">
-                                Thoughtful tooling focused on clarity and
-                                actionable metrics, built to help you run your
-                                business without unnecessary complexity.
+                                Purposeful tools built to make inventory,
+                                multi-category compiling, and customer sharing
+                                as simple as copying a link.
                             </p>
                         </div>
 
                         <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                            {FEATURES.map((feature) => {
+                            {PLATFORM_FEATURES.map((feature) => {
                                 const Icon = feature.icon;
 
                                 return (
                                     <div
                                         key={feature.number}
-                                        className="group relative rounded-3xl border border-[#eaeaf2] bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:border-[#2f6b3f]/30 hover:shadow-xl dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:hover:border-[#bcf7b7]/30"
+                                        className="rounded-3xl border border-[#eaeaf2] bg-white p-8 shadow-sm transition hover:border-[#123524] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:hover:border-[#bcf7b7]"
                                     >
                                         <div className="flex items-center justify-between">
-                                            <div className="flex size-12 items-center justify-center rounded-2xl bg-[#e9fbe7] text-[#123524] dark:bg-[#123524] dark:text-[#bcf7b7]">
-                                                <Icon className="size-6" />
+                                            <div className="flex size-11 items-center justify-center rounded-xl bg-[#e9fbe7] text-[#123524] dark:bg-[#123524] dark:text-[#bcf7b7]">
+                                                <Icon className="size-5" />
                                             </div>
-                                            <span className="font-mono text-sm font-extrabold text-[#2f6b3f] dark:text-[#bcf7b7]">
+                                            <span className="font-mono text-sm font-bold text-[#2f6b3f] dark:text-[#bcf7b7]">
                                                 {feature.number}
                                             </span>
                                         </div>
@@ -768,7 +1065,7 @@ export default function Welcome() {
                                         <h3 className="mt-6 text-xl font-bold text-[#123524] dark:text-[#edf7ef]">
                                             {feature.title}
                                         </h3>
-                                        <p className="mt-3 text-base leading-relaxed text-[#636171] dark:text-[#9FB8A4]">
+                                        <p className="mt-3 text-sm leading-relaxed text-[#636171] dark:text-[#9FB8A4]">
                                             {feature.description}
                                         </p>
                                     </div>
@@ -778,245 +1075,93 @@ export default function Welcome() {
                     </div>
                 </section>
 
-                {/* Section: How It Works (from novaflow.html - "From first product to first click in three moves") */}
+                {/* Section: How It Works (Step-by-step) */}
                 <section
                     id="how"
-                    className="border-y border-[#eaeaf2] bg-white py-20 sm:py-28 dark:border-[#1a2a1e] dark:bg-[#08100a]"
+                    className="border-b border-[#eaeaf2] bg-white py-20 sm:py-28 dark:border-[#1a2a1e] dark:bg-[#08100a]"
                 >
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                         <div className="mx-auto max-w-2xl text-center">
-                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e9fbe7] px-4 py-1 text-xs font-bold tracking-wider text-[#123524] uppercase dark:bg-[#123524] dark:text-[#bcf7b7]">
-                                HOW IT WORKS
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e9fbe7] px-3.5 py-1 text-xs font-bold tracking-wider text-[#123524] uppercase dark:bg-[#123524] dark:text-[#bcf7b7]">
+                                Three Steps
                             </span>
                             <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-[#123524] sm:text-5xl dark:text-[#edf7ef]">
-                                From first product to first click in three
+                                From product setup to first click in three
                                 moves.
                             </h2>
                             <p className="mt-3 text-lg text-[#636171] dark:text-[#9FB8A4]">
-                                No complicated configuration or technical
-                                hurdles. Get your storefront live in minutes.
+                                A straightforward workflow designed so you can
+                                start sharing curated links within minutes of
+                                signing up.
                             </p>
                         </div>
 
                         <div className="mt-16 grid gap-8 md:grid-cols-3">
-                            {STEPS.map((step, idx) => (
-                                <div
-                                    key={step.step}
-                                    className="relative flex flex-col justify-between rounded-3xl border border-[#eaeaf2] bg-[#f4f4fa] p-8 dark:border-[#1a2a1e] dark:bg-[#0b120d]"
-                                >
-                                    <div>
-                                        <div className="flex items-center justify-between">
-                                            <span className="flex size-10 items-center justify-center rounded-xl bg-[#123524] font-mono text-sm font-bold text-[#bcf7b7] dark:bg-[#bcf7b7] dark:text-[#06140b]">
-                                                {step.step}
-                                            </span>
-                                            <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-[#2f6b3f] shadow-sm dark:bg-[#123524] dark:text-[#bcf7b7]">
-                                                {step.badge}
-                                            </span>
-                                        </div>
-
-                                        <h3 className="mt-6 text-2xl font-bold text-[#123524] dark:text-[#edf7ef]">
-                                            {step.title}
-                                        </h3>
-                                        <p className="mt-3 text-base leading-relaxed text-[#636171] dark:text-[#9FB8A4]">
-                                            {step.description}
-                                        </p>
-                                    </div>
-
-                                    {idx < 2 && (
-                                        <div className="absolute top-1/2 -right-4 z-10 flex hidden size-8 -translate-y-1/2 items-center justify-center rounded-full border border-[#eaeaf2] bg-white text-[#2f6b3f] shadow-sm md:block dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#bcf7b7]">
-                                            <ArrowRight className="m-auto size-4" />
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* Section: Public Gallery & Real Product Showcase (from novaflow.html - "A storefront that feels like a portfolio") */}
-                <section
-                    id="gallery"
-                    className="bg-[#f4f4fa] py-20 sm:py-28 dark:bg-[#050806]"
-                >
-                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-                            <div>
-                                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e9fbe7] px-4 py-1 text-xs font-bold tracking-wider text-[#123524] uppercase dark:bg-[#123524] dark:text-[#bcf7b7]">
-                                    PUBLIC GALLERY
+                            <div className="rounded-3xl border border-[#eaeaf2] bg-[#f4f4fa] p-8 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                                <span className="flex size-10 items-center justify-center rounded-xl bg-[#123524] font-mono text-sm font-bold text-[#bcf7b7] dark:bg-[#bcf7b7] dark:text-[#06140b]">
+                                    01
                                 </span>
-                                <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-[#123524] sm:text-5xl dark:text-[#edf7ef]">
-                                    A storefront that feels like a portfolio.
-                                </h2>
-                                <p className="mt-3 text-lg text-[#636171] dark:text-[#9FB8A4]">
-                                    Showcasing real artisan collections from
-                                    sellers like{' '}
-                                    <span className="font-bold text-[#123524] dark:text-[#edf7ef]">
-                                        Zal's Beadworks
-                                    </span>
-                                    .
+                                <h3 className="mt-6 text-2xl font-bold text-[#123524] dark:text-[#edf7ef]">
+                                    List & categorize products
+                                </h3>
+                                <p className="mt-3 text-sm leading-relaxed text-[#636171] dark:text-[#9FB8A4]">
+                                    Upload images, assign categories, and define
+                                    stock. Your complete inventory is stored
+                                    securely in your private seller dashboard.
                                 </p>
                             </div>
 
-                            {/* Category Filter Pills */}
-                            <div className="flex flex-wrap items-center gap-2">
-                                {[
-                                    'all',
-                                    'necklaces',
-                                    'bracelets',
-                                    'waistbeads',
-                                    'anklets',
-                                ].map((cat) => (
-                                    <button
-                                        key={cat}
-                                        type="button"
-                                        onClick={() => setSelectedCategory(cat)}
-                                        className={`rounded-xl px-4 py-2 text-xs font-bold capitalize transition ${
-                                            selectedCategory === cat
-                                                ? 'bg-[#123524] text-white shadow-sm dark:bg-[#bcf7b7] dark:text-[#06140b]'
-                                                : 'border border-[#eaeaf2] bg-white text-[#636171] hover:border-[#123524]/20 hover:text-[#123524] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#9FB8A4] dark:hover:text-[#edf7ef]'
-                                        }`}
-                                    >
-                                        {cat}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Product Cards Grid */}
-                        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                            {filteredProducts.map((prod) => (
-                                <div
-                                    key={prod.id}
-                                    className="group flex flex-col justify-between overflow-hidden rounded-3xl border border-[#eaeaf2] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl dark:border-[#1a2a1e] dark:bg-[#0b120d]"
-                                >
-                                    <div className="p-6">
-                                        <div className="flex items-center justify-between">
-                                            <span className="rounded-full bg-[#e9fbe7] px-3 py-1 text-xs font-bold text-[#2f6b3f] dark:bg-[#123524] dark:text-[#bcf7b7]">
-                                                {prod.category}
-                                            </span>
-                                            <span className="text-xs font-semibold text-[#636171] dark:text-[#9FB8A4]">
-                                                {prod.tag}
-                                            </span>
-                                        </div>
-
-                                        <h3 className="mt-4 text-xl font-bold text-[#123524] transition-colors group-hover:text-[#2f6b3f] dark:text-[#edf7ef] dark:group-hover:text-[#bcf7b7]">
-                                            {prod.name}
-                                        </h3>
-                                        <p className="mt-2 text-sm leading-relaxed text-[#636171] dark:text-[#9FB8A4]">
-                                            {prod.description}
-                                        </p>
-                                    </div>
-
-                                    <div className="flex items-center justify-between border-t border-[#eaeaf2] bg-[#f9f9fc] px-6 py-4 dark:border-[#1a2a1e] dark:bg-[#08100a]">
-                                        <span className="text-lg font-extrabold text-[#123524] dark:text-[#edf7ef]">
-                                            {prod.price}
-                                        </span>
-                                        <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                                            <span className="size-2 rounded-full bg-emerald-500" />
-                                            In stock
-                                        </span>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* Section: Alerts & Notifications (from novaflow.html - "Novaflow taps you on the shoulder, only when it matters") */}
-                <section
-                    id="alerts"
-                    className="bg-white py-20 sm:py-28 dark:bg-[#08100a]"
-                >
-                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="rounded-[36px] border border-[#eaeaf2] bg-gradient-to-br from-[#e9fbe7]/40 via-white to-white p-8 sm:p-14 lg:p-16 dark:border-[#1a2a1e] dark:from-[#0b1610] dark:via-[#0b120d] dark:to-[#0b120d]">
-                            <div className="max-w-2xl">
-                                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#123524] px-4 py-1 text-xs font-bold tracking-wider text-[#bcf7b7] uppercase dark:bg-[#bcf7b7] dark:text-[#06140b]">
-                                    <Bell className="size-3.5" />
-                                    <span>STAY IN THE LOOP</span>
+                            <div className="rounded-3xl border border-[#eaeaf2] bg-[#f4f4fa] p-8 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                                <span className="flex size-10 items-center justify-center rounded-xl bg-[#123524] font-mono text-sm font-bold text-[#bcf7b7] dark:bg-[#bcf7b7] dark:text-[#06140b]">
+                                    02
                                 </span>
-                                <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-[#123524] sm:text-5xl dark:text-[#edf7ef]">
-                                    Novaflow taps you on the shoulder, only when
-                                    it matters.
-                                </h2>
-                                <p className="mt-3 text-lg text-[#636171] dark:text-[#9FB8A4]">
-                                    Quiet automation that keeps you informed
-                                    without noisy notification spam.
+                                <h3 className="mt-6 text-2xl font-bold text-[#123524] dark:text-[#edf7ef]">
+                                    Compile categories into a link
+                                </h3>
+                                <p className="mt-3 text-sm leading-relaxed text-[#636171] dark:text-[#9FB8A4]">
+                                    Pick the exact categories you want to
+                                    feature for a drop, set a clean custom slug,
+                                    and create your dedicated link in one click.
                                 </p>
                             </div>
 
-                            <div className="mt-12 grid gap-8 md:grid-cols-3">
-                                <div className="rounded-2xl border border-[#eaeaf2] bg-white p-6 shadow-sm dark:border-[#1a2a1e] dark:bg-[#0f1a12]">
-                                    <div className="flex size-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                                        <Boxes className="size-5" />
-                                    </div>
-                                    <h3 className="mt-4 text-lg font-bold text-[#123524] dark:text-[#edf7ef]">
-                                        Low stock alerts
-                                    </h3>
-                                    <p className="mt-2 text-sm leading-relaxed text-[#636171] dark:text-[#9FB8A4]">
-                                        Know before a bestseller runs out, not
-                                        after customers notice an empty shelf.
-                                    </p>
-                                </div>
-
-                                <div className="rounded-2xl border border-[#eaeaf2] bg-white p-6 shadow-sm dark:border-[#1a2a1e] dark:bg-[#0f1a12]">
-                                    <div className="flex size-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                                        <MousePointerClick className="size-5" />
-                                    </div>
-                                    <h3 className="mt-4 text-lg font-bold text-[#123524] dark:text-[#edf7ef]">
-                                        Click milestones
-                                    </h3>
-                                    <p className="mt-2 text-sm leading-relaxed text-[#636171] dark:text-[#9FB8A4]">
-                                        A gentle nudge whenever a shared
-                                        campaign link crosses a performance
-                                        milestone you care about.
-                                    </p>
-                                </div>
-
-                                <div className="rounded-2xl border border-[#eaeaf2] bg-white p-6 shadow-sm dark:border-[#1a2a1e] dark:bg-[#0f1a12]">
-                                    <div className="flex size-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                                        <TrendingUp className="size-5" />
-                                    </div>
-                                    <h3 className="mt-4 text-lg font-bold text-[#123524] dark:text-[#edf7ef]">
-                                        Weekly digest
-                                    </h3>
-                                    <p className="mt-2 text-sm leading-relaxed text-[#636171] dark:text-[#9FB8A4]">
-                                        A short, beautiful review of your sales
-                                        and traffic delivered on schedule every
-                                        Monday morning.
-                                    </p>
-                                </div>
+                            <div className="rounded-3xl border border-[#eaeaf2] bg-[#f4f4fa] p-8 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                                <span className="flex size-10 items-center justify-center rounded-xl bg-[#123524] font-mono text-sm font-bold text-[#bcf7b7] dark:bg-[#bcf7b7] dark:text-[#06140b]">
+                                    03
+                                </span>
+                                <h3 className="mt-6 text-2xl font-bold text-[#123524] dark:text-[#edf7ef]">
+                                    Share & track traffic live
+                                </h3>
+                                <p className="mt-3 text-sm leading-relaxed text-[#636171] dark:text-[#9FB8A4]">
+                                    Post your link on WhatsApp, Instagram, or
+                                    TikTok. Watch clicks increment live on your
+                                    analytics dashboard to see which drop wins.
+                                </p>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                {/* Section: Final Call to Action Banner (from novaflow.html - "Give your catalogue a home") */}
-                <section
-                    id="cta"
-                    className="relative overflow-hidden bg-[#123524] py-24 text-center text-white sm:py-32"
-                >
-                    {/* Background Graphic Rings */}
-                    <div className="pointer-events-none absolute -top-40 left-1/2 h-[800px] w-[800px] -translate-x-1/2 rounded-full border border-white/5 opacity-40" />
-                    <div className="pointer-events-none absolute -top-20 left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full border border-white/10 opacity-30" />
-
-                    <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+                {/* Section: Final Call to Action (Solid Clean Style) */}
+                <section className="bg-[#123524] py-20 text-center text-white sm:py-28 dark:bg-[#08100a]">
+                    <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
                         <span className="inline-flex items-center gap-1.5 rounded-full bg-[#bcf7b7]/15 px-4 py-1 text-xs font-bold tracking-wider text-[#bcf7b7] uppercase">
-                            START YOUR SHOWCASE
+                            GET STARTED TODAY
                         </span>
                         <h2 className="mt-6 text-4xl font-extrabold tracking-tight sm:text-6xl">
-                            Give your catalogue a home.
+                            Give your products a home. Start compiling links.
                         </h2>
                         <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-[#bcf7b7]/80 sm:text-xl">
-                            Set up your seller account, add your first products,
-                            and share your first link today. No setup fees, no
-                            bloat.
+                            Join independent artisans, makers, and boutique
+                            sellers who simplify sharing and selling with Nova
+                            Flow.
                         </p>
 
                         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
                             {auth.user ? (
                                 <Link
                                     href={dashboard()}
-                                    className="inline-flex items-center gap-2 rounded-2xl bg-[#bcf7b7] px-8 py-4 text-base font-extrabold text-[#06140b] shadow-xl shadow-black/20 transition hover:scale-[1.02] hover:bg-[#a6ec9f]"
+                                    className="inline-flex items-center gap-2 rounded-xl bg-[#bcf7b7] px-8 py-4 text-base font-extrabold text-[#06140b] shadow-sm hover:bg-[#a6ec9f]"
                                 >
                                     <LayoutGrid className="size-5" />
                                     <span>Go to your Dashboard</span>
@@ -1025,14 +1170,14 @@ export default function Welcome() {
                                 <>
                                     <Link
                                         href={register()}
-                                        className="inline-flex items-center gap-2 rounded-2xl bg-[#bcf7b7] px-8 py-4 text-base font-extrabold text-[#06140b] shadow-xl shadow-black/20 transition hover:scale-[1.02] hover:bg-[#a6ec9f]"
+                                        className="inline-flex items-center gap-2 rounded-xl bg-[#bcf7b7] px-8 py-4 text-base font-extrabold text-[#06140b] shadow-sm hover:bg-[#a6ec9f]"
                                     >
                                         <span>Create your seller account</span>
                                         <ArrowRight className="size-5" />
                                     </Link>
                                     <Link
                                         href={login()}
-                                        className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-8 py-4 text-base font-bold text-white transition hover:bg-white/10"
+                                        className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-8 py-4 text-base font-bold text-white hover:bg-white/20"
                                     >
                                         <span>Sign in</span>
                                     </Link>
@@ -1042,62 +1187,216 @@ export default function Welcome() {
                     </div>
                 </section>
 
-                {/* Footer */}
-                <footer className="border-t border-[#eaeaf2] bg-white py-12 dark:border-[#1a2a1e] dark:bg-[#050806]">
+                {/* Professional Multi-Column Expanded Footer (Remodeled Footer) */}
+                <footer className="border-t border-[#eaeaf2] bg-white pt-16 pb-12 dark:border-[#1a2a1e] dark:bg-[#050806]">
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-                            <div className="flex items-center gap-3">
+                        {/* Top Section: Brand + Navigation Columns */}
+                        <div className="grid gap-12 lg:grid-cols-12">
+                            {/* Brand Column (Span 4) */}
+                            <div className="space-y-4 lg:col-span-4">
                                 <AppLogo
                                     textClassName="text-[#123524] dark:text-[#edf7ef]"
                                     iconClassName="size-8"
                                 />
-                                <span className="text-xs text-[#636171] dark:text-[#9FB8A4]">
-                                    — Boutique Commerce & Portfolio Platform
-                                </span>
+                                <p className="max-w-sm text-sm leading-relaxed text-[#636171] dark:text-[#9FB8A4]">
+                                    The category-first commerce platform for
+                                    independent sellers and boutique creators.
+                                    Compile products into clean, trackable links
+                                    and share anywhere.
+                                </p>
+
+                                {/* System Status Pill */}
+                                <div className="pt-2">
+                                    <div className="inline-flex items-center gap-2 rounded-full border border-[#eaeaf2] bg-[#f4f4fa] px-3 py-1 text-xs font-semibold text-[#123524] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#edf7ef]">
+                                        <span className="size-2 rounded-full bg-emerald-500" />
+                                        <span>All systems operational</span>
+                                    </div>
+                                </div>
                             </div>
 
-                            <nav className="flex flex-wrap items-center gap-6 text-sm font-medium text-[#636171] dark:text-[#9FB8A4]">
-                                <a
-                                    href="#features"
-                                    className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
-                                >
-                                    Features
-                                </a>
-                                <a
-                                    href="#how"
-                                    className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
-                                >
-                                    How it works
-                                </a>
-                                <a
-                                    href="#prototype"
-                                    className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
-                                >
-                                    Prototypes
-                                </a>
-                                <a
-                                    href="#gallery"
-                                    className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
-                                >
-                                    Gallery
-                                </a>
-                                <a
-                                    href="#alerts"
-                                    className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
-                                >
-                                    Alerts
-                                </a>
-                            </nav>
+                            {/* 4 Navigation Columns (Span 8) */}
+                            <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:col-span-8">
+                                {/* Column 1: Platform */}
+                                <div className="space-y-3">
+                                    <h4 className="text-xs font-bold tracking-wider text-[#123524] uppercase dark:text-[#edf7ef]">
+                                        Platform
+                                    </h4>
+                                    <ul className="space-y-2.5 text-sm text-[#636171] dark:text-[#9FB8A4]">
+                                        <li>
+                                            <a
+                                                href="#link-engine"
+                                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                            >
+                                                Link Generator
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a
+                                                href="#storefronts"
+                                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                            >
+                                                Curated Storefronts
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a
+                                                href="#features"
+                                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                            >
+                                                Inventory Manager
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a
+                                                href="#features"
+                                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                            >
+                                                Click Analytics
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a
+                                                href="#prototypes"
+                                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                            >
+                                                Mobile Architecture
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                {/* Column 2: For Sellers */}
+                                <div className="space-y-3">
+                                    <h4 className="text-xs font-bold tracking-wider text-[#123524] uppercase dark:text-[#edf7ef]">
+                                        For Sellers
+                                    </h4>
+                                    <ul className="space-y-2.5 text-sm text-[#636171] dark:text-[#9FB8A4]">
+                                        <li>
+                                            <span className="text-[#636171] dark:text-[#9FB8A4]">
+                                                Artisans & Crafts
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span className="text-[#636171] dark:text-[#9FB8A4]">
+                                                Boutique Fashion
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span className="text-[#636171] dark:text-[#9FB8A4]">
+                                                Jewelry & Beadwork
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span className="text-[#636171] dark:text-[#9FB8A4]">
+                                                Instagram Sellers
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span className="text-[#636171] dark:text-[#9FB8A4]">
+                                                WhatsApp Commerce
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                {/* Column 3: Resources */}
+                                <div className="space-y-3">
+                                    <h4 className="text-xs font-bold tracking-wider text-[#123524] uppercase dark:text-[#edf7ef]">
+                                        Resources
+                                    </h4>
+                                    <ul className="space-y-2.5 text-sm text-[#636171] dark:text-[#9FB8A4]">
+                                        <li>
+                                            <a
+                                                href="#how"
+                                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                            >
+                                                How Links Work
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a
+                                                href="#storefronts"
+                                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                            >
+                                                Selling Strategies
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a
+                                                href="#link-engine"
+                                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                            >
+                                                Category Compiling
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <Link
+                                                href={login()}
+                                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                            >
+                                                Seller Sign In
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link
+                                                href={register()}
+                                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                            >
+                                                Create Account
+                                            </Link>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                {/* Column 4: Trust & Privacy */}
+                                <div className="space-y-3">
+                                    <h4 className="text-xs font-bold tracking-wider text-[#123524] uppercase dark:text-[#edf7ef]">
+                                        Trust & Data
+                                    </h4>
+                                    <ul className="space-y-2.5 text-sm text-[#636171] dark:text-[#9FB8A4]">
+                                        <li>
+                                            <span className="text-[#636171] dark:text-[#9FB8A4]">
+                                                Private by Design
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span className="text-[#636171] dark:text-[#9FB8A4]">
+                                                Isolated Tenant Data
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span className="text-[#636171] dark:text-[#9FB8A4]">
+                                                SSL Encryption
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span className="text-[#636171] dark:text-[#9FB8A4]">
+                                                Terms of Service
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span className="text-[#636171] dark:text-[#9FB8A4]">
+                                                Privacy Policy
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
 
-                        <div className="mt-8 flex flex-col gap-4 border-t border-[#eaeaf2] pt-8 text-xs text-[#636171] sm:flex-row sm:items-center sm:justify-between dark:border-[#1a2a1e] dark:text-[#9FB8A4]">
+                        {/* Bottom Copyright and Meta Bar */}
+                        <div className="mt-14 flex flex-col gap-4 border-t border-[#eaeaf2] pt-8 text-xs text-[#636171] sm:flex-row sm:items-center sm:justify-between dark:border-[#1a2a1e] dark:text-[#9FB8A4]">
                             <p>
                                 © {new Date().getFullYear()} Nova Flow. All
                                 rights reserved.
                             </p>
-                            <p className="font-mono">
-                                Products · Analytics · Gallery · Settings
-                            </p>
+                            <div className="flex items-center gap-6">
+                                <span>Multi-Tenant Architecture</span>
+                                <span>·</span>
+                                <span>Category-First Commerce</span>
+                                <span>·</span>
+                                <span>Boutique Storefronts</span>
+                            </div>
                         </div>
                     </div>
                 </footer>
