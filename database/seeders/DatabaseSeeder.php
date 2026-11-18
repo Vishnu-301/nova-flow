@@ -7,7 +7,7 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Schema;
+use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,11 +19,11 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // truncate database on seed
-        Schema::disableForeignKeyConstraints();
-        User::truncate();
-        Product::truncate();
-        Category::truncate();
-        Schema::enableForeignKeyConstraints();
+        Schema::withoutForeignKeyConstraints(function () {
+            User::truncate();
+            Product::truncate();
+            Category::truncate();
+        });
 
         $usersToSeed = [
             [
@@ -44,7 +44,12 @@ class DatabaseSeeder extends Seeder
             ]);
 
             $this->seedProductsAndCategoriesForUser($user);
+
+            $this->call([
+                TestSeeder::class,
+            ]);
         }
+
     }
 
     /**
