@@ -1,20 +1,17 @@
 import { Head, Link, usePage } from '@inertiajs/react';
 import {
     ArrowRight,
-    BarChart3,
-    Check,
+    Bell,
     CheckCircle2,
+    ChevronLeft,
+    ChevronRight,
     Copy,
-    Eye,
     Globe,
     Layers,
     LayoutGrid,
-    Link2,
     Menu,
     MessageCircle,
     Monitor,
-    MousePointerClick,
-    Package,
     QrCode,
     Share2,
     ShieldCheck,
@@ -27,47 +24,368 @@ import { useState } from 'react';
 import AppLogo from '@/components/app-logo';
 import { dashboard, login, register } from '@/routes';
 
-interface CategoryItem {
+interface FeatureSlide {
     id: string;
-    name: string;
-    slug: string;
-    productCount: number;
-    sampleProduct: string;
-    priceRange: string;
+    badge: string;
+    tabLabel: string;
+    title: string;
+    description: string;
+    renderVisual: () => React.ReactNode;
 }
 
-const AVAILABLE_CATEGORIES: CategoryItem[] = [
+const FEATURE_SLIDES: FeatureSlide[] = [
     {
-        id: 'cat-1',
-        name: 'Waistbeads',
-        slug: 'waistbeads',
-        productCount: 7,
-        sampleProduct: 'Vancleef Waistbeads with Chain',
-        priceRange: '₦10,000 - ₦25,000',
+        id: 'slide-1',
+        badge: 'Feature 01 · Link Engine',
+        tabLabel: '01. Category Links',
+        title: 'Compile any categories into one clean shareable link',
+        description:
+            'Select any combination of product categories and bundle them into a single custom URL in seconds. Share one link instead of sending dozens of individual photos over chat.',
+        renderVisual: () => (
+            <div className="rounded-2xl border border-[#eaeaf2] bg-[#f8f8fc] p-6 text-left dark:border-[#1a2a1e] dark:bg-[#050806]">
+                <div className="flex items-center justify-between border-b border-[#eaeaf2] pb-3 text-xs font-semibold text-[#636171] dark:border-[#1a2a1e] dark:text-[#9FB8A4]">
+                    <span>Category Bundle Setup</span>
+                    <span className="rounded bg-[#e9fbe7] px-2 py-0.5 text-[10px] font-bold text-[#123524] dark:bg-[#123524] dark:text-[#bcf7b7]">
+                        Compiled
+                    </span>
+                </div>
+
+                {/* Simulated Category Selection Pills */}
+                <div className="mt-4 space-y-2">
+                    <div className="flex items-center justify-between rounded-xl border border-[#2f6b3f] bg-white p-3 dark:border-[#bcf7b7] dark:bg-[#0b120d]">
+                        <div className="flex items-center gap-2.5">
+                            <span className="flex size-4 items-center justify-center rounded bg-[#123524] text-white dark:bg-[#bcf7b7] dark:text-[#06140b]">
+                                <CheckCircle2 className="size-3" />
+                            </span>
+                            <span className="text-sm font-bold text-[#123524] dark:text-[#edf7ef]">
+                                Handcrafted Waistbeads
+                            </span>
+                        </div>
+                        <span className="text-xs font-semibold text-[#636171] dark:text-[#9FB8A4]">
+                            7 items
+                        </span>
+                    </div>
+
+                    <div className="flex items-center justify-between rounded-xl border border-[#2f6b3f] bg-white p-3 dark:border-[#bcf7b7] dark:bg-[#0b120d]">
+                        <div className="flex items-center gap-2.5">
+                            <span className="flex size-4 items-center justify-center rounded bg-[#123524] text-white dark:bg-[#bcf7b7] dark:text-[#06140b]">
+                                <CheckCircle2 className="size-3" />
+                            </span>
+                            <span className="text-sm font-bold text-[#123524] dark:text-[#edf7ef]">
+                                Stacking Bracelets
+                            </span>
+                        </div>
+                        <span className="text-xs font-semibold text-[#636171] dark:text-[#9FB8A4]">
+                            4 items
+                        </span>
+                    </div>
+                </div>
+
+                {/* Generated URL Box */}
+                <div className="mt-5 rounded-xl border border-[#eaeaf2] bg-white p-3.5 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                    <div className="flex items-center justify-between text-xs text-[#636171] dark:text-[#9FB8A4]">
+                        <span>Generated Storefront URL</span>
+                        <div className="flex items-center gap-1 font-bold text-[#2f6b3f] dark:text-[#bcf7b7]">
+                            <Copy className="size-3" />
+                            <span>Ready to Share</span>
+                        </div>
+                    </div>
+                    <div className="mt-2 flex items-center justify-between rounded-lg bg-[#f4f4fa] px-3 py-2 font-mono text-xs font-bold text-[#123524] dark:bg-[#101a13] dark:text-[#bcf7b7]">
+                        <span className="truncate">
+                            novaflow.com/your-store/summer-collection
+                        </span>
+                        <span className="shrink-0 rounded bg-[#e9fbe7] px-2 py-0.5 font-sans text-[10px] font-bold text-[#123524] dark:bg-[#123524] dark:text-[#bcf7b7]">
+                            11 Products
+                        </span>
+                    </div>
+                </div>
+
+                {/* Share Channels */}
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-xs text-[#636171] dark:text-[#9FB8A4]">
+                    <span>Quick Share:</span>
+                    <div className="flex items-center gap-2">
+                        <span className="rounded-md border border-[#eaeaf2] bg-white px-2 py-1 text-[11px] font-semibold text-[#123524] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#edf7ef]">
+                            WhatsApp
+                        </span>
+                        <span className="rounded-md border border-[#eaeaf2] bg-white px-2 py-1 text-[11px] font-semibold text-[#123524] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#edf7ef]">
+                            Instagram Bio
+                        </span>
+                        <span className="rounded-md border border-[#eaeaf2] bg-white px-2 py-1 text-[11px] font-semibold text-[#123524] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#edf7ef]">
+                            QR Code
+                        </span>
+                    </div>
+                </div>
+            </div>
+        ),
     },
     {
-        id: 'cat-2',
-        name: 'Bracelets',
-        slug: 'bracelets',
-        productCount: 4,
-        sampleProduct: 'WHIMSY Glow Bracelet',
-        priceRange: '₦6,000 - ₦20,000',
+        id: 'slide-2',
+        badge: 'Feature 02 · Customer Experience',
+        tabLabel: '02. Mobile Storefront',
+        title: 'Instant storefronts with zero customer registration barrier',
+        description:
+            'When customers tap your link, they land on a clean, dedicated catalog. No app installations, no accounts to create, and no chaotic clutter — just fast, frictionless viewing.',
+        renderVisual: () => (
+            <div className="rounded-2xl border border-[#eaeaf2] bg-[#f8f8fc] p-6 text-left dark:border-[#1a2a1e] dark:bg-[#050806]">
+                <div className="flex items-center justify-between border-b border-[#eaeaf2] pb-3 text-xs font-semibold text-[#636171] dark:border-[#1a2a1e] dark:text-[#9FB8A4]">
+                    <span>Customer Mobile Experience</span>
+                    <span className="font-bold text-[#2f6b3f] dark:text-[#bcf7b7]">
+                        App-Free
+                    </span>
+                </div>
+
+                {/* Simulated Storefront Catalog */}
+                <div className="mt-4 rounded-xl border border-[#eaeaf2] bg-white p-4 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-xs font-bold text-[#2f6b3f] uppercase dark:text-[#bcf7b7]">
+                                Curated Drop
+                            </p>
+                            <h4 className="text-base font-extrabold text-[#123524] dark:text-[#edf7ef]">
+                                Summer Artisan Collection
+                            </h4>
+                        </div>
+                        <span className="rounded-full bg-[#f4f4fa] px-2.5 py-1 text-xs font-bold text-[#123524] dark:bg-[#050806] dark:text-[#edf7ef]">
+                            11 Items
+                        </span>
+                    </div>
+
+                    {/* Filter tabs */}
+                    <div className="mt-3 flex gap-1.5">
+                        <span className="rounded-lg bg-[#123524] px-2.5 py-1 text-[11px] font-bold text-white dark:bg-[#bcf7b7] dark:text-[#06140b]">
+                            All (11)
+                        </span>
+                        <span className="rounded-lg border border-[#eaeaf2] bg-white px-2.5 py-1 text-[11px] text-[#636171] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#9FB8A4]">
+                            Waistbeads (7)
+                        </span>
+                        <span className="rounded-lg border border-[#eaeaf2] bg-white px-2.5 py-1 text-[11px] text-[#636171] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#9FB8A4]">
+                            Bracelets (4)
+                        </span>
+                    </div>
+
+                    {/* Simulated Item Row */}
+                    <div className="mt-4 flex items-center justify-between rounded-lg border border-[#eaeaf2] bg-[#f8f8fc] p-3 dark:border-[#1a2a1e] dark:bg-[#050806]">
+                        <div className="space-y-0.5">
+                            <p className="text-xs font-bold text-[#123524] dark:text-[#edf7ef]">
+                                Gold Vancleef Waistbead Set
+                            </p>
+                            <p className="text-[11px] text-[#636171] dark:text-[#9FB8A4]">
+                                Artisan double-strand with clasp
+                            </p>
+                        </div>
+                        <div className="text-right">
+                            <p className="text-xs font-bold text-[#123524] dark:text-[#edf7ef]">
+                                ₦25,000
+                            </p>
+                            <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+                                In Stock
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mt-4 flex items-center justify-between text-xs text-[#636171] dark:text-[#9FB8A4]">
+                    <span>Touch-friendly mobile drawer</span>
+                    <span className="font-semibold text-[#2f6b3f] dark:text-[#bcf7b7]">
+                        Direct WhatsApp order
+                    </span>
+                </div>
+            </div>
+        ),
     },
     {
-        id: 'cat-3',
-        name: 'Necklaces',
-        slug: 'necklaces',
-        productCount: 5,
-        sampleProduct: 'Handcrafted Beaded Choker',
-        priceRange: '₦7,000 - ₦30,000',
+        id: 'slide-3',
+        badge: 'Feature 03 · Analytics',
+        tabLabel: '03. Click Analytics',
+        title: 'Track traffic, click-throughs, and campaign popularity live',
+        description:
+            'Every generated link tracks visitor activity automatically. See which custom slugs, social drops, and promo campaigns drive real attention from your audience.',
+        renderVisual: () => (
+            <div className="rounded-2xl border border-[#eaeaf2] bg-[#f8f8fc] p-6 text-left dark:border-[#1a2a1e] dark:bg-[#050806]">
+                <div className="flex items-center justify-between border-b border-[#eaeaf2] pb-3 text-xs font-semibold text-[#636171] dark:border-[#1a2a1e] dark:text-[#9FB8A4]">
+                    <span>Link Performance Monitor</span>
+                    <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                        ● Active Tracking
+                    </span>
+                </div>
+
+                {/* Metric Summary Cards */}
+                <div className="mt-4 grid grid-cols-2 gap-3">
+                    <div className="rounded-xl border border-[#eaeaf2] bg-white p-3 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                        <span className="text-[11px] text-[#636171] dark:text-[#9FB8A4]">
+                            Total Link Clicks
+                        </span>
+                        <p className="mt-1 text-2xl font-black text-[#123524] dark:text-[#edf7ef]">
+                            1,420
+                        </p>
+                    </div>
+                    <div className="rounded-xl border border-[#eaeaf2] bg-white p-3 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                        <span className="text-[11px] text-[#636171] dark:text-[#9FB8A4]">
+                            Top Performing Link
+                        </span>
+                        <p className="mt-1 truncate text-base font-black text-[#2f6b3f] dark:text-[#bcf7b7]">
+                            /summer-drop
+                        </p>
+                    </div>
+                </div>
+
+                {/* Click Distribution Bars */}
+                <div className="mt-4 rounded-xl border border-[#eaeaf2] bg-white p-4 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                    <div className="flex items-center justify-between text-xs font-bold text-[#123524] dark:text-[#edf7ef]">
+                        <span>Campaign Click Breakdown</span>
+                        <span className="text-[#636171] dark:text-[#9FB8A4]">
+                            75% conversion
+                        </span>
+                    </div>
+
+                    <div className="mt-3 space-y-2">
+                        <div>
+                            <div className="flex justify-between text-[11px] text-[#636171] dark:text-[#9FB8A4]">
+                                <span>/exclusive-waist-beads</span>
+                                <span className="font-bold text-[#123524] dark:text-[#edf7ef]">
+                                    75% (1,065 clicks)
+                                </span>
+                            </div>
+                            <div className="mt-1 h-2 overflow-hidden rounded-full bg-[#f4f4fa] dark:bg-[#1a2a1e]">
+                                <div className="h-full w-[75%] rounded-full bg-[#2f6b3f] dark:bg-[#bcf7b7]" />
+                            </div>
+                        </div>
+
+                        <div>
+                            <div className="flex justify-between text-[11px] text-[#636171] dark:text-[#9FB8A4]">
+                                <span>/stacking-bracelets</span>
+                                <span className="font-bold text-[#123524] dark:text-[#edf7ef]">
+                                    25% (355 clicks)
+                                </span>
+                            </div>
+                            <div className="mt-1 h-2 overflow-hidden rounded-full bg-[#f4f4fa] dark:bg-[#1a2a1e]">
+                                <div className="h-full w-[25%] rounded-full bg-[#2dd4bf]" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        ),
     },
     {
-        id: 'cat-4',
-        name: 'Anklets',
-        slug: 'anklets',
-        productCount: 3,
-        sampleProduct: 'Dove Grace Soft Anklet',
-        priceRange: '₦4,000 - ₦5,000',
+        id: 'slide-4',
+        badge: 'Feature 04 · Stock Honest',
+        tabLabel: '04. Stock Alerts',
+        title: 'Live inventory sync and automatic low-stock notifications',
+        description:
+            'Keep customer expectations accurate. Set stock numbers per product and get warned when high-demand bestsellers drop low, so you restock before losing buyers.',
+        renderVisual: () => (
+            <div className="rounded-2xl border border-[#eaeaf2] bg-[#f8f8fc] p-6 text-left dark:border-[#1a2a1e] dark:bg-[#050806]">
+                <div className="flex items-center justify-between border-b border-[#eaeaf2] pb-3 text-xs font-semibold text-[#636171] dark:border-[#1a2a1e] dark:text-[#9FB8A4]">
+                    <span>Inventory Level Monitor</span>
+                    <span className="rounded bg-[#e9fbe7] px-2 py-0.5 text-[10px] font-bold text-[#123524] dark:bg-[#123524] dark:text-[#bcf7b7]">
+                        Auto-Synced
+                    </span>
+                </div>
+
+                {/* Stock Items Display */}
+                <div className="mt-4 space-y-2.5">
+                    <div className="flex items-center justify-between rounded-xl border border-[#eaeaf2] bg-white p-3 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                        <div>
+                            <p className="text-xs font-bold text-[#123524] dark:text-[#edf7ef]">
+                                Gold Beaded Waistband
+                            </p>
+                            <p className="text-[11px] text-[#636171] dark:text-[#9FB8A4]">
+                                Waistbeads
+                            </p>
+                        </div>
+                        <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400">
+                            18 in stock
+                        </span>
+                    </div>
+
+                    <div className="flex items-center justify-between rounded-xl border border-[#ffb545]/40 bg-white p-3 dark:border-[#ffb545]/30 dark:bg-[#0b120d]">
+                        <div>
+                            <p className="text-xs font-bold text-[#123524] dark:text-[#edf7ef]">
+                                WHIMSY Glow Bracelet
+                            </p>
+                            <p className="text-[11px] text-[#636171] dark:text-[#9FB8A4]">
+                                Bracelets
+                            </p>
+                        </div>
+                        <span className="rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-bold text-amber-700 dark:bg-amber-950/60 dark:text-amber-400">
+                            Only 2 left
+                        </span>
+                    </div>
+                </div>
+
+                {/* Automated Notification Banner */}
+                <div className="mt-4 flex items-center gap-2.5 rounded-xl border border-amber-200 bg-amber-50/70 p-3 text-xs text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-300">
+                    <Bell className="size-4 shrink-0 text-amber-600 dark:text-amber-400" />
+                    <span>
+                        <strong>Low Stock Alert:</strong> "WHIMSY Glow Bracelet"
+                        has 2 remaining units.
+                    </span>
+                </div>
+            </div>
+        ),
+    },
+    {
+        id: 'slide-5',
+        badge: 'Feature 05 · Architecture',
+        tabLabel: '05. Private Security',
+        title: 'Isolated multi-tenant architecture with private data scoping',
+        description:
+            'Every seller operates within their own isolated data partition. Your inventory, customer links, analytics, and revenue numbers are strictly private to your store.',
+        renderVisual: () => (
+            <div className="rounded-2xl border border-[#eaeaf2] bg-[#f8f8fc] p-6 text-left dark:border-[#1a2a1e] dark:bg-[#050806]">
+                <div className="flex items-center justify-between border-b border-[#eaeaf2] pb-3 text-xs font-semibold text-[#636171] dark:border-[#1a2a1e] dark:text-[#9FB8A4]">
+                    <span>Security & Tenant Scoping</span>
+                    <span className="font-bold text-[#2f6b3f] dark:text-[#bcf7b7]">
+                        100% Isolated
+                    </span>
+                </div>
+
+                {/* Tenant Diagram */}
+                <div className="mt-4 space-y-2.5">
+                    <div className="flex items-center justify-between rounded-xl border border-[#2f6b3f] bg-white p-3.5 dark:border-[#bcf7b7] dark:bg-[#0b120d]">
+                        <div className="flex items-center gap-2.5">
+                            <ShieldCheck className="size-5 text-[#2f6b3f] dark:text-[#bcf7b7]" />
+                            <div>
+                                <p className="text-xs font-bold text-[#123524] dark:text-[#edf7ef]">
+                                    Seller Tenant Partition
+                                </p>
+                                <p className="text-[11px] text-[#636171] dark:text-[#9FB8A4]">
+                                    user_id scoped queries on all models
+                                </p>
+                            </div>
+                        </div>
+                        <span className="font-mono text-xs font-bold text-[#2f6b3f] dark:text-[#bcf7b7]">
+                            Strict Scope
+                        </span>
+                    </div>
+
+                    <div className="flex items-center justify-between rounded-xl border border-[#eaeaf2] bg-white p-3.5 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                        <div className="flex items-center gap-2.5">
+                            <Globe className="size-5 text-[#636171] dark:text-[#9FB8A4]" />
+                            <div>
+                                <p className="text-xs font-bold text-[#123524] dark:text-[#edf7ef]">
+                                    Custom Slugs & Public Route
+                                </p>
+                                <p className="text-[11px] text-[#636171] dark:text-[#9FB8A4]">
+                                    /{'{link:slug}'} storefront resolution
+                                </p>
+                            </div>
+                        </div>
+                        <span className="font-mono text-xs text-[#636171] dark:text-[#9FB8A4]">
+                            Verified Route
+                        </span>
+                    </div>
+                </div>
+
+                <div className="mt-4 flex items-center justify-between text-xs text-[#636171] dark:text-[#9FB8A4]">
+                    <span>SSL Encrypted Transmission</span>
+                    <span className="font-semibold text-[#123524] dark:text-[#edf7ef]">
+                        Zero Cross-Seller Data Leak
+                    </span>
+                </div>
+            </div>
+        ),
     },
 ];
 
@@ -80,7 +398,7 @@ const STOREFRONT_USE_CASES = [
             'A buyer asks: "Do you have any gold waistbeads and matching bracelets?"',
         solution:
             'Instead of sending 30 loose photos that clutter their chat, select Waistbeads + Bracelets in your dashboard. Novaflow generates a dedicated, live link in two seconds.',
-        slug: 'novaflow.com/zals/gold-waistbeads-and-bracelets',
+        slug: 'novaflow.com/your-store/gold-waistbeads-and-bracelets',
         actionLabel:
             'Client taps link → views curated selection with live stock',
     },
@@ -92,7 +410,7 @@ const STOREFRONT_USE_CASES = [
             'You are promoting a seasonal collection on Instagram Stories and TikTok.',
         solution:
             'Create a custom slug for your new drop. Customers browse your curated collection instantly on mobile without signup gates, while you watch click milestones roll in.',
-        slug: 'novaflow.com/zals/summer-artisan-drop',
+        slug: 'novaflow.com/your-store/summer-artisan-drop',
         actionLabel: 'Followers tap bio → fast, focused collection checkout',
     },
     {
@@ -103,7 +421,7 @@ const STOREFRONT_USE_CASES = [
             'Shoppers at your market stall want to see available sizes, colors, and prices.',
         solution:
             'Generate a link for the categories on display and print a single tabletop QR code. Shoppers scan and browse your exact booth catalogue on their own smartphones.',
-        slug: 'novaflow.com/zals/market-day-showcase',
+        slug: 'novaflow.com/your-store/market-day-showcase',
         actionLabel:
             'Shoppers scan QR → browse entire inventory on their phones',
     },
@@ -115,53 +433,8 @@ const STOREFRONT_USE_CASES = [
             'You want loyal repeat clients to access new handcrafted items before public release.',
         solution:
             'Compile your unreleased items into a private link slug. Share the link exclusively with VIP clients to take early requests before announcing to the public.',
-        slug: 'novaflow.com/zals/vip-early-access',
+        slug: 'novaflow.com/your-store/vip-early-access',
         actionLabel: 'VIPs get first pick → zero public stock confusion',
-    },
-];
-
-const PLATFORM_FEATURES = [
-    {
-        number: '01',
-        title: 'Category-to-Link Engine',
-        description:
-            'Combine any combination of categories into a single, clean URL. Each link shows only the items you selected, perfectly compiled.',
-        icon: Link2,
-    },
-    {
-        number: '02',
-        title: 'Instant Mobile Storefronts',
-        description:
-            'Customers experience a lightweight, ultra-fast storefront with zero friction, live category filters, and single-item focus modes.',
-        icon: Smartphone,
-    },
-    {
-        number: '03',
-        title: 'Real-Time Click Tracking',
-        description:
-            'Every link visit is tracked automatically. Monitor which campaign links, story drops, and custom slugs generate the most interest.',
-        icon: MousePointerClick,
-    },
-    {
-        number: '04',
-        title: 'Honest Inventory Management',
-        description:
-            'Upload product imagery, set stock quantities, and adjust pricing. When stock hits low levels, your dashboard alerts you immediately.',
-        icon: Package,
-    },
-    {
-        number: '05',
-        title: 'Multi-Tenant Data Isolation',
-        description:
-            'Each seller operates in an isolated environment. Your products, custom links, customer traffic, and analytics belong strictly to you.',
-        icon: ShieldCheck,
-    },
-    {
-        number: '06',
-        title: 'Portfolio-Grade Presentation',
-        description:
-            'Designed specifically for makers, artisans, and boutique shops who care about craftsmanship and clean, un-bloated customer presentation.',
-        icon: Globe,
     },
 ];
 
@@ -171,41 +444,19 @@ export default function Welcome() {
     const [activeDevice, setActiveDevice] = useState<
         'desktop' | 'tablet' | 'mobile'
     >('desktop');
-    const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([
-        'cat-1',
-        'cat-2',
-    ]);
-    const [customSlugName, setCustomSlugName] = useState('summer-artisan-drop');
-    const [copiedUrl, setCopiedUrl] = useState(false);
+    const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
 
-    const toggleCategorySelection = (id: string) => {
-        setSelectedCategoryIds((prev) => {
-            if (prev.includes(id)) {
-                if (prev.length === 1) {
-                    return prev;
-                }
+    const activeSlide = FEATURE_SLIDES[currentSlideIndex];
 
-                return prev.filter((item) => item !== id);
-            }
-
-            return [...prev, id];
-        });
+    const nextSlide = () => {
+        setCurrentSlideIndex((prev) => (prev + 1) % FEATURE_SLIDES.length);
     };
 
-    const selectedCategories = AVAILABLE_CATEGORIES.filter((c) =>
-        selectedCategoryIds.includes(c.id),
-    );
-    const totalCompiledProducts = selectedCategories.reduce(
-        (sum, c) => sum + c.productCount,
-        0,
-    );
-
-    const fullDemoUrl = `novaflow.com/zals-beadworks/${customSlugName || 'custom-collection'}`;
-
-    const handleCopyUrl = () => {
-        navigator.clipboard?.writeText(`https://${fullDemoUrl}`);
-        setCopiedUrl(true);
-        setTimeout(() => setCopiedUrl(false), 2200);
+    const prevSlide = () => {
+        setCurrentSlideIndex(
+            (prev) =>
+                (prev - 1 + FEATURE_SLIDES.length) % FEATURE_SLIDES.length,
+        );
     };
 
     return (
@@ -227,10 +478,10 @@ export default function Welcome() {
                         {/* Desktop Nav Links */}
                         <nav className="hidden items-center gap-7 text-sm font-semibold text-[#636171] md:flex dark:text-[#9FB8A4]">
                             <a
-                                href="#link-engine"
+                                href="#features-carousel"
                                 className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
                             >
-                                Link Engine
+                                Core Features
                             </a>
                             <a
                                 href="#storefronts"
@@ -243,12 +494,6 @@ export default function Welcome() {
                                 className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
                             >
                                 Multi-Device
-                            </a>
-                            <a
-                                href="#features"
-                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
-                            >
-                                Features
                             </a>
                             <a
                                 href="#how"
@@ -311,11 +556,11 @@ export default function Welcome() {
                         <div className="border-b border-[#eaeaf2] bg-white px-5 py-6 sm:px-6 md:hidden dark:border-[#1a2a1e] dark:bg-[#0b120d]">
                             <div className="flex flex-col gap-4 text-base font-semibold text-[#123524] dark:text-[#edf7ef]">
                                 <a
-                                    href="#link-engine"
+                                    href="#features-carousel"
                                     onClick={() => setMobileMenuOpen(false)}
                                     className="py-1 hover:text-[#2f6b3f] dark:hover:text-[#bcf7b7]"
                                 >
-                                    Link Engine
+                                    Core Features
                                 </a>
                                 <a
                                     href="#storefronts"
@@ -330,13 +575,6 @@ export default function Welcome() {
                                     className="py-1 hover:text-[#2f6b3f] dark:hover:text-[#bcf7b7]"
                                 >
                                     Multi-Device
-                                </a>
-                                <a
-                                    href="#features"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="py-1 hover:text-[#2f6b3f] dark:hover:text-[#bcf7b7]"
-                                >
-                                    Features
                                 </a>
                                 <a
                                     href="#how"
@@ -378,18 +616,12 @@ export default function Welcome() {
                     )}
                 </header>
 
-                {/* Hero Section (Standard Clean Solid Style — No Gradients) */}
+                {/* Hero Section */}
                 <section className="border-b border-[#eaeaf2] bg-[#f4f4fa] pt-14 pb-18 sm:pt-20 sm:pb-24 dark:border-[#1a2a1e] dark:bg-[#050806]">
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                         <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
-                            {/* Left Column: Clear Core Value Proposition */}
+                            {/* Left Column: Core Proposition */}
                             <div className="space-y-6 lg:col-span-7">
-                                <div className="inline-flex items-center gap-2 rounded-full border border-[#2f6b3f] bg-[#e9fbe7] px-3.5 py-1 text-xs font-bold tracking-wider text-[#123524] uppercase dark:border-[#bcf7b7] dark:bg-[#123524] dark:text-[#bcf7b7]">
-                                    <Sparkles className="size-3.5 text-[#2f6b3f] dark:text-[#bcf7b7]" />
-                                    <span>
-                                        Category-to-Link Commerce Platform
-                                    </span>
-                                </div>
 
                                 <h1 className="text-4xl font-extrabold tracking-tight text-[#123524] sm:text-6xl lg:text-[62px] lg:leading-[1.1] dark:text-[#edf7ef]">
                                     Compile products into curated links. Share
@@ -426,11 +658,11 @@ export default function Welcome() {
                                                 <ArrowRight className="size-5" />
                                             </Link>
                                             <a
-                                                href="#link-engine"
+                                                href="#features-carousel"
                                                 className="inline-flex items-center gap-2 rounded-xl border border-[#eaeaf2] bg-white px-6 py-4 text-base font-bold text-[#123524] shadow-sm hover:border-[#123524] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#edf7ef]"
                                             >
-                                                <Link2 className="size-5 text-[#2f6b3f] dark:text-[#bcf7b7]" />
-                                                <span>Try the Link Engine</span>
+                                                <Layers className="size-5 text-[#2f6b3f] dark:text-[#bcf7b7]" />
+                                                <span>Explore Features</span>
                                             </a>
                                         </>
                                     )}
@@ -469,7 +701,7 @@ export default function Welcome() {
                                 </div>
                             </div>
 
-                            {/* Right Column: Clean Structural Overview Card */}
+                            {/* Right Column: Platform Overview Card */}
                             <div className="lg:col-span-5">
                                 <div className="rounded-3xl border border-[#eaeaf2] bg-white p-6 shadow-sm dark:border-[#1a2a1e] dark:bg-[#0b120d]">
                                     <div className="flex items-center justify-between border-b border-[#eaeaf2] pb-4 dark:border-[#1a2a1e]">
@@ -479,66 +711,68 @@ export default function Welcome() {
                                             </div>
                                             <div>
                                                 <p className="text-sm font-bold text-[#123524] dark:text-[#edf7ef]">
-                                                    Zal's Beadworks
+                                                    Nova Flow Storefront
                                                 </p>
                                                 <p className="text-[11px] text-[#636171] dark:text-[#9FB8A4]">
-                                                    Active Storefront
+                                                    Boutique Creator Suite
                                                 </p>
                                             </div>
                                         </div>
                                         <span className="rounded-full bg-[#e9fbe7] px-2.5 py-1 text-xs font-bold text-[#123524] dark:bg-[#123524] dark:text-[#bcf7b7]">
-                                            ● Live
+                                            ● Live Engine
                                         </span>
                                     </div>
 
-                                    {/* Stats grid */}
+                                    {/* Feature Cards Grid */}
                                     <div className="mt-5 grid grid-cols-2 gap-3">
                                         <div className="rounded-xl border border-[#eaeaf2] bg-[#f4f4fa] p-3.5 dark:border-[#1a2a1e] dark:bg-[#050806]">
                                             <span className="text-xs text-[#636171] dark:text-[#9FB8A4]">
-                                                Total Products
+                                                Link Engine
                                             </span>
-                                            <p className="mt-1 text-2xl font-black text-[#123524] dark:text-[#edf7ef]">
-                                                19
+                                            <p className="mt-1 text-sm font-bold text-[#123524] dark:text-[#edf7ef]">
+                                                Category Bundles
                                             </p>
                                         </div>
                                         <div className="rounded-xl border border-[#eaeaf2] bg-[#f4f4fa] p-3.5 dark:border-[#1a2a1e] dark:bg-[#050806]">
                                             <span className="text-xs text-[#636171] dark:text-[#9FB8A4]">
-                                                Categories
+                                                Storefronts
                                             </span>
-                                            <p className="mt-1 text-2xl font-black text-[#123524] dark:text-[#edf7ef]">
-                                                4
+                                            <p className="mt-1 text-sm font-bold text-[#123524] dark:text-[#edf7ef]">
+                                                Mobile First
                                             </p>
                                         </div>
                                         <div className="rounded-xl border border-[#eaeaf2] bg-[#f4f4fa] p-3.5 dark:border-[#1a2a1e] dark:bg-[#050806]">
                                             <span className="text-xs text-[#636171] dark:text-[#9FB8A4]">
-                                                Generated Links
+                                                Analytics
                                             </span>
-                                            <p className="mt-1 text-2xl font-black text-[#123524] dark:text-[#edf7ef]">
-                                                3
+                                            <p className="mt-1 text-sm font-bold text-[#123524] dark:text-[#edf7ef]">
+                                                Live Click Counts
                                             </p>
                                         </div>
                                         <div className="rounded-xl border border-[#eaeaf2] bg-[#f4f4fa] p-3.5 dark:border-[#1a2a1e] dark:bg-[#050806]">
                                             <span className="text-xs text-[#636171] dark:text-[#9FB8A4]">
-                                                Total Link Clicks
+                                                Inventory
                                             </span>
-                                            <p className="mt-1 text-2xl font-black text-[#2f6b3f] dark:text-[#bcf7b7]">
-                                                4
+                                            <p className="mt-1 text-sm font-bold text-[#2f6b3f] dark:text-[#bcf7b7]">
+                                                Auto Stock Warnings
                                             </p>
                                         </div>
                                     </div>
 
-                                    {/* Active Link Item */}
+                                    {/* Active Link Item Preview */}
                                     <div className="mt-4 rounded-xl border border-[#eaeaf2] bg-[#f4f4fa] p-3.5 dark:border-[#1a2a1e] dark:bg-[#050806]">
                                         <div className="flex items-center justify-between text-xs font-semibold text-[#636171] dark:text-[#9FB8A4]">
-                                            <span>Featured Drop Link</span>
+                                            <span>Clean Link Compiling</span>
                                             <span className="text-[#2f6b3f] dark:text-[#bcf7b7]">
-                                                3 clicks (75%)
+                                                One URL
                                             </span>
                                         </div>
                                         <div className="mt-2 flex items-center justify-between rounded-lg border border-[#eaeaf2] bg-white px-3 py-2 font-mono text-xs text-[#123524] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#edf7ef]">
-                                            <span>/exclusive-waist-beads</span>
+                                            <span>
+                                                novaflow.com/your-store/summer-drop
+                                            </span>
                                             <span className="rounded bg-[#e9fbe7] px-2 py-0.5 font-sans text-[10px] font-bold text-[#123524] dark:bg-[#123524] dark:text-[#bcf7b7]">
-                                                Active
+                                                Ready
                                             </span>
                                         </div>
                                     </div>
@@ -548,282 +782,132 @@ export default function Welcome() {
                     </div>
                 </section>
 
-                {/* Section: Interactive Category-to-Link Engine Studio (The Core Mechanism of Nova Flow) */}
+                {/* Section: Redesigned Core Features Slide/Carousel Showcase (No Site Data, Pure Visual Feature Slides) */}
                 <section
-                    id="link-engine"
+                    id="features-carousel"
                     className="border-b border-[#eaeaf2] bg-white py-20 sm:py-28 dark:border-[#1a2a1e] dark:bg-[#08100a]"
                 >
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="max-w-3xl">
-                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e9fbe7] px-3.5 py-1 text-xs font-bold tracking-wider text-[#123524] uppercase dark:bg-[#123524] dark:text-[#bcf7b7]">
-                                <Layers className="size-3.5" />
-                                <span>The Core Feature</span>
-                            </span>
-                            <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-[#123524] sm:text-5xl dark:text-[#edf7ef]">
-                                Select categories. Put them into a link. Share
-                                with one tap.
-                            </h2>
-                            <p className="mt-4 text-lg text-[#636171] dark:text-[#9FB8A4]">
-                                Try the interactive simulator below: check or
-                                uncheck categories to see how Nova Flow compiles
-                                your products into a clean custom link with
-                                instant storefront preview.
-                            </p>
+                        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+                            <div className="max-w-2xl">
+                                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e9fbe7] px-3.5 py-1 text-xs font-bold tracking-wider text-[#123524] uppercase dark:bg-[#123524] dark:text-[#bcf7b7]">
+                                    <Layers className="size-3.5" />
+                                    <span>Core Platform Capabilities</span>
+                                </span>
+                                <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-[#123524] sm:text-5xl dark:text-[#edf7ef]">
+                                    What Nova Flow offers your business.
+                                </h2>
+                                <p className="mt-4 text-lg text-[#636171] dark:text-[#9FB8A4]">
+                                    Explore the five pillar features that power
+                                    the Nova Flow commerce experience.
+                                </p>
+                            </div>
+
+                            {/* Carousel Navigation Buttons */}
+                            <div className="flex items-center gap-3">
+                                <button
+                                    type="button"
+                                    onClick={prevSlide}
+                                    className="flex size-11 items-center justify-center rounded-xl border border-[#eaeaf2] bg-white text-[#123524] shadow-sm transition hover:bg-[#f4f4fa] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#edf7ef] dark:hover:bg-[#14291b]"
+                                    aria-label="Previous feature slide"
+                                >
+                                    <ChevronLeft className="size-5" />
+                                </button>
+                                <span className="font-mono text-xs font-bold text-[#636171] dark:text-[#9FB8A4]">
+                                    {String(currentSlideIndex + 1).padStart(
+                                        2,
+                                        '0',
+                                    )}{' '}
+                                    /{' '}
+                                    {String(FEATURE_SLIDES.length).padStart(
+                                        2,
+                                        '0',
+                                    )}
+                                </span>
+                                <button
+                                    type="button"
+                                    onClick={nextSlide}
+                                    className="flex size-11 items-center justify-center rounded-xl border border-[#eaeaf2] bg-white text-[#123524] shadow-sm transition hover:bg-[#f4f4fa] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#edf7ef] dark:hover:bg-[#14291b]"
+                                    aria-label="Next feature slide"
+                                >
+                                    <ChevronRight className="size-5" />
+                                </button>
+                            </div>
                         </div>
 
-                        {/* Interactive Link Composer Studio */}
-                        <div className="mt-14 grid items-start gap-8 lg:grid-cols-12">
-                            {/* Left Side: Seller Controls */}
-                            <div className="rounded-3xl border border-[#eaeaf2] bg-[#f4f4fa] p-6 sm:p-8 lg:col-span-6 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
-                                <div className="flex items-center justify-between border-b border-[#eaeaf2] pb-4 dark:border-[#1a2a1e]">
-                                    <div className="flex items-center gap-2">
-                                        <span className="flex size-7 items-center justify-center rounded-lg bg-[#123524] text-xs font-bold text-white dark:bg-[#bcf7b7] dark:text-[#06140b]">
-                                            1
-                                        </span>
-                                        <h3 className="font-bold text-[#123524] dark:text-[#edf7ef]">
-                                            Choose Categories to Compile
-                                        </h3>
-                                    </div>
-                                    <span className="text-xs text-[#636171] dark:text-[#9FB8A4]">
-                                        {selectedCategoryIds.length} selected
+                        {/* Slide Selector Tabs */}
+                        <div className="mt-8 flex flex-wrap gap-2 border-b border-[#eaeaf2] pb-4 dark:border-[#1a2a1e]">
+                            {FEATURE_SLIDES.map((slide, idx) => (
+                                <button
+                                    key={slide.id}
+                                    type="button"
+                                    onClick={() => setCurrentSlideIndex(idx)}
+                                    className={`rounded-xl px-4 py-2 text-xs font-bold transition ${currentSlideIndex === idx
+                                            ? 'bg-[#123524] text-white shadow-sm dark:bg-[#bcf7b7] dark:text-[#06140b]'
+                                            : 'border border-[#eaeaf2] bg-white text-[#636171] hover:text-[#123524] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#9FB8A4] dark:hover:text-[#edf7ef]'
+                                        }`}
+                                >
+                                    {slide.tabLabel}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Active Feature Slide Presentation (No site data, purely visual representation of capability) */}
+                        <div className="mt-10 rounded-3xl border border-[#eaeaf2] bg-[#f4f4fa] p-8 sm:p-12 lg:p-14 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                            <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14">
+                                {/* Slide Text Content (Left) */}
+                                <div className="space-y-5 lg:col-span-6">
+                                    <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1 text-xs font-bold text-[#2f6b3f] shadow-sm dark:bg-[#123524] dark:text-[#bcf7b7]">
+                                        {activeSlide.badge}
                                     </span>
-                                </div>
+                                    <h3 className="text-2xl leading-tight font-extrabold text-[#123524] sm:text-4xl dark:text-[#edf7ef]">
+                                        {activeSlide.title}
+                                    </h3>
+                                    <p className="text-base leading-relaxed text-[#636171] sm:text-lg dark:text-[#9FB8A4]">
+                                        {activeSlide.description}
+                                    </p>
 
-                                {/* Category Selection Checkboxes */}
-                                <div className="mt-6 space-y-3">
-                                    {AVAILABLE_CATEGORIES.map((cat) => {
-                                        const isSelected =
-                                            selectedCategoryIds.includes(
-                                                cat.id,
-                                            );
-
-                                        return (
-                                            <div
-                                                key={cat.id}
-                                                onClick={() =>
-                                                    toggleCategorySelection(
-                                                        cat.id,
-                                                    )
-                                                }
-                                                className={`flex cursor-pointer items-center justify-between rounded-2xl border p-4 transition ${
-                                                    isSelected
-                                                        ? 'border-[#2f6b3f] bg-white dark:border-[#bcf7b7] dark:bg-[#123524]/40'
-                                                        : 'border-[#eaeaf2] bg-white/60 hover:bg-white dark:border-[#1a2a1e] dark:bg-[#050806] dark:hover:bg-[#0f1a12]'
-                                                }`}
-                                            >
-                                                <div className="flex items-center gap-3">
-                                                    <div
-                                                        className={`flex size-5 items-center justify-center rounded-md border ${
-                                                            isSelected
-                                                                ? 'border-[#123524] bg-[#123524] text-white dark:border-[#bcf7b7] dark:bg-[#bcf7b7] dark:text-[#06140b]'
-                                                                : 'border-[#eaeaf2] bg-white dark:border-[#1a2a1e] dark:bg-[#08100a]'
-                                                        }`}
-                                                    >
-                                                        {isSelected && (
-                                                            <Check className="size-3.5" />
-                                                        )}
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-sm font-bold text-[#123524] dark:text-[#edf7ef]">
-                                                            {cat.name}
-                                                        </p>
-                                                        <p className="text-xs text-[#636171] dark:text-[#9FB8A4]">
-                                                            Sample:{' '}
-                                                            {cat.sampleProduct}{' '}
-                                                            ({cat.priceRange})
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <span className="rounded-lg bg-[#f4f4fa] px-2.5 py-1 text-xs font-bold text-[#123524] dark:bg-[#050806] dark:text-[#edf7ef]">
-                                                    {cat.productCount} items
-                                                </span>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-
-                                {/* Step 2: Slug Customizer */}
-                                <div className="mt-6 border-t border-[#eaeaf2] pt-6 dark:border-[#1a2a1e]">
-                                    <div className="mb-3 flex items-center gap-2">
-                                        <span className="flex size-7 items-center justify-center rounded-lg bg-[#123524] text-xs font-bold text-white dark:bg-[#bcf7b7] dark:text-[#06140b]">
-                                            2
-                                        </span>
-                                        <label
-                                            htmlFor="slug-input"
-                                            className="text-sm font-bold text-[#123524] dark:text-[#edf7ef]"
-                                        >
-                                            Customize Your Link Slug
-                                        </label>
-                                    </div>
-
-                                    <div className="flex items-center rounded-xl border border-[#eaeaf2] bg-white px-3 py-2 dark:border-[#1a2a1e] dark:bg-[#050806]">
-                                        <span className="font-mono text-xs text-[#636171] dark:text-[#9FB8A4]">
-                                            novaflow.com/zals/
-                                        </span>
-                                        <input
-                                            id="slug-input"
-                                            type="text"
-                                            value={customSlugName}
-                                            onChange={(e) =>
-                                                setCustomSlugName(
-                                                    e.target.value
-                                                        .toLowerCase()
-                                                        .replace(
-                                                            /[^a-z0-9-]/g,
-                                                            '-',
-                                                        ),
-                                                )
-                                            }
-                                            className="w-full bg-transparent px-1 font-mono text-xs font-bold text-[#123524] outline-none dark:text-[#bcf7b7]"
-                                            placeholder="custom-collection-name"
-                                        />
+                                    {/* Action Footnote */}
+                                    <div className="flex items-center gap-4 pt-2 text-xs font-bold text-[#123524] dark:text-[#edf7ef]">
+                                        <div className="flex items-center gap-1.5 text-[#2f6b3f] dark:text-[#bcf7b7]">
+                                            <CheckCircle2 className="size-4" />
+                                            <span>
+                                                Integrated in all accounts
+                                            </span>
+                                        </div>
+                                        <span>·</span>
+                                        <span>No setup fees</span>
                                     </div>
                                 </div>
 
-                                {/* Step 3: Copy / Share URL Button */}
-                                <div className="mt-6 border-t border-[#eaeaf2] pt-6 dark:border-[#1a2a1e]">
-                                    <button
-                                        type="button"
-                                        onClick={handleCopyUrl}
-                                        className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#123524] py-3.5 text-sm font-bold text-white shadow-sm hover:bg-[#1a4430] dark:bg-[#bcf7b7] dark:text-[#06140b] dark:hover:bg-[#a6ec9f]"
-                                    >
-                                        {copiedUrl ? (
-                                            <Check className="size-4" />
-                                        ) : (
-                                            <Copy className="size-4" />
-                                        )}
-                                        <span>
-                                            {copiedUrl
-                                                ? 'Copied to Clipboard!'
-                                                : 'Copy Shareable Storefront Link'}
-                                        </span>
-                                    </button>
+                                {/* Slide Visual Illustration (Right) */}
+                                <div className="lg:col-span-6">
+                                    {activeSlide.renderVisual()}
                                 </div>
                             </div>
 
-                            {/* Right Side: What the Customer Sees in That Generated Link */}
-                            <div className="rounded-3xl border border-[#eaeaf2] bg-white p-6 sm:p-8 lg:col-span-6 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
-                                <div className="flex items-center justify-between border-b border-[#eaeaf2] pb-4 dark:border-[#1a2a1e]">
-                                    <div className="flex items-center gap-2">
-                                        <Eye className="size-5 text-[#2f6b3f] dark:text-[#bcf7b7]" />
-                                        <h3 className="font-bold text-[#123524] dark:text-[#edf7ef]">
-                                            Live Customer View of This Link
-                                        </h3>
-                                    </div>
-                                    <span className="rounded-full bg-[#e9fbe7] px-3 py-1 text-xs font-bold text-[#123524] dark:bg-[#123524] dark:text-[#bcf7b7]">
-                                        {totalCompiledProducts} Products
-                                        Compiled
-                                    </span>
-                                </div>
-
-                                {/* Active URL Address Bar */}
-                                <div className="mt-5 flex items-center justify-between rounded-xl border border-[#eaeaf2] bg-[#f4f4fa] px-3.5 py-2.5 font-mono text-xs text-[#123524] dark:border-[#1a2a1e] dark:bg-[#050806] dark:text-[#edf7ef]">
-                                    <div className="flex items-center gap-2 truncate">
-                                        <Globe className="size-4 shrink-0 text-[#2f6b3f] dark:text-[#bcf7b7]" />
-                                        <span className="truncate">
-                                            https://{fullDemoUrl}
-                                        </span>
-                                    </div>
-                                    <span className="shrink-0 font-sans text-[11px] font-bold text-[#2f6b3f] dark:text-[#bcf7b7]">
-                                        Instant View
-                                    </span>
-                                </div>
-
-                                {/* Simulated Storefront Header */}
-                                <div className="mt-6 rounded-2xl border border-[#eaeaf2] bg-[#f4f4fa] p-5 dark:border-[#1a2a1e] dark:bg-[#050806]">
-                                    <div className="flex items-start justify-between">
-                                        <div>
-                                            <p className="text-xs font-bold text-[#2f6b3f] uppercase dark:text-[#bcf7b7]">
-                                                Artisan Collection
-                                            </p>
-                                            <h4 className="mt-1 text-xl font-extrabold text-[#123524] dark:text-[#edf7ef]">
-                                                Zal's Beadworks
-                                            </h4>
-                                            <p className="mt-1 text-xs text-[#636171] dark:text-[#9FB8A4]">
-                                                Compiled categories:{' '}
-                                                {selectedCategories
-                                                    .map((c) => c.name)
-                                                    .join(' & ')}
-                                            </p>
-                                        </div>
-                                        <span className="rounded-lg border border-[#eaeaf2] bg-white px-2.5 py-1 text-xs font-bold text-[#123524] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#edf7ef]">
-                                            Curated Drop
-                                        </span>
-                                    </div>
-
-                                    {/* Category Filter Badges */}
-                                    <div className="mt-4 flex flex-wrap items-center gap-2">
-                                        <span className="rounded-lg bg-[#123524] px-3 py-1 text-xs font-bold text-white dark:bg-[#bcf7b7] dark:text-[#06140b]">
-                                            All in this link (
-                                            {totalCompiledProducts})
-                                        </span>
-                                        {selectedCategories.map((c) => (
-                                            <span
-                                                key={c.id}
-                                                className="rounded-lg border border-[#eaeaf2] bg-white px-3 py-1 text-xs font-medium text-[#123524] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#edf7ef]"
-                                            >
-                                                {c.name} ({c.productCount})
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Compiled Products Showcase within the Link */}
-                                <div className="mt-5 space-y-3">
-                                    {selectedCategories.map((cat) => (
-                                        <div
-                                            key={cat.id}
-                                            className="flex items-center justify-between rounded-xl border border-[#eaeaf2] bg-white p-3.5 dark:border-[#1a2a1e] dark:bg-[#050806]"
-                                        >
-                                            <div>
-                                                <div className="flex items-center gap-2">
-                                                    <span className="rounded bg-[#e9fbe7] px-2 py-0.5 text-[10px] font-bold text-[#123524] dark:bg-[#123524] dark:text-[#bcf7b7]">
-                                                        {cat.name}
-                                                    </span>
-                                                    <p className="text-sm font-bold text-[#123524] dark:text-[#edf7ef]">
-                                                        {cat.sampleProduct}
-                                                    </p>
-                                                </div>
-                                                <p className="mt-1 text-xs text-[#636171] dark:text-[#9FB8A4]">
-                                                    Direct Product Link:{' '}
-                                                    <span className="font-mono">
-                                                        /zals/{cat.slug}
-                                                    </span>
-                                                </p>
-                                            </div>
-
-                                            <div className="text-right">
-                                                <p className="text-xs font-bold text-[#123524] dark:text-[#edf7ef]">
-                                                    {cat.priceRange}
-                                                </p>
-                                                <span className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
-                                                    In Stock
-                                                </span>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                {/* Link Analytics Indicator */}
-                                <div className="mt-6 flex items-center justify-between rounded-xl border border-[#eaeaf2] bg-[#f4f4fa] px-4 py-3 text-xs dark:border-[#1a2a1e] dark:bg-[#050806]">
-                                    <div className="flex items-center gap-2 text-[#636171] dark:text-[#9FB8A4]">
-                                        <BarChart3 className="size-4 text-[#2f6b3f] dark:text-[#bcf7b7]" />
-                                        <span>
-                                            Traffic to this link increments live
-                                            in your private dashboard
-                                        </span>
-                                    </div>
-                                    <span className="font-bold text-[#2f6b3f] dark:text-[#bcf7b7]">
-                                        Auto-Tracked
-                                    </span>
-                                </div>
+                            {/* Carousel Indicator Dots */}
+                            <div className="mt-10 flex items-center justify-center gap-2 border-t border-[#eaeaf2] pt-6 dark:border-[#1a2a1e]">
+                                {FEATURE_SLIDES.map((_, idx) => (
+                                    <button
+                                        key={idx}
+                                        type="button"
+                                        onClick={() =>
+                                            setCurrentSlideIndex(idx)
+                                        }
+                                        className={`size-2.5 rounded-full transition-all ${currentSlideIndex === idx
+                                                ? 'w-8 bg-[#123524] dark:bg-[#bcf7b7]'
+                                                : 'bg-[#eaeaf2] hover:bg-[#636171] dark:bg-[#1a2a1e]'
+                                            }`}
+                                        aria-label={`Go to slide ${idx + 1}`}
+                                    />
+                                ))}
                             </div>
                         </div>
                     </div>
                 </section>
 
-                {/* Section: Creative Storefronts & Real-World Use Cases (Remodeled Section!) */}
+                {/* Section: Creative Storefronts & Real-World Use Cases */}
                 <section
                     id="storefronts"
                     className="border-b border-[#eaeaf2] bg-[#f4f4fa] py-20 sm:py-28 dark:border-[#1a2a1e] dark:bg-[#050806]"
@@ -868,7 +952,7 @@ export default function Welcome() {
                                             {item.title}
                                         </h3>
 
-                                        {/* Real-world Scenario */}
+                                        {/* Scenario */}
                                         <div className="mt-4 rounded-xl border border-[#eaeaf2] bg-[#f4f4fa] p-3.5 text-xs text-[#636171] dark:border-[#1a2a1e] dark:bg-[#050806] dark:text-[#9FB8A4]">
                                             <span className="font-bold text-[#123524] dark:text-[#edf7ef]">
                                                 Scenario:{' '}
@@ -876,12 +960,12 @@ export default function Welcome() {
                                             {item.scenario}
                                         </div>
 
-                                        {/* The Nova Flow Solution */}
+                                        {/* Solution */}
                                         <p className="mt-4 text-sm leading-relaxed text-[#636171] dark:text-[#9FB8A4]">
                                             {item.solution}
                                         </p>
 
-                                        {/* Mock Link & Result */}
+                                        {/* Link & Outcome */}
                                         <div className="mt-6 border-t border-[#eaeaf2] pt-5 dark:border-[#1a2a1e]">
                                             <div className="flex items-center justify-between font-mono text-xs text-[#123524] dark:text-[#edf7ef]">
                                                 <span className="truncate font-bold text-[#2f6b3f] dark:text-[#bcf7b7]">
@@ -924,11 +1008,10 @@ export default function Welcome() {
                                 <button
                                     type="button"
                                     onClick={() => setActiveDevice('desktop')}
-                                    className={`inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition ${
-                                        activeDevice === 'desktop'
+                                    className={`inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition ${activeDevice === 'desktop'
                                             ? 'bg-white text-[#123524] shadow-sm dark:bg-[#123524] dark:text-[#bcf7b7]'
                                             : 'text-[#636171] hover:text-[#123524] dark:text-[#9FB8A4] dark:hover:text-[#edf7ef]'
-                                    }`}
+                                        }`}
                                 >
                                     <Monitor className="size-4" />
                                     <span>Desktop Dashboard</span>
@@ -936,11 +1019,10 @@ export default function Welcome() {
                                 <button
                                     type="button"
                                     onClick={() => setActiveDevice('tablet')}
-                                    className={`inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition ${
-                                        activeDevice === 'tablet'
+                                    className={`inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition ${activeDevice === 'tablet'
                                             ? 'bg-white text-[#123524] shadow-sm dark:bg-[#123524] dark:text-[#bcf7b7]'
                                             : 'text-[#636171] hover:text-[#123524] dark:text-[#9FB8A4] dark:hover:text-[#edf7ef]'
-                                    }`}
+                                        }`}
                                 >
                                     <Tablet className="size-4" />
                                     <span>Tablet (Clean Mockup)</span>
@@ -948,11 +1030,10 @@ export default function Welcome() {
                                 <button
                                     type="button"
                                     onClick={() => setActiveDevice('mobile')}
-                                    className={`inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition ${
-                                        activeDevice === 'mobile'
+                                    className={`inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition ${activeDevice === 'mobile'
                                             ? 'bg-white text-[#123524] shadow-sm dark:bg-[#123524] dark:text-[#bcf7b7]'
                                             : 'text-[#636171] hover:text-[#123524] dark:text-[#9FB8A4] dark:hover:text-[#edf7ef]'
-                                    }`}
+                                        }`}
                                 >
                                     <Smartphone className="size-4" />
                                     <span>Mobile Phone (Clean Mockup)</span>
@@ -1024,61 +1105,10 @@ export default function Welcome() {
                     </div>
                 </section>
 
-                {/* Section: Comprehensive Platform Features (Clean Solid Cards) */}
-                <section
-                    id="features"
-                    className="border-b border-[#eaeaf2] bg-[#f4f4fa] py-20 sm:py-28 dark:border-[#1a2a1e] dark:bg-[#050806]"
-                >
-                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="max-w-2xl">
-                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e9fbe7] px-3.5 py-1 text-xs font-bold tracking-wider text-[#123524] uppercase dark:bg-[#123524] dark:text-[#bcf7b7]">
-                                Platform Architecture
-                            </span>
-                            <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-[#123524] sm:text-5xl dark:text-[#edf7ef]">
-                                Everything a seller needs. Nothing they don't.
-                            </h2>
-                            <p className="mt-4 text-lg text-[#636171] dark:text-[#9FB8A4]">
-                                Purposeful tools built to make inventory,
-                                multi-category compiling, and customer sharing
-                                as simple as copying a link.
-                            </p>
-                        </div>
-
-                        <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                            {PLATFORM_FEATURES.map((feature) => {
-                                const Icon = feature.icon;
-
-                                return (
-                                    <div
-                                        key={feature.number}
-                                        className="rounded-3xl border border-[#eaeaf2] bg-white p-8 shadow-sm transition hover:border-[#123524] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:hover:border-[#bcf7b7]"
-                                    >
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex size-11 items-center justify-center rounded-xl bg-[#e9fbe7] text-[#123524] dark:bg-[#123524] dark:text-[#bcf7b7]">
-                                                <Icon className="size-5" />
-                                            </div>
-                                            <span className="font-mono text-sm font-bold text-[#2f6b3f] dark:text-[#bcf7b7]">
-                                                {feature.number}
-                                            </span>
-                                        </div>
-
-                                        <h3 className="mt-6 text-xl font-bold text-[#123524] dark:text-[#edf7ef]">
-                                            {feature.title}
-                                        </h3>
-                                        <p className="mt-3 text-sm leading-relaxed text-[#636171] dark:text-[#9FB8A4]">
-                                            {feature.description}
-                                        </p>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                </section>
-
-                {/* Section: How It Works (Step-by-step) */}
+                {/* Section: How It Works */}
                 <section
                     id="how"
-                    className="border-b border-[#eaeaf2] bg-white py-20 sm:py-28 dark:border-[#1a2a1e] dark:bg-[#08100a]"
+                    className="border-b border-[#eaeaf2] bg-[#f4f4fa] py-20 sm:py-28 dark:border-[#1a2a1e] dark:bg-[#050806]"
                 >
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                         <div className="mx-auto max-w-2xl text-center">
@@ -1097,7 +1127,7 @@ export default function Welcome() {
                         </div>
 
                         <div className="mt-16 grid gap-8 md:grid-cols-3">
-                            <div className="rounded-3xl border border-[#eaeaf2] bg-[#f4f4fa] p-8 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                            <div className="rounded-3xl border border-[#eaeaf2] bg-white p-8 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
                                 <span className="flex size-10 items-center justify-center rounded-xl bg-[#123524] font-mono text-sm font-bold text-[#bcf7b7] dark:bg-[#bcf7b7] dark:text-[#06140b]">
                                     01
                                 </span>
@@ -1111,7 +1141,7 @@ export default function Welcome() {
                                 </p>
                             </div>
 
-                            <div className="rounded-3xl border border-[#eaeaf2] bg-[#f4f4fa] p-8 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                            <div className="rounded-3xl border border-[#eaeaf2] bg-white p-8 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
                                 <span className="flex size-10 items-center justify-center rounded-xl bg-[#123524] font-mono text-sm font-bold text-[#bcf7b7] dark:bg-[#bcf7b7] dark:text-[#06140b]">
                                     02
                                 </span>
@@ -1125,7 +1155,7 @@ export default function Welcome() {
                                 </p>
                             </div>
 
-                            <div className="rounded-3xl border border-[#eaeaf2] bg-[#f4f4fa] p-8 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                            <div className="rounded-3xl border border-[#eaeaf2] bg-white p-8 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
                                 <span className="flex size-10 items-center justify-center rounded-xl bg-[#123524] font-mono text-sm font-bold text-[#bcf7b7] dark:bg-[#bcf7b7] dark:text-[#06140b]">
                                     03
                                 </span>
@@ -1142,53 +1172,58 @@ export default function Welcome() {
                     </div>
                 </section>
 
-                {/* Section: Final Call to Action (Solid Clean Style) */}
-                <section className="bg-[#123524] py-20 text-center text-white sm:py-28 dark:bg-[#08100a]">
-                    <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#bcf7b7]/15 px-4 py-1 text-xs font-bold tracking-wider text-[#bcf7b7] uppercase">
-                            GET STARTED TODAY
-                        </span>
-                        <h2 className="mt-6 text-4xl font-extrabold tracking-tight sm:text-6xl">
-                            Give your products a home. Start compiling links.
-                        </h2>
-                        <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-[#bcf7b7]/80 sm:text-xl">
-                            Join independent artisans, makers, and boutique
-                            sellers who simplify sharing and selling with Nova
-                            Flow.
-                        </p>
+                {/* Section: Refined Light Pre-Footer CTA (Light, Airy, Standard Style) */}
+                <section className="border-b border-[#eaeaf2] bg-[#f4f4fa] py-16 sm:py-24 dark:border-[#1a2a1e] dark:bg-[#050806]">
+                    <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+                        <div className="rounded-3xl border border-[#eaeaf2] bg-white p-10 text-center shadow-sm sm:p-16 dark:border-[#1a2a1e] dark:bg-[#0b120d]">
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e9fbe7] px-3.5 py-1 text-xs font-bold tracking-wider text-[#123524] uppercase dark:bg-[#123524] dark:text-[#bcf7b7]">
+                                START YOUR SHOWCASE
+                            </span>
+                            <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-[#123524] sm:text-5xl dark:text-[#edf7ef]">
+                                Give your products a home. Start compiling
+                                links.
+                            </h2>
+                            <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-[#636171] sm:text-lg dark:text-[#9FB8A4]">
+                                Join independent artisans, makers, and boutique
+                                sellers who simplify sharing and selling with
+                                Nova Flow. Free to start, zero setup bloat.
+                            </p>
 
-                        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-                            {auth.user ? (
-                                <Link
-                                    href={dashboard()}
-                                    className="inline-flex items-center gap-2 rounded-xl bg-[#bcf7b7] px-8 py-4 text-base font-extrabold text-[#06140b] shadow-sm hover:bg-[#a6ec9f]"
-                                >
-                                    <LayoutGrid className="size-5" />
-                                    <span>Go to your Dashboard</span>
-                                </Link>
-                            ) : (
-                                <>
+                            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+                                {auth.user ? (
                                     <Link
-                                        href={register()}
-                                        className="inline-flex items-center gap-2 rounded-xl bg-[#bcf7b7] px-8 py-4 text-base font-extrabold text-[#06140b] shadow-sm hover:bg-[#a6ec9f]"
+                                        href={dashboard()}
+                                        className="inline-flex items-center gap-2 rounded-xl bg-[#123524] px-8 py-4 text-base font-bold text-white shadow-sm hover:bg-[#1a4430] dark:bg-[#bcf7b7] dark:text-[#06140b] dark:hover:bg-[#a6ec9f]"
                                     >
-                                        <span>Create your seller account</span>
-                                        <ArrowRight className="size-5" />
+                                        <LayoutGrid className="size-5" />
+                                        <span>Go to your Dashboard</span>
                                     </Link>
-                                    <Link
-                                        href={login()}
-                                        className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-8 py-4 text-base font-bold text-white hover:bg-white/20"
-                                    >
-                                        <span>Sign in</span>
-                                    </Link>
-                                </>
-                            )}
+                                ) : (
+                                    <>
+                                        <Link
+                                            href={register()}
+                                            className="inline-flex items-center gap-2 rounded-xl bg-[#123524] px-8 py-4 text-base font-bold text-white shadow-sm hover:bg-[#1a4430] dark:bg-[#bcf7b7] dark:text-[#06140b] dark:hover:bg-[#a6ec9f]"
+                                        >
+                                            <span>
+                                                Create your seller account
+                                            </span>
+                                            <ArrowRight className="size-5" />
+                                        </Link>
+                                        <Link
+                                            href={login()}
+                                            className="inline-flex items-center gap-2 rounded-xl border border-[#eaeaf2] bg-[#f4f4fa] px-8 py-4 text-base font-bold text-[#123524] shadow-sm hover:bg-[#eaeaf2] dark:border-[#1a2a1e] dark:bg-[#050806] dark:text-[#edf7ef]"
+                                        >
+                                            <span>Sign in</span>
+                                        </Link>
+                                    </>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                {/* Professional Multi-Column Expanded Footer (Remodeled Footer) */}
-                <footer className="border-t border-[#eaeaf2] bg-white pt-16 pb-12 dark:border-[#1a2a1e] dark:bg-[#050806]">
+                {/* Professional Light Footer (Light, Airy, Standard Clean Style) */}
+                <footer className="bg-white pt-16 pb-12 dark:bg-[#050806]">
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                         {/* Top Section: Brand + Navigation Columns */}
                         <div className="grid gap-12 lg:grid-cols-12">
@@ -1198,7 +1233,7 @@ export default function Welcome() {
                                     textClassName="text-[#123524] dark:text-[#edf7ef]"
                                     iconClassName="size-8"
                                 />
-                                <p className="max-w-sm text-sm leading-relaxed text-[#636171] dark:text-[#9FB8A4]">
+                                <p className="max-w-sm text-sm leading-relaxed text-[#716f81] dark:text-[#9FB8A4]">
                                     The category-first commerce platform for
                                     independent sellers and boutique creators.
                                     Compile products into clean, trackable links
@@ -1207,7 +1242,7 @@ export default function Welcome() {
 
                                 {/* System Status Pill */}
                                 <div className="pt-2">
-                                    <div className="inline-flex items-center gap-2 rounded-full border border-[#eaeaf2] bg-[#f4f4fa] px-3 py-1 text-xs font-semibold text-[#123524] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#edf7ef]">
+                                    <div className="inline-flex items-center gap-2 rounded-full border border-[#eaeaf2] bg-[#f8f8fc] px-3.5 py-1 text-xs font-medium text-[#123524] dark:border-[#1a2a1e] dark:bg-[#0b120d] dark:text-[#edf7ef]">
                                         <span className="size-2 rounded-full bg-emerald-500" />
                                         <span>All systems operational</span>
                                     </div>
@@ -1217,82 +1252,82 @@ export default function Welcome() {
                             {/* 4 Navigation Columns (Span 8) */}
                             <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:col-span-8">
                                 {/* Column 1: Platform */}
-                                <div className="space-y-3">
+                                <div className="space-y-3.5">
                                     <h4 className="text-xs font-bold tracking-wider text-[#123524] uppercase dark:text-[#edf7ef]">
                                         Platform
                                     </h4>
-                                    <ul className="space-y-2.5 text-sm text-[#636171] dark:text-[#9FB8A4]">
+                                    <ul className="space-y-2.5 text-sm text-[#716f81] dark:text-[#9FB8A4]">
                                         <li>
                                             <a
-                                                href="#link-engine"
-                                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                                href="#features-carousel"
+                                                className="transition hover:text-[#123524] dark:hover:text-[#bcf7b7]"
                                             >
-                                                Link Generator
+                                                Category Links
                                             </a>
                                         </li>
                                         <li>
                                             <a
                                                 href="#storefronts"
-                                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                                className="transition hover:text-[#123524] dark:hover:text-[#bcf7b7]"
                                             >
-                                                Curated Storefronts
+                                                Storefront Engine
                                             </a>
                                         </li>
                                         <li>
                                             <a
-                                                href="#features"
-                                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                                href="#prototypes"
+                                                className="transition hover:text-[#123524] dark:hover:text-[#bcf7b7]"
                                             >
-                                                Inventory Manager
+                                                Responsive App
                                             </a>
                                         </li>
                                         <li>
                                             <a
-                                                href="#features"
-                                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                                href="#features-carousel"
+                                                className="transition hover:text-[#123524] dark:hover:text-[#bcf7b7]"
                                             >
                                                 Click Analytics
                                             </a>
                                         </li>
                                         <li>
                                             <a
-                                                href="#prototypes"
-                                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                                href="#features-carousel"
+                                                className="transition hover:text-[#123524] dark:hover:text-[#bcf7b7]"
                                             >
-                                                Mobile Architecture
+                                                Stock Warnings
                                             </a>
                                         </li>
                                     </ul>
                                 </div>
 
                                 {/* Column 2: For Sellers */}
-                                <div className="space-y-3">
+                                <div className="space-y-3.5">
                                     <h4 className="text-xs font-bold tracking-wider text-[#123524] uppercase dark:text-[#edf7ef]">
                                         For Sellers
                                     </h4>
-                                    <ul className="space-y-2.5 text-sm text-[#636171] dark:text-[#9FB8A4]">
+                                    <ul className="space-y-2.5 text-sm text-[#716f81] dark:text-[#9FB8A4]">
                                         <li>
-                                            <span className="text-[#636171] dark:text-[#9FB8A4]">
+                                            <span className="cursor-default transition hover:text-[#123524] dark:hover:text-[#bcf7b7]">
                                                 Artisans & Crafts
                                             </span>
                                         </li>
                                         <li>
-                                            <span className="text-[#636171] dark:text-[#9FB8A4]">
+                                            <span className="cursor-default transition hover:text-[#123524] dark:hover:text-[#bcf7b7]">
                                                 Boutique Fashion
                                             </span>
                                         </li>
                                         <li>
-                                            <span className="text-[#636171] dark:text-[#9FB8A4]">
-                                                Jewelry & Beadwork
+                                            <span className="cursor-default transition hover:text-[#123524] dark:hover:text-[#bcf7b7]">
+                                                Jewelry Designers
                                             </span>
                                         </li>
                                         <li>
-                                            <span className="text-[#636171] dark:text-[#9FB8A4]">
-                                                Instagram Sellers
+                                            <span className="cursor-default transition hover:text-[#123524] dark:hover:text-[#bcf7b7]">
+                                                Instagram Drops
                                             </span>
                                         </li>
                                         <li>
-                                            <span className="text-[#636171] dark:text-[#9FB8A4]">
+                                            <span className="cursor-default transition hover:text-[#123524] dark:hover:text-[#bcf7b7]">
                                                 WhatsApp Commerce
                                             </span>
                                         </li>
@@ -1300,15 +1335,15 @@ export default function Welcome() {
                                 </div>
 
                                 {/* Column 3: Resources */}
-                                <div className="space-y-3">
+                                <div className="space-y-3.5">
                                     <h4 className="text-xs font-bold tracking-wider text-[#123524] uppercase dark:text-[#edf7ef]">
                                         Resources
                                     </h4>
-                                    <ul className="space-y-2.5 text-sm text-[#636171] dark:text-[#9FB8A4]">
+                                    <ul className="space-y-2.5 text-sm text-[#716f81] dark:text-[#9FB8A4]">
                                         <li>
                                             <a
                                                 href="#how"
-                                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                                className="transition hover:text-[#123524] dark:hover:text-[#bcf7b7]"
                                             >
                                                 How Links Work
                                             </a>
@@ -1316,23 +1351,15 @@ export default function Welcome() {
                                         <li>
                                             <a
                                                 href="#storefronts"
-                                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                                className="transition hover:text-[#123524] dark:hover:text-[#bcf7b7]"
                                             >
                                                 Selling Strategies
                                             </a>
                                         </li>
                                         <li>
-                                            <a
-                                                href="#link-engine"
-                                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
-                                            >
-                                                Category Compiling
-                                            </a>
-                                        </li>
-                                        <li>
                                             <Link
                                                 href={login()}
-                                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                                className="transition hover:text-[#123524] dark:hover:text-[#bcf7b7]"
                                             >
                                                 Seller Sign In
                                             </Link>
@@ -1340,7 +1367,7 @@ export default function Welcome() {
                                         <li>
                                             <Link
                                                 href={register()}
-                                                className="hover:text-[#123524] dark:hover:text-[#bcf7b7]"
+                                                className="transition hover:text-[#123524] dark:hover:text-[#bcf7b7]"
                                             >
                                                 Create Account
                                             </Link>
@@ -1348,34 +1375,34 @@ export default function Welcome() {
                                     </ul>
                                 </div>
 
-                                {/* Column 4: Trust & Privacy */}
-                                <div className="space-y-3">
+                                {/* Column 4: Trust & Data */}
+                                <div className="space-y-3.5">
                                     <h4 className="text-xs font-bold tracking-wider text-[#123524] uppercase dark:text-[#edf7ef]">
                                         Trust & Data
                                     </h4>
-                                    <ul className="space-y-2.5 text-sm text-[#636171] dark:text-[#9FB8A4]">
+                                    <ul className="space-y-2.5 text-sm text-[#716f81] dark:text-[#9FB8A4]">
                                         <li>
-                                            <span className="text-[#636171] dark:text-[#9FB8A4]">
+                                            <span className="cursor-default transition hover:text-[#123524] dark:hover:text-[#bcf7b7]">
                                                 Private by Design
                                             </span>
                                         </li>
                                         <li>
-                                            <span className="text-[#636171] dark:text-[#9FB8A4]">
-                                                Isolated Tenant Data
+                                            <span className="cursor-default transition hover:text-[#123524] dark:hover:text-[#bcf7b7]">
+                                                Isolated Tenant Scope
                                             </span>
                                         </li>
                                         <li>
-                                            <span className="text-[#636171] dark:text-[#9FB8A4]">
+                                            <span className="cursor-default transition hover:text-[#123524] dark:hover:text-[#bcf7b7]">
                                                 SSL Encryption
                                             </span>
                                         </li>
                                         <li>
-                                            <span className="text-[#636171] dark:text-[#9FB8A4]">
+                                            <span className="cursor-default transition hover:text-[#123524] dark:hover:text-[#bcf7b7]">
                                                 Terms of Service
                                             </span>
                                         </li>
                                         <li>
-                                            <span className="text-[#636171] dark:text-[#9FB8A4]">
+                                            <span className="cursor-default transition hover:text-[#123524] dark:hover:text-[#bcf7b7]">
                                                 Privacy Policy
                                             </span>
                                         </li>
@@ -1384,10 +1411,10 @@ export default function Welcome() {
                             </div>
                         </div>
 
-                        {/* Bottom Copyright and Meta Bar */}
-                        <div className="mt-14 flex flex-col gap-4 border-t border-[#eaeaf2] pt-8 text-xs text-[#636171] sm:flex-row sm:items-center sm:justify-between dark:border-[#1a2a1e] dark:text-[#9FB8A4]">
+                        {/* Bottom Copyright & Status Bar */}
+                        <div className="mt-14 flex flex-col gap-4 border-t border-[#eaeaf2] pt-8 text-xs text-[#716f81] sm:flex-row sm:items-center sm:justify-between dark:border-[#1a2a1e] dark:text-[#9FB8A4]">
                             <p>
-                                © {new Date().getFullYear()} Nova Flow. All
+                                © {new Date().getFullYear()} Nova Flow Inc. All
                                 rights reserved.
                             </p>
                             <div className="flex items-center gap-6">

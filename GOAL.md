@@ -17,4 +17,8 @@ you are to refine the desing of the homepage, use the `fromtend-desgin` skill,
 - remodel the store-front section, its not to display products it should seem more crearive
 - expand details and remodel footer to professional fotter 
 
-# build overview
+# build overview for readme file
+you are to give a well structured detsail of novaflow on the readem file.
+- read prd file for more cleaeity of the project
+- use pictures provide in `image` folder
+- document shoul be weel sturctured and peach ready
