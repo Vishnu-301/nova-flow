@@ -12,16 +12,19 @@ import {
     Menu,
     MessageCircle,
     Monitor,
+    Moon,
     QrCode,
     Share2,
     ShieldCheck,
     Smartphone,
     Sparkles,
+    Sun,
     Tablet,
     X,
 } from 'lucide-react';
 import { useState } from 'react';
 import AppLogo from '@/components/app-logo';
+import { useAppearance } from '@/hooks/use-appearance';
 import { dashboard, login, register } from '@/routes';
 
 interface FeatureSlide {
@@ -440,6 +443,7 @@ const STOREFRONT_USE_CASES = [
 
 export default function Welcome() {
     const { auth } = usePage().props;
+    const { resolvedAppearance, updateAppearance } = useAppearance();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [activeDevice, setActiveDevice] = useState<
         'desktop' | 'tablet' | 'mobile'
@@ -447,6 +451,10 @@ export default function Welcome() {
     const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
 
     const activeSlide = FEATURE_SLIDES[currentSlideIndex];
+    const nextAppearance = resolvedAppearance === 'dark' ? 'light' : 'dark';
+    const AppearanceIcon = nextAppearance === 'dark' ? Moon : Sun;
+
+    const toggleAppearance = () => updateAppearance(nextAppearance);
 
     const nextSlide = () => {
         setCurrentSlideIndex((prev) => (prev + 1) % FEATURE_SLIDES.length);
@@ -505,6 +513,15 @@ export default function Welcome() {
 
                         {/* Auth Navigation */}
                         <div className="hidden items-center gap-3 sm:flex">
+                            <button
+                                type="button"
+                                onClick={toggleAppearance}
+                                aria-label={`Switch to ${nextAppearance} mode`}
+                                title={`Switch to ${nextAppearance} mode`}
+                                className="hidden rounded-xl p-2.5 text-[#123524] transition-colors hover:bg-[#eaeaf2] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2f6b3f] md:inline-flex dark:text-[#edf7ef] dark:hover:bg-[#1a2a1e] dark:focus-visible:outline-[#bcf7b7]"
+                            >
+                                <AppearanceIcon className="size-5" />
+                            </button>
                             {auth.user ? (
                                 <Link
                                     href={dashboard()}
@@ -533,7 +550,16 @@ export default function Welcome() {
                         </div>
 
                         {/* Mobile Hamburger Toggle */}
-                        <div className="flex items-center md:hidden">
+                        <div className="flex items-center gap-1 md:hidden">
+                            <button
+                                type="button"
+                                onClick={toggleAppearance}
+                                className="rounded-xl p-2 text-[#123524] transition-colors hover:bg-[#eaeaf2] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2f6b3f] dark:text-[#edf7ef] dark:hover:bg-[#1a2a1e] dark:focus-visible:outline-[#bcf7b7]"
+                                aria-label={`Switch to ${nextAppearance} mode`}
+                                title={`Switch to ${nextAppearance} mode`}
+                            >
+                                <AppearanceIcon className="size-5" />
+                            </button>
                             <button
                                 type="button"
                                 onClick={() =>
